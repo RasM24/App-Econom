@@ -1,2 +1,3 @@
 include ':app',
+	':component.wish',
 	':component.design'
