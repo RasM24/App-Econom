@@ -1,22 +1,5 @@
 <resources>
 
-	<!-- Base application theme. -->
-	<style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
-		<!-- Customize your theme here. -->
-		<item name="colorPrimary">#3EB48A</item>
-		<item name="colorPrimaryDark">#147553</item>
-		<item name="colorAccent">#3EB48A</item>
-
-		<item name="windowActionBar">false</item>
-		<item name="windowNoTitle">true</item>
-
-		<item name="actionBarTheme">@style/AppBar</item>
-	</style>
-
-	<style name="AppBar" parent="Base.ThemeOverlay.AppCompat.ActionBar">
-		<item name="android:background">#FFF</item>
-	</style>
-
 	<style name="Material.IconButton" parent="Widget.MaterialComponents.Button.TextButton.Icon">
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>
@@ -29,7 +12,7 @@
 	</style>
 
 	<style name="Material.Text.Colored" parent="TextAppearance.MaterialComponents.Body1">
-		<item name="android:textColor">#3EB48A</item>
+		<item name="android:textColor">@color/colorPrimary</item>
 	</style>
 
 	<style name="Material.InputTextLayout.Outlined" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox" />
@@ -39,7 +22,7 @@
 	<style name="Material.Text.Description" parent="TextAppearance.MaterialComponents.Body1" />
 
 	<style name="Material.Text.Cost" parent="TextAppearance.MaterialComponents.Body2">
-		<item name="android:textColor">#3EB48A</item>
+		<item name="android:textColor">@color/colorPrimary</item>
 	</style>
 
 	<style name="Material.Text.Noodles" parent="TextAppearance.MaterialComponents.Body2">

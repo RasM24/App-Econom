@@ -28,8 +28,8 @@ data class Wish(
 }
 
 enum class Importance(@IdRes val nameResId: Int, val colorId: Int) {
-	CRITICAL(R.string.importance_critical, R.color.impt_1),
-	BIG(R.string.importance_big, R.color.impt_2),
-	LITTLE(R.string.importance_little, R.color.impt_3),
-	BACKLOG(R.string.importance_backlog, R.color.impt_4)
+	CRITICAL(R.string.importance_critical, R.color.colorHighlighting),
+	BIG(R.string.importance_big, R.color.colorImportant),
+	LITTLE(R.string.importance_little, R.color.colorNoMatter),
+	BACKLOG(R.string.importance_backlog, R.color.colorIndifference)
 }

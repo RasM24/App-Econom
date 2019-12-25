@@ -1,2 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="ru.endroad.econom.component.design" />
+<manifest package="ru.endroad.econom.component.design" />
