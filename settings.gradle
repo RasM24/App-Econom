@@ -1,2 +1,1 @@
-include ':app', ':buildSrc'
-rootProject.name='Econom'
+include ':app'
