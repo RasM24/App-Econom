@@ -2,6 +2,7 @@ apply plugin: 'kotlin-kapt'
 
 dependencies {
 	implementation project(":component.design")
+	implementation project(":component.wish")
 
 	implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-rc03'
 	implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0-rc03'
