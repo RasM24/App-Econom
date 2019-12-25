@@ -5,13 +5,12 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import ru.endroad.arena.data.bgDispatcher
 import ru.endroad.econom.entity.Estimation
-import ru.endroad.econom.presenter.GetRandomEstimationUseCase
 
-class GetRandomEstimationUseCaseImpl(
+class GetRandomEstimationUseCase(
 	private val estimationRepository: EstimationRepository
-) : GetRandomEstimationUseCase, CoroutineScope by CoroutineScope(bgDispatcher) {
+) : CoroutineScope by CoroutineScope(bgDispatcher) {
 
-	override fun invoke(): Deferred<Estimation> = async {
+	operator fun invoke(): Deferred<Estimation> = async {
 		estimationRepository
 			.getListAsync()
 			.await()

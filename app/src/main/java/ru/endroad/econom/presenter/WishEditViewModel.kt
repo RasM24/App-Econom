@@ -2,6 +2,8 @@ package ru.endroad.econom.presenter
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import ru.endroad.econom.domain.AddWishUseCase
+import ru.endroad.econom.domain.EditWishUseCase
 import ru.endroad.econom.entity.Importance
 import ru.endroad.econom.entity.Wish
 import ru.endroad.econom.view.*
