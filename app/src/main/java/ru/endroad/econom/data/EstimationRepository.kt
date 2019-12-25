@@ -5,12 +5,11 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import ru.endroad.arena.data.bgDispatcher
 import ru.endroad.econom.data.room.EstimationDao
-import ru.endroad.econom.domain.EstimationRepository
 import ru.endroad.econom.entity.Estimation
 
-class EstimationRepositoryImpl(
+class EstimationRepository(
 	private val dao: EstimationDao
-) : EstimationRepository, CoroutineScope by CoroutineScope(bgDispatcher) {
+) : CoroutineScope by CoroutineScope(bgDispatcher) {
 
-	override fun getListAsync(): Deferred<List<Estimation>> = async { dao.getList() }
+	fun getListAsync(): Deferred<List<Estimation>> = async { dao.getList() }
 }

@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import ru.endroad.arena.data.bgDispatcher
+import ru.endroad.econom.data.EstimationRepository
 import ru.endroad.econom.entity.Estimation
 
 class GetRandomEstimationUseCase(
