@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">Econom</string>
+	<string name="app_name">Econom</string>
+
+	<string name="importance_critical">критичное</string>
+	<string name="importance_big">важное</string>
+	<string name="importance_little">неважное</string>
+	<string name="importance_backlog">пофиг</string>
 </resources>

@@ -1,6 +1,8 @@
 package ru.endroad.econom
 
 import ru.endroad.arena.viewlayer.activity.BaseActivity
+import ru.endroad.econom.view.WishListFragment
+import ru.endroad.navigation.changeRoot
 
 class SingleActivity : BaseActivity() {
 
@@ -8,5 +10,7 @@ class SingleActivity : BaseActivity() {
 
 	override val theme: Int = R.style.AppTheme
 
-	override fun onFirstCreate() {}
+	override fun onFirstCreate() {
+		supportFragmentManager.changeRoot(WishListFragment.getInstance(), R.id.root)
+	}
 }
