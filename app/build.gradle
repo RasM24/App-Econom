@@ -1,6 +1,7 @@
 apply plugin: 'kotlin-kapt'
 
 dependencies {
+	implementation project(':feature.wishes')
 	implementation project(":component.design")
 	implementation project(":component.wish")
 

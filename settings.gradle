@@ -1,3 +1,4 @@
 include ':app',
+	':feature.wishes',
 	':component.wish',
 	':component.design'
