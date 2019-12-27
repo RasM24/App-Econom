@@ -6,7 +6,6 @@ import ru.endroad.econom.domain.*
 
 val domainModule = module {
 	factory<GetWishUseCase> { (id: Int) -> GetWishUseCase(get(), id) }
-	singleBy<GetRandomEstimationUseCase, GetRandomEstimationUseCase>()
 	singleBy<GetWishListLiveDataUseCase, GetWishListLiveDataUseCase>()
 	singleBy<PerformWishUseCase, PerformWishUseCase>()
 	singleBy<DeleteWishUseCase, DeleteWishUseCase>()

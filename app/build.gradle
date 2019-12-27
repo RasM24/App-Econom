@@ -2,6 +2,7 @@ apply plugin: 'kotlin-kapt'
 
 dependencies {
 	implementation project(':feature.wishes')
+	implementation project(":feature.estimation")
 	implementation project(":component.design")
 	implementation project(":component.wish")
 

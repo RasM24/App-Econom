@@ -1,1 +1,5 @@
-dependencies { }
+dependencies {
+
+	implementation 'org.koin:koin-core:2.0.0'
+	implementation 'org.koin:koin-core-ext:2.0.0'
+}
