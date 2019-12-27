@@ -2,8 +2,8 @@ package ru.endroad.econom.view
 
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.Deferred
-import ru.endroad.econom.entity.Importance
-import ru.endroad.econom.entity.Wish
+import ru.endroad.econom.component.wish.model.Importance
+import ru.endroad.econom.component.wish.model.Wish
 
 interface IWishEditViewModel {
 

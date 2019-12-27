@@ -1,7 +1,8 @@
-package ru.endroad.econom.component.wish
+package ru.endroad.econom.component.wish.model
 
 import androidx.annotation.ColorRes
 import androidx.annotation.IdRes
+import ru.endroad.econom.component.wish.R
 
 enum class Importance(@IdRes val nameResId: Int, @ColorRes val colorId: Int) {
 	CRITICAL(R.string.importance_critical, R.color.colorHighlighting),

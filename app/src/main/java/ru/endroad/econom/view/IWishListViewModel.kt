@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
 import ru.endroad.econom.entity.TotalResult
-import ru.endroad.econom.entity.Wish
-import ru.endroad.econom.presenter.WishList
+import ru.endroad.econom.component.wish.model.Wish
+import ru.endroad.econom.component.wish.model.WishList
 
 interface IWishListViewModel {
 

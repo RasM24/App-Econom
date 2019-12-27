@@ -1,10 +1,10 @@
-package ru.endroad.econom.entity
+package ru.endroad.econom.component.wish.model
 
-import androidx.annotation.IdRes
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import ru.endroad.econom.R
-import ru.endroad.econom.data.room.WISH_TABLE
+import ru.endroad.econom.component.wish.datasource.WISH_TABLE
+
+typealias WishList = List<Wish>
 
 @Entity(tableName = WISH_TABLE) //TODO при необходимости разнести на сущность и pojo-модель
 data class Wish(
@@ -25,11 +25,4 @@ data class Wish(
 	companion object {
 		const val NOODLE_COST = 17
 	}
-}
-
-enum class Importance(@IdRes val nameResId: Int, val colorId: Int) {
-	CRITICAL(R.string.importance_critical, R.color.colorHighlighting),
-	BIG(R.string.importance_big, R.color.colorImportant),
-	LITTLE(R.string.importance_little, R.color.colorNoMatter),
-	BACKLOG(R.string.importance_backlog, R.color.colorIndifference)
 }

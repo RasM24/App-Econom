@@ -5,10 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import ru.endroad.econom.entity.Wish
+import ru.endroad.econom.component.wish.datasource.EnumConverter
+import ru.endroad.econom.component.wish.datasource.WishDao
+import ru.endroad.econom.component.wish.model.Wish
 
 const val DATABASE_NAME = "CoreDatabase"
-const val WISH_TABLE = "wishes"
 
 @Database(
 	version = 1,

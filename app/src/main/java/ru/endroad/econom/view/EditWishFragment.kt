@@ -13,7 +13,7 @@ import ru.endroad.arena.viewlayer.extension.withArgument
 import ru.endroad.arena.viewlayer.fragment.BaseFragment
 import ru.endroad.arena.viewmodellayer.await
 import ru.endroad.econom.R
-import ru.endroad.econom.entity.Importance
+import ru.endroad.econom.component.wish.model.Importance
 import ru.endroad.econom.presenter.WishEditViewModel
 import ru.endroad.navigation.finish
 import kotlin.coroutines.CoroutineContext

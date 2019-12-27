@@ -1,14 +1,11 @@
-package ru.endroad.econom.data
+package ru.endroad.econom.component.wish.datasource
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.endroad.arena.data.bgDispatcher
-import ru.endroad.econom.data.room.WishDao
-import ru.endroad.econom.entity.Wish
-import ru.endroad.econom.presenter.WishList
+import ru.endroad.econom.component.wish.model.Wish
+import ru.endroad.econom.component.wish.model.WishList
 
 class WishRepository(
 	private val wishDataSource: WishDao
@@ -16,12 +13,11 @@ class WishRepository(
 
 	fun getList(): Flow<WishList> = wishDataSource.getList()
 
-	fun getAsync(id: Int): Deferred<Wish> = async { wishDataSource.get(id) }
+	suspend fun get(id: Int): Wish = wishDataSource.get(id)
 
 	fun update(wish: Wish) = launch { wishDataSource.update(wish) }.invokeOnCompletion { }
 
 	fun insert(wish: Wish) = launch { wishDataSource.insert(wish) }
 
 	fun delete(wish: Wish) = launch { wishDataSource.delete(wish) }
-
 }

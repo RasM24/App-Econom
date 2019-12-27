@@ -1,7 +1,7 @@
-package ru.endroad.econom.domain
+package ru.endroad.econom.component.wish.domain
 
-import ru.endroad.econom.data.WishRepository
-import ru.endroad.econom.entity.Wish
+import ru.endroad.econom.component.wish.datasource.WishRepository
+import ru.endroad.econom.component.wish.model.Wish
 
 class PerformWishUseCase(private val wishRepository: WishRepository) {
 

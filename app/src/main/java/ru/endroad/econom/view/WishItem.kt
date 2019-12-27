@@ -5,7 +5,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.items.ModelAbstractItem
 import ru.endroad.econom.R
-import ru.endroad.econom.entity.Wish
+import ru.endroad.econom.component.wish.model.Wish
 
 class WishItem(item: Wish) : ModelAbstractItem<Wish, WishItem.ViewHolder>(item) {
 

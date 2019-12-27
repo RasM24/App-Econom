@@ -10,7 +10,7 @@ import ru.endroad.arena.data.flow.extension.subcribe
 import ru.endroad.arena.data.uiDispatcher
 import ru.endroad.arena.viewlayer.fragment.ListFragment
 import ru.endroad.econom.R
-import ru.endroad.econom.entity.Wish
+import ru.endroad.econom.component.wish.model.Wish
 import ru.endroad.econom.presenter.WishListViewModel
 import ru.endroad.navigation.forwardTo
 

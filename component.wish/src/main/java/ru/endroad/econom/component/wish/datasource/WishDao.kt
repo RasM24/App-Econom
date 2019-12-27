@@ -1,9 +1,11 @@
-package ru.endroad.econom.data.room
+package ru.endroad.econom.component.wish.datasource
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import ru.endroad.econom.entity.Wish
-import ru.endroad.econom.presenter.WishList
+import ru.endroad.econom.component.wish.model.Wish
+import ru.endroad.econom.component.wish.model.WishList
+
+const val WISH_TABLE = "wishes"
 
 @Dao
 interface WishDao {
@@ -22,5 +24,4 @@ interface WishDao {
 
 	@Delete
 	suspend fun delete(wish: Wish)
-
 }

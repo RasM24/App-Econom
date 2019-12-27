@@ -9,14 +9,13 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
 import ru.endroad.arena.data.bgDispatcher
 import ru.endroad.birusa.feature.estimation.GetRandomEstimationUseCase
-import ru.endroad.econom.domain.DeleteWishUseCase
-import ru.endroad.econom.domain.GetWishListLiveDataUseCase
-import ru.endroad.econom.domain.PerformWishUseCase
+import ru.endroad.econom.component.wish.domain.DeleteWishUseCase
+import ru.endroad.econom.component.wish.domain.GetWishListLiveDataUseCase
+import ru.endroad.econom.component.wish.domain.PerformWishUseCase
 import ru.endroad.econom.entity.TotalResult
-import ru.endroad.econom.entity.Wish
+import ru.endroad.econom.component.wish.model.Wish
+import ru.endroad.econom.component.wish.model.WishList
 import ru.endroad.econom.view.IWishListViewModel
-
-typealias WishList = List<Wish>
 
 class WishListViewModel(
 	private val deleteWish: DeleteWishUseCase,
