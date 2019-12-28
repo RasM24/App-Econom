@@ -1,4 +1,4 @@
-package ru.endroad.econom.view
+package ru.endroad.econom.feature.wishes.view
 
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
@@ -12,9 +12,9 @@ import ru.endroad.arena.viewlayer.extension.argumentOptional
 import ru.endroad.arena.viewlayer.extension.withArgument
 import ru.endroad.arena.viewlayer.fragment.BaseFragment
 import ru.endroad.arena.viewmodellayer.await
-import ru.endroad.econom.R
+import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.econom.component.wish.model.Importance
-import ru.endroad.econom.presenter.WishEditViewModel
+import ru.endroad.econom.feature.wishes.presenter.WishEditViewModel
 import ru.endroad.navigation.finish
 import kotlin.coroutines.CoroutineContext
 

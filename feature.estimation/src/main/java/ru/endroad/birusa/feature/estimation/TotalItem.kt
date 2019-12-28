@@ -1,11 +1,9 @@
-package ru.endroad.econom.view
+package ru.endroad.birusa.feature.estimation
 
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.items.ModelAbstractItem
-import ru.endroad.econom.R
-import ru.endroad.econom.entity.TotalResult
 
 class TotalItem(item: TotalResult) : ModelAbstractItem<TotalResult, TotalItem.ViewHolder>(item) {
 

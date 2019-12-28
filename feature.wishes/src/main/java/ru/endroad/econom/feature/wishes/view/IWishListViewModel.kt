@@ -1,9 +1,9 @@
-package ru.endroad.econom.view
+package ru.endroad.econom.feature.wishes.view
 
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
-import ru.endroad.econom.entity.TotalResult
+import ru.endroad.birusa.feature.estimation.TotalResult
 import ru.endroad.econom.component.wish.model.Wish
 import ru.endroad.econom.component.wish.model.WishList
 

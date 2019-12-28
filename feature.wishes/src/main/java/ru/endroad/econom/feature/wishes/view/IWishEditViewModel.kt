@@ -1,4 +1,4 @@
-package ru.endroad.econom.view
+package ru.endroad.econom.feature.wishes.view
 
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.Deferred

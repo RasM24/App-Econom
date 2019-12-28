@@ -1,7 +1,7 @@
 package ru.endroad.econom
 
 import ru.endroad.arena.viewlayer.activity.BaseActivity
-import ru.endroad.econom.view.WishListFragment
+import ru.endroad.econom.feature.wishes.view.WishListFragment
 import ru.endroad.navigation.changeRoot
 
 class SingleActivity : BaseActivity() {

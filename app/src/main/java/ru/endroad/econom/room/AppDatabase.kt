@@ -1,4 +1,4 @@
-package ru.endroad.econom.data.room
+package ru.endroad.econom.room
 
 import android.content.Context
 import androidx.room.Database
@@ -24,7 +24,8 @@ abstract class AppDatabase : RoomDatabase() {
 
 	companion object {
 		fun build(context: Context): AppDatabase =
-			Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME)
+			Room.databaseBuilder(context, AppDatabase::class.java,
+								 DATABASE_NAME)
 				.build()
 	}
 }

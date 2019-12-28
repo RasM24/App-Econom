@@ -1,4 +1,4 @@
-package ru.endroad.econom.view
+package ru.endroad.econom.feature.wishes.view
 
 import androidx.fragment.app.Fragment
 import com.mikepenz.fastadapter.IModelItem
@@ -9,9 +9,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.endroad.arena.data.flow.extension.subcribe
 import ru.endroad.arena.data.uiDispatcher
 import ru.endroad.arena.viewlayer.fragment.ListFragment
-import ru.endroad.econom.R
+import ru.endroad.birusa.feature.estimation.TotalItem
+import ru.endroad.birusa.feature.estimation.map
+import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.econom.component.wish.model.Wish
-import ru.endroad.econom.presenter.WishListViewModel
+import ru.endroad.econom.feature.wishes.presenter.WishListViewModel
 import ru.endroad.navigation.forwardTo
 
 class WishListFragment : ListFragment(), CoroutineScope by CoroutineScope(uiDispatcher) {

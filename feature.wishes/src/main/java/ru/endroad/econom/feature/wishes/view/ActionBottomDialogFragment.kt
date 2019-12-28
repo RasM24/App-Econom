@@ -1,11 +1,11 @@
-package ru.endroad.econom.view
+package ru.endroad.econom.feature.wishes.view
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.bottom_sheet.*
 import ru.endroad.arena.viewlayer.fragment.BaseBottomSheetDialogFragment
-import ru.endroad.econom.R
+import ru.endroad.birusa.feature.wishes.R
 
 class ActionBottomDialogFragment(
 	private val onClickCompleteListener: () -> Unit,

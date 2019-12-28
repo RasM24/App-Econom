@@ -1,4 +1,4 @@
-package ru.endroad.econom.presenter
+package ru.endroad.econom.feature.wishes.presenter
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -12,10 +12,10 @@ import ru.endroad.birusa.feature.estimation.GetRandomEstimationUseCase
 import ru.endroad.econom.component.wish.domain.DeleteWishUseCase
 import ru.endroad.econom.component.wish.domain.GetWishListLiveDataUseCase
 import ru.endroad.econom.component.wish.domain.PerformWishUseCase
-import ru.endroad.econom.entity.TotalResult
 import ru.endroad.econom.component.wish.model.Wish
 import ru.endroad.econom.component.wish.model.WishList
-import ru.endroad.econom.view.IWishListViewModel
+import ru.endroad.birusa.feature.estimation.TotalResult
+import ru.endroad.econom.feature.wishes.view.IWishListViewModel
 
 class WishListViewModel(
 	private val deleteWish: DeleteWishUseCase,

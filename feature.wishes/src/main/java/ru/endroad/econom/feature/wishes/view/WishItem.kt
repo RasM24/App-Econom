@@ -1,10 +1,10 @@
-package ru.endroad.econom.view
+package ru.endroad.econom.feature.wishes.view
 
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.items.ModelAbstractItem
-import ru.endroad.econom.R
+import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.econom.component.wish.model.Wish
 
 class WishItem(item: Wish) : ModelAbstractItem<Wish, WishItem.ViewHolder>(item) {
