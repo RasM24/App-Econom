@@ -1,10 +1,8 @@
-apply plugin: 'kotlin-kapt'
-
 dependencies {
-	implementation project(':feature.wishes')
-	implementation project(":feature.estimation")
 	implementation project(":component.design")
 	implementation project(":component.wish")
+
+	implementation project(":feature.estimation")
 
 	implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-rc03'
 	implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0-rc03'
@@ -14,6 +12,4 @@ dependencies {
 	implementation 'org.koin:koin-androidx-viewmodel:2.0.0'
 
 	implementation 'com.mikepenz:fastadapter:4.1.1'
-
-	kapt 'androidx.room:room-compiler:2.2.3'
 }

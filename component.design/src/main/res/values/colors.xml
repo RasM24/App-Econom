@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!--Основные цвета приложения-->
+	<color name="colorPrimary">#3EB48A</color>
+	<color name="colorPrimaryDark">#147553</color>
+
+	<color name="colorHighlighting">#FF8E58</color>
+	<color name="colorImportant">#3EB48A</color>
+	<color name="colorNoMatter">#803EB48A</color>
+	<color name="colorIndifference">#26000000</color>
+
+	<color name="titleColor">#DDD</color>
+
+	<color name="dividerMainColor">#DDD</color>
+	<color name="dividerShadowColor">#AAA</color>
+
+	<color name="colorMint">#8BDABE</color>
+
+	<color name="estimation_background">#458770</color>
+</resources>
