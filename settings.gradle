@@ -1,2 +1,5 @@
-include ':app', ':buildSrc'
-rootProject.name='Econom'
+include ':app',
+	':feature.estimation',
+	':feature.wishes',
+	':component.wish',
+	':component.design'

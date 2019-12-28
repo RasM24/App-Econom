@@ -1,0 +1,9 @@
+dependencies {
+	implementation project(":component.design")
+
+	api 'androidx.room:room-runtime:2.2.3'
+	api 'androidx.room:room-ktx:2.2.3'
+
+	implementation 'org.koin:koin-core:2.0.0'
+	implementation 'org.koin:koin-core-ext:2.0.0'
+}

@@ -1,0 +1,32 @@
+<resources>
+
+	<style name="Material.IconButton" parent="Widget.MaterialComponents.Button.TextButton.Icon">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="iconPadding">8dp</item>
+		<item name="android:layout_marginLeft">16dp</item>
+		<item name="android:layout_marginRight">16dp</item>
+		<item name="android:layout_marginTop">8dp</item>
+		<item name="android:layout_marginBottom">8dp</item>
+		<item name="android:gravity">left|center_vertical</item>
+	</style>
+
+	<style name="Material.Text.Colored" parent="TextAppearance.MaterialComponents.Body1">
+		<item name="android:textColor">@color/colorPrimary</item>
+	</style>
+
+	<style name="Material.InputTextLayout.Outlined" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox" />
+
+	<style name="Material.Text.Title" parent="TextAppearance.MaterialComponents.Headline6" />
+
+	<style name="Material.Text.Description" parent="TextAppearance.MaterialComponents.Body1" />
+
+	<style name="Material.Text.Cost" parent="TextAppearance.MaterialComponents.Body2">
+		<item name="android:textColor">@color/colorPrimary</item>
+	</style>
+
+	<style name="Material.Text.Noodles" parent="TextAppearance.MaterialComponents.Body2">
+		<item name="android:textColor">?android:textColorSecondary</item>
+	</style>
+
+</resources>
