@@ -1,5 +1,16 @@
 apply plugin: 'kotlin-kapt'
-
+android {
+	flavorDimensions "mock"
+	productFlavors {
+		mock {
+			dimension "mock"
+			applicationIdSuffix ".mock"
+		}
+		live {
+			dimension "mock"
+		}
+	}
+}
 dependencies {
 	implementation project(':feature.wishes')
 	implementation project(":feature.estimation")
