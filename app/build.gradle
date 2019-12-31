@@ -12,6 +12,18 @@ android {
 	}
 }
 dependencies {
+	androidTestImplementation 'ru.endroad:tavern:0.1.0'
+
+	api 'androidx.test.espresso:espresso-core:3.2.0'
+	api 'androidx.test.espresso:espresso-contrib:3.2.0'
+	api 'androidx.test.uiautomator:uiautomator:2.2.0'
+	api 'androidx.test.espresso:espresso-intents:3.2.0'
+
+	androidTestImplementation 'junit:junit:4.12'
+	androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+
+	androidTestImplementation 'com.android.support.test:rules:1.0.2'
+
 	implementation project(':feature.wishes')
 	implementation project(":feature.estimation")
 	implementation project(":component.design")
