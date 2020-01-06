@@ -10,6 +10,7 @@ import org.junit.runner.RunWith
 import ru.endroad.econom.SingleActivity
 import ru.endroad.econom.mock.wishes
 import ru.endroad.econom.screens.BottomSheetScreen
+import ru.endroad.econom.screens.FulfilledListScreen
 import ru.endroad.econom.screens.WishEditScreen
 import ru.endroad.econom.screens.WishListScreen
 import ru.endroad.econom.utils.getDatabasePresetRule
@@ -48,6 +49,16 @@ class WishesListTest {
 	@Test
 	fun performWish() {
 		WishListScreen {
+			tapOn(fulfilledList)
+		}
+
+		FulfilledListScreen {
+			check(itemLexusWish) { visibility = GONE }
+
+			TODO("реализовать tapOnBack")
+		}
+
+		WishListScreen {
 			tapOn(itemLexusWish)
 		}
 
@@ -57,6 +68,14 @@ class WishesListTest {
 
 		WishListScreen {
 			check(itemLexusWish) { visibility = GONE }
+		}
+
+		WishListScreen {
+			tapOn(fulfilledList)
+		}
+
+		FulfilledListScreen {
+			check(itemLexusWish) { visibility = VISIBLE }
 		}
 	}
 

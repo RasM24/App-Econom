@@ -10,6 +10,8 @@ import ru.endroad.tavern.base.Layout
 object WishListScreen : BaseScreen<WishListScreen>() {
 
 	val floatingButton = KView(withId(R.id.fab))
+	val fulfilledList = KView(TODO("Пока нет списка выполненных желаний"))
 
 	val itemLexusWish = KView(withText("Автомобиль Lexus"))
+
 }
