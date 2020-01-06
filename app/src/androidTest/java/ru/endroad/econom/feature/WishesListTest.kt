@@ -89,7 +89,23 @@ class WishesListTest {
 	 */
 	@Test
 	fun deleteWish() {
+		WishListScreen {
+			tapOn(itemLexusWish)
+		}
 
+		BottomSheetScreen {
+			tapOn(deleteButton)
+		}
+
+		WishListScreen {
+			check(itemLexusWish) { visibility = GONE }
+
+			tapOn(fulfilledList)
+		}
+
+		FulfilledListScreen {
+			check(itemLexusWish) { visibility = GONE }
+		}
 	}
 
 	/**
