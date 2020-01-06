@@ -6,14 +6,16 @@ import ru.endroad.econom.component.wish.datasource.WISH_TABLE
 import ru.endroad.econom.component.wish.model.Importance
 import ru.endroad.econom.component.wish.model.Wish
 
-private const val SQL_INSERT_WISH = "INSERT INTO $WISH_TABLE (name, cost, importance, info, complete) VALUES(?,?,?,?,?)"
-private val Wish.arrayValues get() = arrayOf(name, cost, importance, info, complete)
+const val SQL_INSERT_WISH = "INSERT INTO $WISH_TABLE (name, cost, importance, info, complete) VALUES(?,?,?,?,?)"
+const val SQL_UPDATE_WISH = "UPDATE $WISH_TABLE SET name = ?,cost = ?,importance = ?,info= ?,complete = ? WHERE id = ?"
+
+val Wish.arrayValues get() = arrayOf(name, cost, importance, info, complete)
 
 fun SupportSQLiteDatabase.mockWishes() = runTransaction {
 	wishes.forEach { wish -> execSQL(SQL_INSERT_WISH, wish.arrayValues) }
 }
 
-private val wishes = mutableListOf(
+val wishes = mutableListOf(
 	Wish(name = "Автомобиль Lexus", cost = 400000, importance = Importance.LITTLE, info = "Lexus GS300, на коже с черным салоном"),
 	Wish(name = "Велосипед", cost = 30000, importance = Importance.LITTLE, info = "На лето хорошо бы купить велосипед"),
 	Wish(name = "Аккумулятор", importance = Importance.CRITICAL, cost = 4000),
