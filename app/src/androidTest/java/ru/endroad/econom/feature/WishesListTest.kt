@@ -227,6 +227,6 @@ class WishesListTest {
 	 */
 	@Test
 	fun estimations() {
-
+		TODO("Придумать как проверить дразнилку")
 	}
 }
