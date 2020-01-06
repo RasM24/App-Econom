@@ -118,7 +118,39 @@ class WishesListTest {
 	 */
 	@Test
 	fun editWish() {
+		WishListScreen {
+			tapOn(firstItem)
+		}
 
+		BottomSheetScreen {
+			tapOn(editButton)
+		}
+
+		WishEditScreen {
+			check(title) {
+				text = "Изменение"
+			}
+			check(primaryTitle) {
+				text = "Основная информация"
+				visibility = VISIBLE
+			}
+			check(detailTitle) {
+				text = "Детали"
+				visibility = VISIBLE
+			}
+
+			enter(nameInput) { "Автомобиль Honda" }
+			enter(infoInput) { "Гнилушка-старушка :)" }
+			enter(costInput) { "200000" }
+			enter(importanceInput) { "BACKLOG" }
+			tapOn(applyButton)
+		}
+
+		WishListScreen {
+			check(firstItem) {
+				TODO("Добавить проверки")
+			}
+		}
 	}
 
 	/**
@@ -159,7 +191,6 @@ class WishesListTest {
 	 */
 	@Test
 	fun invalidationTest() {
-
 		WishListScreen {
 			tapOn(floatingButton)
 		}

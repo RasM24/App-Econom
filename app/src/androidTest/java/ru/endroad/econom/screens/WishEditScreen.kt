@@ -7,6 +7,8 @@ import ru.endroad.tavern.base.KView
 
 object WishEditScreen : BaseScreen<WishEditScreen>() {
 
+	val title = KView(TODO())
+
 	val primaryTitle = KView(withId(R.id.textMainInfoBlock))
 	val detailTitle = KView(withId(R.id.textDetailInfoBlock))
 

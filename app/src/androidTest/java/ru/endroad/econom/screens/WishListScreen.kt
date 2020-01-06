@@ -12,6 +12,7 @@ object WishListScreen : BaseScreen<WishListScreen>() {
 	val floatingButton = KView(withId(R.id.fab))
 	val fulfilledList = KView(TODO("Пока нет списка выполненных желаний"))
 
+	val firstItem = KView(TODO())
 	val itemLexusWish = KView(withText("Автомобиль Lexus"))
 
 }
