@@ -123,8 +123,36 @@ class WishesListTest {
 	 * *написать тесты на валидаторы
 	 */
 	@Test
-	fun invalidation() {
+	fun invalidationTest() {
 
+		WishListScreen {
+			tapOn(floatingButton)
+		}
+
+		WishEditScreen {
+			tapOn(applyButton)
+
+			check(nameInputLayout) { error = "Введите название" }
+			check(costInputLayout) { error = "Введите ценник" }
+			check(importanceInputLayout) { error = "Выберите важность" }
+
+			enter(nameInput) { "Невообразимое желание, невозможно уместить в одну строчку" }
+			enter(costInput) { "цена введена буквами штааа" }
+			enter(importanceInput) { "выбрали как-то не то.. штааа" }
+			tapOn(applyButton)
+
+			check(nameInputLayout) { error = "Текст не должен быть длиннее 40 символов" }
+			check(costInputLayout) { error = "Значение неккоректно" }
+			check(importanceInputLayout) { error = "Значение неккоректно" }
+
+			enter(nameInput) { "Квартира на рублевке" }
+			enter(costInput) { "1000000000" }
+			enter(importanceInput) { "BACKLOG" }
+
+			check(nameInputLayout) { error = empty() }
+			check(costInputLayout) { error = empty() }
+			check(importanceInputLayout) { error = empty() }
+		}
 	}
 
 	/**
