@@ -1,5 +1,6 @@
 include ':app',
 	':feature.estimation',
 	':feature.wishes',
+	':feature.stub',
 	':component.wish',
 	':component.design'

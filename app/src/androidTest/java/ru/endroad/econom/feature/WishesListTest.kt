@@ -7,7 +7,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import ru.endroad.econom.SingleActivity
+import ru.endroad.econom.application.SingleActivity
 import ru.endroad.econom.mock.wishes
 import ru.endroad.econom.screens.BottomSheetScreen
 import ru.endroad.econom.screens.FulfilledListScreen

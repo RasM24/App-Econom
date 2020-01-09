@@ -1,6 +1,7 @@
-package ru.endroad.econom
+package ru.endroad.econom.application
 
 import ru.endroad.arena.viewlayer.activity.BaseActivity
+import ru.endroad.econom.R
 import ru.endroad.econom.feature.wishes.view.WishListFragment
 import ru.endroad.navigation.changeRoot
 
