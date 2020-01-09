@@ -36,7 +36,7 @@ class WishEditViewModel(
 
 	private fun EditScreenEvent.NameInputChangeFocus.reduce() {
 		if (hasFocus)
-			//TODO("Сброс валидации")
+		//TODO("Сброс валидации")
 		else {
 			//TODO добавить изменение стейта
 			nameValidator.isNotEmpty(name)
@@ -46,7 +46,7 @@ class WishEditViewModel(
 
 	private fun EditScreenEvent.CostInputChangeFocus.reduce() {
 		if (hasFocus)
-			//TODO("Сброс валидации")
+		//TODO("Сброс валидации")
 		else {
 			//TODO добавить изменение стейта
 			costValidator(cost)
@@ -55,7 +55,7 @@ class WishEditViewModel(
 
 	private fun EditScreenEvent.ImportanceInputChangeFocus.reduce() {
 		if (hasFocus)
-			//TODO("Сброс валидации")
+		//TODO("Сброс валидации")
 		else {
 			//TODO добавить изменение стейта
 			importanceValidator(importance)
@@ -64,11 +64,14 @@ class WishEditViewModel(
 
 	//TODO осторожно, говнокод!! Перейти на MVI и выпилить это дерьмо
 	private fun applyData(applyEvent: EditScreenEvent.ApplyClick) {
-		val validation = FieldsValidation.validate(applyEvent.name, applyEvent.cost, applyEvent.importance)
 
-		this.validation.value = validation
+		validation.value = FieldsValidation(
+			nameValidator.isNotEmpty(applyEvent.name) && nameValidator.isNotLong(applyEvent.name),
+			costValidator(applyEvent.cost),
+			importanceValidator(applyEvent.importance)
+		)
 
-		if (validation.validate) {
+		if (validation.value?.validate == true) {
 			val wish = Wish(
 				name = applyEvent.name,
 				info = applyEvent.info,

@@ -19,16 +19,6 @@ data class FieldsValidation(val nameField: Boolean, val costField: Boolean, val 
 
 	val validate get() = nameField && costField && importanceField
 
-	companion object {
-		fun validate(name: String, cost: String, importance: String): FieldsValidation {
-			//TODO добавить валидацию на пустую строку имени
-			val nameField = name.length in 1..40 //TODO magic number
-			val costField = runCatching { cost.toInt() > 0 }.getOrDefault(false)
-			val importanceField = runCatching { Importance.values().contains(Importance.valueOf(importance)) }.getOrDefault(false)
-
-			return FieldsValidation(nameField, costField, importanceField)
-		}
-	}
 }
 
 sealed class StateW
