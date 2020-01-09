@@ -25,6 +25,7 @@ dependencies {
 	androidTestImplementation 'com.android.support.test:rules:1.0.2'
 
 	implementation project(':feature.wishes')
+	implementation project(':feature.navigation')
 	implementation project(":feature.estimation")
 	implementation project(":feature.stub")
 	implementation project(":component.design")

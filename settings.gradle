@@ -1,4 +1,5 @@
 include ':app',
+	':feature.navigation',
 	':feature.estimation',
 	':feature.wishes',
 	':feature.stub',
