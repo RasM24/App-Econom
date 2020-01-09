@@ -16,12 +16,9 @@ import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.econom.component.wish.model.Importance
 import ru.endroad.econom.feature.wishes.presenter.WishEditViewModel
 import ru.endroad.navigation.finish
-import kotlin.coroutines.CoroutineContext
 
 //TODO есть баг - при инвалидации поля он не возвращается к состоянию неошибки. Исправить с переходом на MVI
-class EditWishFragment : BaseFragment(), CoroutineScope {
-
-	override val coroutineContext: CoroutineContext = uiDispatcher
+class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDispatcher) {
 
 	private val wishId: Int? by argumentOptional(WISH_ID)
 	private val viewModel: IWishEditViewModel by viewModel<WishEditViewModel> { parametersOf(wishId) }
@@ -36,7 +33,8 @@ class EditWishFragment : BaseFragment(), CoroutineScope {
 		val adapter = ArrayAdapter(
 			context!!,
 			R.layout.dropdown,
-			importances)
+			importances
+		)
 
 		input_important.setAdapter(adapter)
 	}
@@ -69,7 +67,8 @@ class EditWishFragment : BaseFragment(), CoroutineScope {
 					cost = input_cost.text.toString(),
 					importance = input_important.text.toString(),
 					info = input_info.text.toString(),
-					id = id)
+					id = id
+				)
 			}
 		}
 	}
@@ -82,7 +81,8 @@ class EditWishFragment : BaseFragment(), CoroutineScope {
 				name = input_name.text.toString(),
 				cost = input_cost.text.toString(),
 				importance = input_important.text.toString(),
-				info = input_info.text.toString())
+				info = input_info.text.toString()
+			)
 		}
 	}
 

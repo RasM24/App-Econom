@@ -15,7 +15,7 @@ class WishRepository(
 
 	suspend fun get(id: Int): Wish = wishDataSource.get(id)
 
-	fun update(wish: Wish) = launch { wishDataSource.update(wish) }.invokeOnCompletion { }
+	fun update(wish: Wish) = launch { wishDataSource.update(wish) }
 
 	fun insert(wish: Wish) = launch { wishDataSource.insert(wish) }
 
