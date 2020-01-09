@@ -14,6 +14,7 @@ import ru.endroad.arena.viewlayer.fragment.BaseFragment
 import ru.endroad.arena.viewmodellayer.await
 import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.econom.component.wish.model.Importance
+import ru.endroad.econom.feature.wishes.entity.EditScreenEvent
 import ru.endroad.econom.feature.wishes.presenter.WishEditViewModel
 import ru.endroad.navigation.finish
 
@@ -62,12 +63,13 @@ class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDisp
 			input_name.setText(name)
 			input_cost.setText("$cost")
 			apply.setOnClickListener {
-				viewModel.applyData(
-					name = input_name.text.toString(),
-					cost = input_cost.text.toString(),
-					importance = input_important.text.toString(),
-					info = input_info.text.toString(),
-					id = id
+				viewModel.event(
+					EditScreenEvent.Apply(
+						name = input_name.text.toString(),
+						cost = input_cost.text.toString(),
+						importance = input_important.text.toString(),
+						info = input_info.text.toString()
+					)
 				)
 			}
 		}
@@ -77,11 +79,13 @@ class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDisp
 		title = "Добавить"
 		apply.text = "Добавить"
 		apply.setOnClickListener {
-			viewModel.applyData(
-				name = input_name.text.toString(),
-				cost = input_cost.text.toString(),
-				importance = input_important.text.toString(),
-				info = input_info.text.toString()
+			viewModel.event(
+				EditScreenEvent.Apply(
+					name = input_name.text.toString(),
+					cost = input_cost.text.toString(),
+					importance = input_important.text.toString(),
+					info = input_info.text.toString()
+				)
 			)
 		}
 	}
