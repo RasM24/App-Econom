@@ -10,7 +10,9 @@ import ru.endroad.econom.feature.wishes.domain.CostValidator
 import ru.endroad.econom.feature.wishes.domain.ImportanceValidator
 import ru.endroad.econom.feature.wishes.domain.NameValidator
 import ru.endroad.econom.feature.wishes.entity.EditScreenEvent
-import ru.endroad.econom.feature.wishes.view.*
+import ru.endroad.econom.feature.wishes.entity.EditScreenState
+import ru.endroad.econom.feature.wishes.view.IWishEditViewModel
+import ru.endroad.econom.feature.wishes.view.StateW
 
 class WishEditViewModel(
 	private val addWish: AddWishUseCase,
@@ -18,10 +20,10 @@ class WishEditViewModel(
 	private val nameValidator: NameValidator,
 	private val costValidator: CostValidator,
 	private val importanceValidator: ImportanceValidator,
-	override val state: StateW
+	override val stateW: StateW
 ) : ViewModel(), IWishEditViewModel {
 
-	override val validation: MutableLiveData<FieldsValidation> = MutableLiveData()
+	override val state = MutableLiveData<EditScreenState>()
 
 	override fun event(event: EditScreenEvent) {
 		when (event) {
@@ -36,42 +38,38 @@ class WishEditViewModel(
 
 	private fun EditScreenEvent.NameInputChangeFocus.reduce() {
 		if (hasFocus)
-		//TODO("Сброс валидации")
+			state.value = EditScreenState.Validating(nameField = true)
 		else {
-			//TODO добавить изменение стейта
-			nameValidator.isNotEmpty(name)
-			nameValidator.isNotLong(name)
+			val nameField = nameValidator.isNotEmpty(name) && nameValidator.isNotLong(name)
+			state.value = EditScreenState.Validating(nameField = nameField)
 		}
 	}
 
 	private fun EditScreenEvent.CostInputChangeFocus.reduce() {
 		if (hasFocus)
-		//TODO("Сброс валидации")
+			state.value = EditScreenState.Validating(costField = true)
 		else {
-			//TODO добавить изменение стейта
-			costValidator(cost)
+			state.value = EditScreenState.Validating(costField = costValidator(cost))
 		}
 	}
 
 	private fun EditScreenEvent.ImportanceInputChangeFocus.reduce() {
 		if (hasFocus)
-		//TODO("Сброс валидации")
+			state.value = EditScreenState.Validating(importanceField = true)
 		else {
-			//TODO добавить изменение стейта
-			importanceValidator(importance)
+			state.value = EditScreenState.Validating(importanceField = importanceValidator(importance))
 		}
 	}
 
 	//TODO осторожно, говнокод!! Перейти на MVI и выпилить это дерьмо
 	private fun applyData(applyEvent: EditScreenEvent.ApplyClick) {
+		val nameField = nameValidator.isNotEmpty(applyEvent.name) && nameValidator.isNotLong(applyEvent.name)
+		val costField = costValidator(applyEvent.cost)
+		val importanceField = importanceValidator(applyEvent.importance)
 
-		validation.value = FieldsValidation(
-			nameValidator.isNotEmpty(applyEvent.name) && nameValidator.isNotLong(applyEvent.name),
-			costValidator(applyEvent.cost),
-			importanceValidator(applyEvent.importance)
-		)
+		state.value = EditScreenState.Validating(nameField, costField, importanceField)
 
-		if (validation.value?.validate == true) {
+		if (nameField && costField && importanceField) {
 			val wish = Wish(
 				name = applyEvent.name,
 				info = applyEvent.info,
@@ -79,10 +77,10 @@ class WishEditViewModel(
 				importance = Importance.valueOf(applyEvent.importance)
 			)
 
-			when (state) {
-				NewWishState     -> addWish(wish)
-				is EditWishState -> editWishUseCase(wish.apply { this.id = id }) //TODO передавать Id во вью модель
-			}
+			//			when (state) {
+			//				NewWishState     -> addWish(wish)
+			//				is EditWishState -> editWishUseCase(wish.apply { this.id = id }) //TODO передавать Id во вью модель
+			//			}
 		}
 	}
 }

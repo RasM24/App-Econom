@@ -30,7 +30,7 @@ val featureWishesModule = module {
 		WishEditViewModel(
 			addWish = get(),
 			editWishUseCase = get(),
-			state = get { parametersOf(id) },
+			stateW = get { parametersOf(id) },
 			nameValidator = get(),
 			costValidator = get(),
 			importanceValidator = get()

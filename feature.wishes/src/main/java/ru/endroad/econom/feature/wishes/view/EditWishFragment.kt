@@ -17,8 +17,8 @@ import ru.endroad.arena.viewmodellayer.await
 import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.econom.component.wish.model.Importance
 import ru.endroad.econom.feature.wishes.entity.EditScreenEvent
+import ru.endroad.econom.feature.wishes.entity.EditScreenState
 import ru.endroad.econom.feature.wishes.presenter.WishEditViewModel
-import ru.endroad.navigation.finish
 
 //TODO есть баг - при инвалидации поля он не возвращается к состоянию неошибки. Исправить с переходом на MVI
 class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDispatcher) {
@@ -51,16 +51,25 @@ class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDisp
 	}
 
 	override fun setupViewModel() {
-		when (val state = viewModel.state) {
+		when (val state = viewModel.stateW) {
 			NewWishState     -> renderAddWish()
 			is EditWishState -> renderEditWish(state)
 		}
-		viewModel.validation.subcribe(this) { validation ->
-			if (validation.validate) finish()
-
-			if (!validation.nameField) input_name_layout.error = "Текст не должен быть длиннее 40 символов"
-			if (!validation.costField) input_cost_layout.error = "Введите ценник"
-			if (!validation.importanceField) input_important_layout.error = "Выберите важность"
+		viewModel.state.subcribe(this) { state ->
+			if (state is EditScreenState.Validating) {
+				state.nameField?.let {
+					if (it) input_name_layout.error = null
+					else input_name_layout.error = "Текст не должен быть длиннее 40 символов"
+				}
+				state.costField?.let {
+					if (it) input_cost_layout.error = null
+					else input_cost_layout.error = "Введите ценник"
+				}
+				state.importanceField?.let {
+					if (it) input_important_layout.error = null
+					else input_important_layout.error = "Выберите важность"
+				}
+			}
 		}
 	}
 
