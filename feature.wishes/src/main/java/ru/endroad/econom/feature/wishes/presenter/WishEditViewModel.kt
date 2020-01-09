@@ -6,12 +6,18 @@ import ru.endroad.econom.component.wish.domain.AddWishUseCase
 import ru.endroad.econom.component.wish.domain.EditWishUseCase
 import ru.endroad.econom.component.wish.model.Importance
 import ru.endroad.econom.component.wish.model.Wish
+import ru.endroad.econom.feature.wishes.domain.CostValidator
+import ru.endroad.econom.feature.wishes.domain.ImportanceValidator
+import ru.endroad.econom.feature.wishes.domain.NameValidator
 import ru.endroad.econom.feature.wishes.entity.EditScreenEvent
 import ru.endroad.econom.feature.wishes.view.*
 
 class WishEditViewModel(
 	private val addWish: AddWishUseCase,
 	private val editWishUseCase: EditWishUseCase,
+	private val nameValidator: NameValidator,
+	private val costValidator: CostValidator,
+	private val importanceValidator: ImportanceValidator,
 	override val state: StateW
 ) : ViewModel(), IWishEditViewModel {
 
@@ -19,17 +25,45 @@ class WishEditViewModel(
 
 	override fun event(event: EditScreenEvent) {
 		when (event) {
-			is EditScreenEvent.Apply                    -> applyData(event)
+			is EditScreenEvent.ApplyClick                 -> applyData(event)
 
-			is EditScreenEvent.NameInputLostFocus       -> TODO()
-			is EditScreenEvent.InfoInputLostFocus       -> TODO()
-			is EditScreenEvent.CostInputLostFocus       -> TODO()
-			is EditScreenEvent.ImportanceInputLostFocus -> TODO()
+			is EditScreenEvent.NameInputChangeFocus       -> event.reduce()
+			is EditScreenEvent.InfoInputChangeFocus       -> Unit
+			is EditScreenEvent.CostInputChangeFocus       -> event.reduce()
+			is EditScreenEvent.ImportanceInputChangeFocus -> event.reduce()
+		}
+	}
+
+	private fun EditScreenEvent.NameInputChangeFocus.reduce() {
+		if (hasFocus)
+			//TODO("Сброс валидации")
+		else {
+			//TODO добавить изменение стейта
+			nameValidator.isNotEmpty(name)
+			nameValidator.isNotLong(name)
+		}
+	}
+
+	private fun EditScreenEvent.CostInputChangeFocus.reduce() {
+		if (hasFocus)
+			//TODO("Сброс валидации")
+		else {
+			//TODO добавить изменение стейта
+			costValidator(cost)
+		}
+	}
+
+	private fun EditScreenEvent.ImportanceInputChangeFocus.reduce() {
+		if (hasFocus)
+			//TODO("Сброс валидации")
+		else {
+			//TODO добавить изменение стейта
+			importanceValidator(importance)
 		}
 	}
 
 	//TODO осторожно, говнокод!! Перейти на MVI и выпилить это дерьмо
-	private fun applyData(applyEvent: EditScreenEvent.Apply) {
+	private fun applyData(applyEvent: EditScreenEvent.ApplyClick) {
 		val validation = FieldsValidation.validate(applyEvent.name, applyEvent.cost, applyEvent.importance)
 
 		this.validation.value = validation

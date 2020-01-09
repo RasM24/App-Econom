@@ -1,6 +1,8 @@
 package ru.endroad.econom.feature.wishes.view
 
 import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.wish_edit_fragment.*
 import kotlinx.coroutines.CoroutineScope
@@ -27,14 +29,22 @@ class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDisp
 	override val layout: Int = R.layout.wish_edit_fragment
 
 	override fun setupViewComponents() {
+		input_name.bindChangeFocus(EditScreenEvent::NameInputChangeFocus)
+		input_info.bindChangeFocus(EditScreenEvent::InfoInputChangeFocus)
+		input_cost.bindChangeFocus(EditScreenEvent::CostInputChangeFocus)
+		input_important.bindChangeFocus(EditScreenEvent::ImportanceInputChangeFocus)
 
-		val importances = Importance.values()
-			.map(Importance::name)
+		apply.bindClick {
+			EditScreenEvent.ApplyClick(name = input_name.text.toString(),
+									   cost = input_cost.text.toString(),
+									   importance = input_important.text.toString(),
+									   info = input_info.text.toString())
+		}
+
+		val importances = Importance.values().map(Importance::name)
 
 		val adapter = ArrayAdapter(
-			context!!,
-			R.layout.dropdown,
-			importances
+			context!!, R.layout.dropdown, importances
 		)
 
 		input_important.setAdapter(adapter)
@@ -46,8 +56,7 @@ class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDisp
 			is EditWishState -> renderEditWish(state)
 		}
 		viewModel.validation.subcribe(this) { validation ->
-			if (validation.validate)
-				finish()
+			if (validation.validate) finish()
 
 			if (!validation.nameField) input_name_layout.error = "Текст не должен быть длиннее 40 символов"
 			if (!validation.costField) input_cost_layout.error = "Введите ценник"
@@ -62,32 +71,22 @@ class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDisp
 		await(wishState.wish) {
 			input_name.setText(name)
 			input_cost.setText("$cost")
-			apply.setOnClickListener {
-				viewModel.event(
-					EditScreenEvent.Apply(
-						name = input_name.text.toString(),
-						cost = input_cost.text.toString(),
-						importance = input_important.text.toString(),
-						info = input_info.text.toString()
-					)
-				)
-			}
 		}
 	}
 
 	private fun renderAddWish() {
 		title = "Добавить"
 		apply.text = "Добавить"
-		apply.setOnClickListener {
-			viewModel.event(
-				EditScreenEvent.Apply(
-					name = input_name.text.toString(),
-					cost = input_cost.text.toString(),
-					importance = input_important.text.toString(),
-					info = input_info.text.toString()
-				)
-			)
+	}
+
+	private fun EditText.bindChangeFocus(onLostFocus: (String, Boolean) -> EditScreenEvent) {
+		setOnFocusChangeListener { _, hasFocus ->
+			viewModel.event(onLostFocus(text.toString(), hasFocus))
 		}
+	}
+
+	private fun Button.bindClick(click: () -> EditScreenEvent) {
+		setOnClickListener { viewModel.event(click()) }
 	}
 
 	companion object {
