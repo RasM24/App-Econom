@@ -2,8 +2,12 @@ package ru.endroad.econom.feature.wishes.presenter
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import ru.endroad.econom.component.wish.domain.AddWishUseCase
 import ru.endroad.econom.component.wish.domain.EditWishUseCase
+import ru.endroad.econom.component.wish.domain.GetWishUseCase
 import ru.endroad.econom.component.wish.model.Importance
 import ru.endroad.econom.component.wish.model.Wish
 import ru.endroad.econom.feature.wishes.domain.CostValidator
@@ -12,18 +16,25 @@ import ru.endroad.econom.feature.wishes.domain.NameValidator
 import ru.endroad.econom.feature.wishes.entity.EditScreenEvent
 import ru.endroad.econom.feature.wishes.entity.EditScreenState
 import ru.endroad.econom.feature.wishes.view.IWishEditViewModel
-import ru.endroad.econom.feature.wishes.view.StateW
 
 class WishEditViewModel(
+	private val wishId: Int?,
+	private val getWish: GetWishUseCase,
 	private val addWish: AddWishUseCase,
 	private val editWishUseCase: EditWishUseCase,
 	private val nameValidator: NameValidator,
 	private val costValidator: CostValidator,
-	private val importanceValidator: ImportanceValidator,
-	override val stateW: StateW
+	private val importanceValidator: ImportanceValidator
 ) : ViewModel(), IWishEditViewModel {
 
 	override val state = MutableLiveData<EditScreenState>()
+		.apply {
+			viewModelScope.launch {
+				value = wishId?.let {
+					EditScreenState.InitialEditWish(getWish(wishId))
+				} ?: EditScreenState.InitialNewWish
+			}
+		}
 
 	override fun event(event: EditScreenEvent) {
 		when (event) {
@@ -70,17 +81,18 @@ class WishEditViewModel(
 		state.value = EditScreenState.Validating(nameField, costField, importanceField)
 
 		if (nameField && costField && importanceField) {
-			val wish = Wish(
-				name = applyEvent.name,
-				info = applyEvent.info,
-				cost = applyEvent.cost.toInt(),
-				importance = Importance.valueOf(applyEvent.importance)
-			)
+			val wish = Wish(name = applyEvent.name,
+							info = applyEvent.info,
+							cost = applyEvent.cost.toInt(),
+							importance = Importance.valueOf(applyEvent.importance))
 
-			//			when (state) {
-			//				NewWishState     -> addWish(wish)
-			//				is EditWishState -> editWishUseCase(wish.apply { this.id = id }) //TODO передавать Id во вью модель
-			//			}
+			wish.update().invokeOnCompletion {
+				//TODO добавить закрытие экрана
+			}
+
 		}
 	}
+
+	private fun Wish.update(): Job = wishId?.let { editWishUseCase(copy(id = it)) }
+		?: addWish(this)
 }

@@ -13,7 +13,6 @@ import ru.endroad.arena.data.uiDispatcher
 import ru.endroad.arena.viewlayer.extension.argumentOptional
 import ru.endroad.arena.viewlayer.extension.withArgument
 import ru.endroad.arena.viewlayer.fragment.BaseFragment
-import ru.endroad.arena.viewmodellayer.await
 import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.econom.component.wish.model.Importance
 import ru.endroad.econom.feature.wishes.entity.EditScreenEvent
@@ -51,33 +50,20 @@ class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDisp
 	}
 
 	override fun setupViewModel() {
-		when (val state = viewModel.stateW) {
-			NewWishState     -> renderAddWish()
-			is EditWishState -> renderEditWish(state)
-		}
 		viewModel.state.subcribe(this) { state ->
-			if (state is EditScreenState.Validating) {
-				state.nameField?.let {
-					if (it) input_name_layout.error = null
-					else input_name_layout.error = "Текст не должен быть длиннее 40 символов"
-				}
-				state.costField?.let {
-					if (it) input_cost_layout.error = null
-					else input_cost_layout.error = "Введите ценник"
-				}
-				state.importanceField?.let {
-					if (it) input_important_layout.error = null
-					else input_important_layout.error = "Выберите важность"
-				}
+			when (state) {
+				EditScreenState.InitialNewWish     -> renderAddWish()
+				is EditScreenState.InitialEditWish -> renderEditWish(state)
+				is EditScreenState.Validating      -> renderValidatingFields(state)
 			}
 		}
 	}
 
-	private fun renderEditWish(wishState: EditWishState) {
+	private fun renderEditWish(state: EditScreenState.InitialEditWish) {
 		title = "Изменить"
 		apply.text = "Изменить"
 
-		await(wishState.wish) {
+		state.wish.run {
 			input_name.setText(name)
 			input_cost.setText("$cost")
 		}
@@ -86,6 +72,21 @@ class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDisp
 	private fun renderAddWish() {
 		title = "Добавить"
 		apply.text = "Добавить"
+	}
+
+	private fun renderValidatingFields(state: EditScreenState.Validating) {
+		state.nameField?.let {
+			if (it) input_name_layout.error = null
+			else input_name_layout.error = "Текст не должен быть длиннее 40 символов"
+		}
+		state.costField?.let {
+			if (it) input_cost_layout.error = null
+			else input_cost_layout.error = "Введите ценник"
+		}
+		state.importanceField?.let {
+			if (it) input_important_layout.error = null
+			else input_important_layout.error = "Выберите важность"
+		}
 	}
 
 	private fun EditText.bindChangeFocus(onLostFocus: (String, Boolean) -> EditScreenEvent) {
