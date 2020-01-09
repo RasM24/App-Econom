@@ -16,6 +16,7 @@ import ru.endroad.econom.component.wish.model.Wish
 import ru.endroad.econom.feature.wishes.presenter.WishListViewModel
 import ru.endroad.navigation.forwardTo
 
+//TODO перевести всю навигацию на роутинг в app-модуле
 class WishListFragment : ListFragment(), CoroutineScope by CoroutineScope(uiDispatcher) {
 
 	private val viewModel: IWishListViewModel by viewModel<WishListViewModel>()
@@ -44,7 +45,7 @@ class WishListFragment : ListFragment(), CoroutineScope by CoroutineScope(uiDisp
 	override fun setupViewComponents() {
 		title = "Сколько еще копить?"
 		setDivider(R.drawable.divider_horizontal)
-		fab.setOnClickListener { fragmentManager?.forwardTo(EditWishFragment.getInstance(), R.id.root) }
+		fab.setOnClickListener { fragmentManager?.forwardTo(EditWishFragment.getInstance(), R.id.content) }
 	}
 
 	override fun onClickItem(item: IModelItem<*, *>): Boolean {
