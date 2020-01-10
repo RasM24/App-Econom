@@ -1,6 +1,7 @@
 package ru.endroad.econom.feature.wishes.view
 
 import androidx.fragment.app.Fragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mikepenz.fastadapter.IModelItem
 import kotlinx.android.synthetic.main.wish_fragment_list.*
 import kotlinx.coroutines.CoroutineScope
@@ -13,6 +14,7 @@ import ru.endroad.birusa.feature.estimation.TotalItem
 import ru.endroad.birusa.feature.estimation.map
 import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.econom.component.wish.model.Wish
+import ru.endroad.econom.feature.wishes.entity.ListScreenEvent
 import ru.endroad.econom.feature.wishes.presenter.WishListViewModel
 
 //TODO перевести всю навигацию на роутинг в app-модуле
@@ -44,7 +46,8 @@ class WishListFragment : ListFragment(), CoroutineScope by CoroutineScope(uiDisp
 	override fun setupViewComponents() {
 		title = "Сколько еще копить?"
 		setDivider(R.drawable.divider_horizontal)
-		fab.setOnClickListener {viewModel.openNewWishScreen()  }
+
+		new_wish.bindClick(ListScreenEvent::NewWishClick)
 	}
 
 	override fun onClickItem(item: IModelItem<*, *>): Boolean {
@@ -56,6 +59,10 @@ class WishListFragment : ListFragment(), CoroutineScope by CoroutineScope(uiDisp
 			onClickDeleteListener = { viewModel.delete(model) })
 
 		return super.onClickItem(item)
+	}
+
+	private fun FloatingActionButton.bindClick(onClick: () -> ListScreenEvent) {
+		setOnClickListener { viewModel.reduce(onClick()) }
 	}
 
 	companion object {

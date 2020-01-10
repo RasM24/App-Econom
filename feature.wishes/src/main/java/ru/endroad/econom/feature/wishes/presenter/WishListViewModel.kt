@@ -18,6 +18,8 @@ import ru.endroad.econom.component.wish.domain.PerformWishUseCase
 import ru.endroad.econom.component.wish.model.Wish
 import ru.endroad.econom.component.wish.model.WishList
 import ru.endroad.econom.feature.wishes.WishFlowRouting
+import ru.endroad.econom.feature.wishes.entity.ListScreenEvent
+import ru.endroad.econom.feature.wishes.entity.ListScreenEvent.*
 import ru.endroad.econom.feature.wishes.view.IWishListViewModel
 
 class WishListViewModel(
@@ -29,6 +31,15 @@ class WishListViewModel(
 ) : ViewModel(),
 	IWishListViewModel,
 	CoroutineScope by CoroutineScope(bgDispatcher) {
+
+	override fun reduce(event: ListScreenEvent) {
+		when (event) {
+			is NewWishClick -> router.openWishNewScreen()
+			is PerformClick -> TODO()
+			is DeleteClick  -> TODO()
+			is EditClick    -> TODO()
+		}
+	}
 
 	override val data: LiveData<WishList> = liveData { getWishListLiveData().collect(::emit) }
 
@@ -47,6 +58,4 @@ class WishListViewModel(
 	override fun delete(wish: Wish) {
 		viewModelScope.launch { deleteWish(wish) }
 	}
-
-	override fun openNewWishScreen() = router.openWishNewScreen()
 }
