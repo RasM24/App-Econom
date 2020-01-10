@@ -18,6 +18,7 @@ import ru.endroad.econom.component.wish.model.Importance
 import ru.endroad.econom.feature.wishes.entity.EditScreenEvent
 import ru.endroad.econom.feature.wishes.entity.EditScreenState
 import ru.endroad.econom.feature.wishes.presenter.WishEditViewModel
+import ru.endroad.navigation.finish
 
 //TODO есть баг - при инвалидации поля он не возвращается к состоянию неошибки. Исправить с переходом на MVI
 class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDispatcher) {
@@ -55,6 +56,7 @@ class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDisp
 				EditScreenState.InitialNewWish     -> renderAddWish()
 				is EditScreenState.InitialEditWish -> renderEditWish(state)
 				is EditScreenState.Validating      -> renderValidatingFields(state)
+				EditScreenState.WishSaved          -> finish()
 			}
 		}
 	}

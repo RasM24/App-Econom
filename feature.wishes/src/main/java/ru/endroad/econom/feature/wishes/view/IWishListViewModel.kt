@@ -12,6 +12,6 @@ interface IWishListViewModel {
 	val data: LiveData<WishList>
 	fun getInfo(wish: Wish)
 	fun perform(wish: Wish)
-	fun delete(wish: Wish): Job
+	fun delete(wish: Wish)
 	fun calculateEstimationAsync(sum: Int): Deferred<TotalResult>
 }

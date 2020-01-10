@@ -2,7 +2,7 @@ package ru.endroad.econom.component.wish.datasource
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.endroad.arena.data.bgDispatcher
 import ru.endroad.econom.component.wish.model.Wish
 import ru.endroad.econom.component.wish.model.WishList
@@ -13,11 +13,11 @@ class WishRepository(
 
 	fun getList(): Flow<WishList> = wishDataSource.getList()
 
-	suspend fun get(id: Int): Wish = wishDataSource.get(id)
+	suspend fun get(id: Int): Wish = withContext(bgDispatcher) { wishDataSource.get(id) }
 
-	fun update(wish: Wish) = launch { wishDataSource.update(wish) }
+	suspend fun update(wish: Wish) = withContext(bgDispatcher) { wishDataSource.update(wish) }
 
-	fun insert(wish: Wish) = launch { wishDataSource.insert(wish) }
+	suspend fun insert(wish: Wish) = withContext(bgDispatcher) { wishDataSource.insert(wish) }
 
-	fun delete(wish: Wish) = launch { wishDataSource.delete(wish) }
+	suspend fun delete(wish: Wish) = withContext(bgDispatcher) { wishDataSource.delete(wish) }
 }

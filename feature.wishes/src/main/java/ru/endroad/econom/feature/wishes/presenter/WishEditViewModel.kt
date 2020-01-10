@@ -3,7 +3,6 @@ package ru.endroad.econom.feature.wishes.presenter
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import ru.endroad.econom.component.wish.domain.AddWishUseCase
 import ru.endroad.econom.component.wish.domain.EditWishUseCase
@@ -86,13 +85,13 @@ class WishEditViewModel(
 							cost = applyEvent.cost.toInt(),
 							importance = Importance.valueOf(applyEvent.importance))
 
-			wish.update().invokeOnCompletion {
-				//TODO добавить закрытие экрана
+			viewModelScope.launch {
+				wish.saving()
+				state.value = EditScreenState.WishSaved
 			}
-
 		}
 	}
 
-	private fun Wish.update(): Job = wishId?.let { editWishUseCase(copy(id = it)) }
+	private suspend fun Wish.saving() = wishId?.let { editWishUseCase(copy(id = it)) }
 		?: addWish(this)
 }

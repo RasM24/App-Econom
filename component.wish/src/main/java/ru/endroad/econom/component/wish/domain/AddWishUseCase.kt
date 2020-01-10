@@ -5,5 +5,5 @@ import ru.endroad.econom.component.wish.model.Wish
 
 class AddWishUseCase(private val wishRepository: WishRepository) {
 
-	operator fun invoke(wish: Wish) = wishRepository.insert(wish)
+	suspend operator fun invoke(wish: Wish) = wishRepository.insert(wish)
 }
