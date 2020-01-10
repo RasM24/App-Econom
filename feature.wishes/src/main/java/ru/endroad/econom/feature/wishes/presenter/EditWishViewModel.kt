@@ -16,7 +16,7 @@ import ru.endroad.econom.feature.wishes.entity.EditScreenEvent
 import ru.endroad.econom.feature.wishes.entity.EditScreenState
 import ru.endroad.econom.feature.wishes.view.IWishEditViewModel
 
-class WishEditViewModel(
+class EditWishViewModel(
 	private val wishId: Int?,
 	private val getWish: GetWishUseCase,
 	private val addWish: AddWishUseCase,
@@ -37,53 +37,58 @@ class WishEditViewModel(
 
 	override fun event(event: EditScreenEvent) {
 		when (event) {
-			is EditScreenEvent.ApplyClick                 -> applyData(event)
+			is EditScreenEvent.ApplyClick                  -> event.applyData()
 
-			is EditScreenEvent.NameInputChangeFocus       -> event.reduce()
-			is EditScreenEvent.InfoInputChangeFocus       -> Unit
-			is EditScreenEvent.CostInputChangeFocus       -> event.reduce()
-			is EditScreenEvent.ImportanceInputChangeFocus -> event.reduce()
+			is EditScreenEvent.NameInputLostFocus          -> event.reduce()
+			is EditScreenEvent.InfoInputLostFocus          -> Unit
+			is EditScreenEvent.CostInputLostFocus          -> event.reduce()
+			is EditScreenEvent.ImportanceInputLostFocus    -> event.reduce()
+
+			is EditScreenEvent.NameInputReceiveFocus       -> event.reduce()
+			is EditScreenEvent.InfoInputReceiveFocus       -> Unit
+			is EditScreenEvent.CostInputReceiveFocus       -> event.reduce()
+			is EditScreenEvent.ImportanceInputReceiveFocus -> event.reduce()
 		}
 	}
 
-	private fun EditScreenEvent.NameInputChangeFocus.reduce() {
-		if (hasFocus)
-			state.value = EditScreenState.Validating(nameField = true)
-		else {
-			val nameField = nameValidator.isNotEmpty(name) && nameValidator.isNotLong(name)
-			state.value = EditScreenState.Validating(nameField = nameField)
-		}
+	private fun EditScreenEvent.NameInputLostFocus.reduce() {
+		val nameField = nameValidator.isNotEmpty(name) && nameValidator.isNotLong(name)
+		state.value = EditScreenState.Validating(nameField = nameField)
 	}
 
-	private fun EditScreenEvent.CostInputChangeFocus.reduce() {
-		if (hasFocus)
-			state.value = EditScreenState.Validating(costField = true)
-		else {
-			state.value = EditScreenState.Validating(costField = costValidator(cost))
-		}
+	private fun EditScreenEvent.CostInputLostFocus.reduce() {
+		state.value = EditScreenState.Validating(costField = costValidator(cost))
 	}
 
-	private fun EditScreenEvent.ImportanceInputChangeFocus.reduce() {
-		if (hasFocus)
-			state.value = EditScreenState.Validating(importanceField = true)
-		else {
-			state.value = EditScreenState.Validating(importanceField = importanceValidator(importance))
-		}
+	private fun EditScreenEvent.ImportanceInputLostFocus.reduce() {
+		state.value = EditScreenState.Validating(importanceField = importanceValidator(importance))
+	}
+
+	private fun EditScreenEvent.NameInputReceiveFocus.reduce() {
+		state.value = EditScreenState.Validating(nameField = true)
+	}
+
+	private fun EditScreenEvent.CostInputReceiveFocus.reduce() {
+		state.value = EditScreenState.Validating(costField = true)
+	}
+
+	private fun EditScreenEvent.ImportanceInputReceiveFocus.reduce() {
+		state.value = EditScreenState.Validating(importanceField = true)
 	}
 
 	//TODO осторожно, говнокод!! Перейти на MVI и выпилить это дерьмо
-	private fun applyData(applyEvent: EditScreenEvent.ApplyClick) {
-		val nameField = nameValidator.isNotEmpty(applyEvent.name) && nameValidator.isNotLong(applyEvent.name)
-		val costField = costValidator(applyEvent.cost)
-		val importanceField = importanceValidator(applyEvent.importance)
+	private fun EditScreenEvent.ApplyClick.applyData() {
+		val nameField = nameValidator.isNotEmpty(name) && nameValidator.isNotLong(name)
+		val costField = costValidator(cost)
+		val importanceField = importanceValidator(importance)
 
 		state.value = EditScreenState.Validating(nameField, costField, importanceField)
 
 		if (nameField && costField && importanceField) {
-			val wish = Wish(name = applyEvent.name,
-							info = applyEvent.info,
-							cost = applyEvent.cost.toInt(),
-							importance = Importance.valueOf(applyEvent.importance))
+			val wish = Wish(name = name,
+							info = info,
+							cost = cost.toInt(),
+							importance = Importance.valueOf(importance))
 
 			viewModelScope.launch {
 				wish.saving()

@@ -7,7 +7,7 @@ import ru.endroad.arena.viewmodellayer.viewModel
 import ru.endroad.econom.feature.wishes.domain.CostValidator
 import ru.endroad.econom.feature.wishes.domain.ImportanceValidator
 import ru.endroad.econom.feature.wishes.domain.NameValidator
-import ru.endroad.econom.feature.wishes.presenter.WishEditViewModel
+import ru.endroad.econom.feature.wishes.presenter.EditWishViewModel
 import ru.endroad.econom.feature.wishes.presenter.WishListViewModel
 
 val featureWishesModule = module {
@@ -19,7 +19,7 @@ val featureWishesModule = module {
 	viewModel<WishListViewModel>()
 
 	viewModel { (id: Int?) ->
-		WishEditViewModel(
+		EditWishViewModel(
 			getWish = get(),
 			addWish = get(),
 			editWishUseCase = get(),

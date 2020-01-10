@@ -17,22 +17,21 @@ import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.econom.component.wish.model.Importance
 import ru.endroad.econom.feature.wishes.entity.EditScreenEvent
 import ru.endroad.econom.feature.wishes.entity.EditScreenState
-import ru.endroad.econom.feature.wishes.presenter.WishEditViewModel
+import ru.endroad.econom.feature.wishes.presenter.EditWishViewModel
 import ru.endroad.navigation.finish
 
-//TODO есть баг - при инвалидации поля он не возвращается к состоянию неошибки. Исправить с переходом на MVI
 class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDispatcher) {
 
 	private val wishId: Int? by argumentOptional(WISH_ID)
-	private val viewModel: IWishEditViewModel by viewModel<WishEditViewModel> { parametersOf(wishId) }
+	private val viewModel: IWishEditViewModel by viewModel<EditWishViewModel> { parametersOf(wishId) }
 
 	override val layout: Int = R.layout.wish_edit_fragment
 
 	override fun setupViewComponents() {
-		input_name.bindChangeFocus(EditScreenEvent::NameInputChangeFocus)
-		input_info.bindChangeFocus(EditScreenEvent::InfoInputChangeFocus)
-		input_cost.bindChangeFocus(EditScreenEvent::CostInputChangeFocus)
-		input_important.bindChangeFocus(EditScreenEvent::ImportanceInputChangeFocus)
+		input_name.bindChangeFocus(EditScreenEvent::NameInputLostFocus, EditScreenEvent::NameInputReceiveFocus)
+		input_info.bindChangeFocus(EditScreenEvent::InfoInputLostFocus, EditScreenEvent::InfoInputReceiveFocus)
+		input_cost.bindChangeFocus(EditScreenEvent::CostInputLostFocus, EditScreenEvent::CostInputReceiveFocus)
+		input_important.bindChangeFocus(EditScreenEvent::ImportanceInputLostFocus, EditScreenEvent::ImportanceInputReceiveFocus)
 
 		apply.bindClick {
 			EditScreenEvent.ApplyClick(name = input_name.text.toString(),
@@ -94,9 +93,12 @@ class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDisp
 		}
 	}
 
-	private fun EditText.bindChangeFocus(onLostFocus: (String, Boolean) -> EditScreenEvent) {
+	private fun EditText.bindChangeFocus(onLostFocus: (String) -> EditScreenEvent, onReceiveFocus: () -> EditScreenEvent) {
 		setOnFocusChangeListener { _, hasFocus ->
-			viewModel.event(onLostFocus(text.toString(), hasFocus))
+			if (hasFocus)
+				viewModel.event(onReceiveFocus())
+			else
+				viewModel.event(onLostFocus(text.toString()))
 		}
 	}
 
