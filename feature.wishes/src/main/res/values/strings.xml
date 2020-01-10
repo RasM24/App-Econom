@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="importance_input_error">Выберите важность</string>
+	<string name="cost_input_error">Введите ценник</string>
+	<string name="name_input_error">Текст не должен быть длиннее 40 символов</string>
+</resources>

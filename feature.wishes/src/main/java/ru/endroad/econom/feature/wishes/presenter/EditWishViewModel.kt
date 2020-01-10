@@ -13,6 +13,7 @@ import ru.endroad.econom.feature.wishes.domain.CostValidator
 import ru.endroad.econom.feature.wishes.domain.ImportanceValidator
 import ru.endroad.econom.feature.wishes.domain.NameValidator
 import ru.endroad.econom.feature.wishes.entity.EditScreenEvent
+import ru.endroad.econom.feature.wishes.entity.EditScreenEvent.*
 import ru.endroad.econom.feature.wishes.entity.EditScreenState
 
 class EditWishViewModel(
@@ -35,65 +36,51 @@ class EditWishViewModel(
 
 	override fun reduce(event: EditScreenEvent) {
 		when (event) {
-			is EditScreenEvent.ApplyClick                  -> event.applyData()
+			is ApplyClick                  -> event.reduceAndApply()
 
-			is EditScreenEvent.NameInputLostFocus          -> event.reduce()
-			is EditScreenEvent.InfoInputLostFocus          -> Unit
-			is EditScreenEvent.CostInputLostFocus          -> event.reduce()
-			is EditScreenEvent.ImportanceInputLostFocus    -> event.reduce()
+			is NameInputLostFocus          -> event.reduce().applyState()
+			is InfoInputLostFocus          -> Unit
+			is CostInputLostFocus          -> event.reduce().applyState()
+			is ImportanceInputLostFocus    -> event.reduce().applyState()
 
-			is EditScreenEvent.NameInputReceiveFocus       -> event.reduce()
-			is EditScreenEvent.InfoInputReceiveFocus       -> Unit
-			is EditScreenEvent.CostInputReceiveFocus       -> event.reduce()
-			is EditScreenEvent.ImportanceInputReceiveFocus -> event.reduce()
+			is NameInputReceiveFocus       -> event.reduce().applyState()
+			is InfoInputReceiveFocus       -> Unit
+			is CostInputReceiveFocus       -> event.reduce().applyState()
+			is ImportanceInputReceiveFocus -> event.reduce().applyState()
 		}
 	}
 
-	private fun EditScreenEvent.NameInputLostFocus.reduce() {
+	private fun NameInputLostFocus.reduce(): EditScreenState {
 		val nameField = nameValidator.isNotEmpty(name) && nameValidator.isNotLong(name)
-		EditScreenState.Validating(nameField = nameField).applyState()
+		return EditScreenState.Validating(nameField = nameField)
 	}
 
-	private fun EditScreenEvent.CostInputLostFocus.reduce() {
-		EditScreenState.Validating(costField = costValidator(cost)).applyState()
-	}
+	private fun CostInputLostFocus.reduce() = EditScreenState.Validating(costField = costValidator(cost))
 
-	private fun EditScreenEvent.ImportanceInputLostFocus.reduce() {
-		EditScreenState.Validating(importanceField = importanceValidator(importance)).applyState()
-	}
+	private fun ImportanceInputLostFocus.reduce() = EditScreenState.Validating(importanceField = importanceValidator(importance))
 
-	private fun EditScreenEvent.NameInputReceiveFocus.reduce() {
-		EditScreenState.Validating(nameField = true).applyState()
-	}
+	private fun NameInputReceiveFocus.reduce() = EditScreenState.Validating(nameField = true)
 
-	private fun EditScreenEvent.CostInputReceiveFocus.reduce() {
-		EditScreenState.Validating(costField = true).applyState()
-	}
+	private fun CostInputReceiveFocus.reduce() = EditScreenState.Validating(costField = true)
 
-	private fun EditScreenEvent.ImportanceInputReceiveFocus.reduce() {
-		EditScreenState.Validating(importanceField = true).applyState()
-	}
+	private fun ImportanceInputReceiveFocus.reduce() = EditScreenState.Validating(importanceField = true)
 
-	private fun EditScreenEvent.ApplyClick.applyData() {
+	private fun ApplyClick.reduceAndApply() {
 		val nameField = nameValidator.isNotEmpty(name) && nameValidator.isNotLong(name)
 		val costField = costValidator(cost)
 		val importanceField = importanceValidator(importance)
 
-		EditScreenState.Validating(nameField, costField, importanceField).applyState()
-
-		if (nameField && costField && importanceField) {
-			val wish = Wish(name = name,
-							info = info,
-							cost = cost.toInt(),
-							importance = Importance.valueOf(importance))
-
-			viewModelScope.launch {
-				wish.saving()
-				EditScreenState.WishSaved.applyState()
-			}
-		}
+		if (nameField && costField && importanceField)
+			viewModelScope.launch { saveWish(name, info, cost.toInt(), Importance.valueOf(importance)).applyState() }
+		else
+			EditScreenState.Validating(nameField, costField, importanceField).applyState()
 	}
 
-	private suspend fun Wish.saving() = wishId?.let { editWishUseCase(copy(id = it)) }
-		?: addWish(this)
+	//TODO можно вынести в domain
+	private suspend fun saveWish(name: String, info: String, cost: Int, importance: Importance): EditScreenState {
+		val wish = Wish(name = name, info = info, cost = cost, importance = importance)
+		wishId?.let { editWishUseCase(wish.copy(id = it)) } ?: addWish(wish)
+
+		return EditScreenState.WishSaved
+	}
 }
