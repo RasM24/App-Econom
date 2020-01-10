@@ -32,7 +32,7 @@ class WishListViewModel(
 
 	override val data: LiveData<WishList> = liveData { getWishListLiveData().collect(::emit) }
 
-	override fun getInfo(wish: Wish) {}
+	override fun edit(wish: Wish) = router.openWishEditScreen(wish.id)
 
 	override fun calculateEstimationAsync(sum: Int): Deferred<TotalResult> = async {
 		val estimation = getRandomEstimation()

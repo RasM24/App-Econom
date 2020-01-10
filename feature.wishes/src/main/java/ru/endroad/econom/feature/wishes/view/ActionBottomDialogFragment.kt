@@ -34,9 +34,9 @@ class ActionBottomDialogFragment(
 
 fun Fragment.showBottomSheetActionWish(
 	onClickCompleteListener: () -> Unit,
-	onClickInfoListener: () -> Unit,
+	onClickEditListener: () -> Unit,
 	onClickDeleteListener: () -> Unit
 ) = fragmentManager?.let {
-	ActionBottomDialogFragment(onClickCompleteListener, onClickInfoListener, onClickDeleteListener)
+	ActionBottomDialogFragment(onClickCompleteListener, onClickEditListener, onClickDeleteListener)
 		.show(it, null)
 }

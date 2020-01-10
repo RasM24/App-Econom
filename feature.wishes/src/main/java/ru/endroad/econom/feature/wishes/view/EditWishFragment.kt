@@ -41,10 +41,11 @@ class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDisp
 									   info = input_info.text.toString())
 		}
 
-		val importances = Importance.values().map(Importance::name)
+		val importances = Importance.values()
+			.map(Importance::name)
 
 		val adapter = ArrayAdapter(
-			context!!, R.layout.dropdown, importances
+			requireContext(), R.layout.dropdown, importances
 		)
 
 		input_important.setAdapter(adapter)
@@ -68,6 +69,8 @@ class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDisp
 		state.wish.run {
 			input_name.setText(name)
 			input_cost.setText("$cost")
+			input_info.setText(info)
+			input_important.setText(importance.name, false)
 		}
 	}
 

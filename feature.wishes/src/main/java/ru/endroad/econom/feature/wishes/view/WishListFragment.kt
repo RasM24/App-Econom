@@ -14,7 +14,6 @@ import ru.endroad.birusa.feature.estimation.map
 import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.econom.component.wish.model.Wish
 import ru.endroad.econom.feature.wishes.presenter.WishListViewModel
-import ru.endroad.navigation.forwardTo
 
 //TODO перевести всю навигацию на роутинг в app-модуле
 class WishListFragment : ListFragment(), CoroutineScope by CoroutineScope(uiDispatcher) {
@@ -53,7 +52,7 @@ class WishListFragment : ListFragment(), CoroutineScope by CoroutineScope(uiDisp
 
 		showBottomSheetActionWish(
 			onClickCompleteListener = { viewModel.perform(model) },
-			onClickInfoListener = { viewModel.getInfo(model) },
+			onClickEditListener = { viewModel.edit(model) },
 			onClickDeleteListener = { viewModel.delete(model) })
 
 		return super.onClickItem(item)
