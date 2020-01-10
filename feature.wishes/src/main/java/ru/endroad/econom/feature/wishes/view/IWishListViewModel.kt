@@ -14,4 +14,5 @@ interface IWishListViewModel {
 	fun perform(wish: Wish)
 	fun delete(wish: Wish)
 	fun calculateEstimationAsync(sum: Int): Deferred<TotalResult>
+	fun openNewWishScreen()
 }

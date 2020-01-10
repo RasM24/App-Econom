@@ -17,12 +17,14 @@ import ru.endroad.econom.component.wish.domain.GetWishListLiveDataUseCase
 import ru.endroad.econom.component.wish.domain.PerformWishUseCase
 import ru.endroad.econom.component.wish.model.Wish
 import ru.endroad.econom.component.wish.model.WishList
+import ru.endroad.econom.feature.wishes.WishFlowRouting
 import ru.endroad.econom.feature.wishes.view.IWishListViewModel
 
 class WishListViewModel(
 	private val deleteWish: DeleteWishUseCase,
 	private val performWish: PerformWishUseCase,
 	private val getRandomEstimation: GetRandomEstimationUseCase,
+	private val router: WishFlowRouting,
 	getWishListLiveData: GetWishListLiveDataUseCase
 ) : ViewModel(),
 	IWishListViewModel,
@@ -45,4 +47,6 @@ class WishListViewModel(
 	override fun delete(wish: Wish) {
 		viewModelScope.launch { deleteWish(wish) }
 	}
+
+	override fun openNewWishScreen() = router.openWishNewScreen()
 }

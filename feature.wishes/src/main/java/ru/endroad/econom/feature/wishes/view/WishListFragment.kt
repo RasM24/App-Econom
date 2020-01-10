@@ -45,7 +45,7 @@ class WishListFragment : ListFragment(), CoroutineScope by CoroutineScope(uiDisp
 	override fun setupViewComponents() {
 		title = "Сколько еще копить?"
 		setDivider(R.drawable.divider_horizontal)
-		fab.setOnClickListener { fragmentManager?.forwardTo(EditWishFragment.getInstance(), R.id.content) }
+		fab.setOnClickListener {viewModel.openNewWishScreen()  }
 	}
 
 	override fun onClickItem(item: IModelItem<*, *>): Boolean {

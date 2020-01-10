@@ -8,6 +8,7 @@ import ru.endroad.birusa.feature.estimation.featureEstimationModule
 import ru.endroad.econom.component.wish.componentWishModule
 import ru.endroad.econom.feature.wishes.di.featureWishesModule
 import ru.endroad.econom.room.dataModule
+import ru.endroad.econom.router.routerModule
 
 class App : Application() {
 
@@ -22,6 +23,7 @@ class App : Application() {
 				featureEstimationModule,
 				featureWishesModule,
 				componentWishModule,
+				routerModule,
 				dataModule
 			)
 		}
