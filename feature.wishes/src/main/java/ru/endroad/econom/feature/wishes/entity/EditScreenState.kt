@@ -1,11 +1,12 @@
 package ru.endroad.econom.feature.wishes.entity
 
+import kotlinx.coroutines.Deferred
 import ru.endroad.econom.component.wish.model.Wish
 
 sealed class EditScreenState {
 
 	object InitialNewWish : EditScreenState()
-	class InitialEditWish(val wish: Wish) : EditScreenState()
+	class InitialEditWish(val wish: Deferred<Wish>) : EditScreenState()
 
 	object WishSaved : EditScreenState()
 

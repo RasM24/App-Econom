@@ -1,9 +1,9 @@
 package ru.endroad.econom.feature.wishes.presenter
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import ru.endroad.arena.mvi.viewmodel.PresenterMviAbstract
 import ru.endroad.econom.component.wish.domain.AddWishUseCase
 import ru.endroad.econom.component.wish.domain.EditWishUseCase
 import ru.endroad.econom.component.wish.domain.GetWishUseCase
@@ -14,7 +14,6 @@ import ru.endroad.econom.feature.wishes.domain.ImportanceValidator
 import ru.endroad.econom.feature.wishes.domain.NameValidator
 import ru.endroad.econom.feature.wishes.entity.EditScreenEvent
 import ru.endroad.econom.feature.wishes.entity.EditScreenState
-import ru.endroad.econom.feature.wishes.view.IWishEditViewModel
 
 class EditWishViewModel(
 	private val wishId: Int?,
@@ -24,18 +23,17 @@ class EditWishViewModel(
 	private val nameValidator: NameValidator,
 	private val costValidator: CostValidator,
 	private val importanceValidator: ImportanceValidator
-) : ViewModel(), IWishEditViewModel {
+) : PresenterMviAbstract<EditScreenEvent, EditScreenState>() {
 
-	override val state = MutableLiveData<EditScreenState>()
-		.apply {
-			viewModelScope.launch {
-				value = wishId?.let {
-					EditScreenState.InitialEditWish(getWish(wishId))
-				} ?: EditScreenState.InitialNewWish
-			}
-		}
+	private val initialState: EditScreenState?
+		get() = wishId?.let { EditScreenState.InitialEditWish(viewModelScope.async { getWish(wishId) }) }
+			?: EditScreenState.InitialNewWish
 
-	override fun event(event: EditScreenEvent) {
+	init {
+		initialState?.applyState()
+	}
+
+	override fun reduce(event: EditScreenEvent) {
 		when (event) {
 			is EditScreenEvent.ApplyClick                  -> event.applyData()
 
@@ -53,36 +51,35 @@ class EditWishViewModel(
 
 	private fun EditScreenEvent.NameInputLostFocus.reduce() {
 		val nameField = nameValidator.isNotEmpty(name) && nameValidator.isNotLong(name)
-		state.value = EditScreenState.Validating(nameField = nameField)
+		EditScreenState.Validating(nameField = nameField).applyState()
 	}
 
 	private fun EditScreenEvent.CostInputLostFocus.reduce() {
-		state.value = EditScreenState.Validating(costField = costValidator(cost))
+		EditScreenState.Validating(costField = costValidator(cost)).applyState()
 	}
 
 	private fun EditScreenEvent.ImportanceInputLostFocus.reduce() {
-		state.value = EditScreenState.Validating(importanceField = importanceValidator(importance))
+		EditScreenState.Validating(importanceField = importanceValidator(importance)).applyState()
 	}
 
 	private fun EditScreenEvent.NameInputReceiveFocus.reduce() {
-		state.value = EditScreenState.Validating(nameField = true)
+		EditScreenState.Validating(nameField = true).applyState()
 	}
 
 	private fun EditScreenEvent.CostInputReceiveFocus.reduce() {
-		state.value = EditScreenState.Validating(costField = true)
+		EditScreenState.Validating(costField = true).applyState()
 	}
 
 	private fun EditScreenEvent.ImportanceInputReceiveFocus.reduce() {
-		state.value = EditScreenState.Validating(importanceField = true)
+		EditScreenState.Validating(importanceField = true).applyState()
 	}
 
-	//TODO осторожно, говнокод!! Перейти на MVI и выпилить это дерьмо
 	private fun EditScreenEvent.ApplyClick.applyData() {
 		val nameField = nameValidator.isNotEmpty(name) && nameValidator.isNotLong(name)
 		val costField = costValidator(cost)
 		val importanceField = importanceValidator(importance)
 
-		state.value = EditScreenState.Validating(nameField, costField, importanceField)
+		EditScreenState.Validating(nameField, costField, importanceField).applyState()
 
 		if (nameField && costField && importanceField) {
 			val wish = Wish(name = name,
@@ -92,7 +89,7 @@ class EditWishViewModel(
 
 			viewModelScope.launch {
 				wish.saving()
-				state.value = EditScreenState.WishSaved
+				EditScreenState.WishSaved.applyState()
 			}
 		}
 	}

@@ -6,6 +6,7 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.wish_edit_fragment.*
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import ru.endroad.arena.data.flow.extension.subcribe
@@ -23,7 +24,7 @@ import ru.endroad.navigation.finish
 class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDispatcher) {
 
 	private val wishId: Int? by argumentOptional(WISH_ID)
-	private val viewModel: IWishEditViewModel by viewModel<EditWishViewModel> { parametersOf(wishId) }
+	private val viewModel by viewModel<EditWishViewModel> { parametersOf(wishId) }
 
 	override val layout: Int = R.layout.wish_edit_fragment
 
@@ -65,11 +66,14 @@ class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDisp
 		title = "Изменить"
 		apply.text = "Изменить"
 
-		state.wish.run {
-			input_name.setText(name)
-			input_cost.setText("$cost")
-			input_info.setText(info)
-			input_important.setText(importance.name, false)
+		//TODO придумать, как избавиться от корутин на view-слое
+		CoroutineScope(uiDispatcher).launch {
+			state.wish.await().run {
+				input_name.setText(name)
+				input_cost.setText("$cost")
+				input_info.setText(info)
+				input_important.setText(importance.name, false)
+			}
 		}
 	}
 
@@ -96,14 +100,14 @@ class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDisp
 	private fun EditText.bindChangeFocus(onLostFocus: (String) -> EditScreenEvent, onReceiveFocus: () -> EditScreenEvent) {
 		setOnFocusChangeListener { _, hasFocus ->
 			if (hasFocus)
-				viewModel.event(onReceiveFocus())
+				viewModel.reduce(onReceiveFocus())
 			else
-				viewModel.event(onLostFocus(text.toString()))
+				viewModel.reduce(onLostFocus(text.toString()))
 		}
 	}
 
-	private fun Button.bindClick(click: () -> EditScreenEvent) {
-		setOnClickListener { viewModel.event(click()) }
+	private fun Button.bindClick(onClick: () -> EditScreenEvent) {
+		setOnClickListener { viewModel.reduce(onClick()) }
 	}
 
 	companion object {
