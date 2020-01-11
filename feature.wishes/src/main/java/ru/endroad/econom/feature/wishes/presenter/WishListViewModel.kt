@@ -15,7 +15,6 @@ import ru.endroad.birusa.feature.estimation.TotalResult
 import ru.endroad.econom.component.wish.domain.DeleteWishUseCase
 import ru.endroad.econom.component.wish.domain.GetWishListLiveDataUseCase
 import ru.endroad.econom.component.wish.domain.PerformWishUseCase
-import ru.endroad.econom.component.wish.model.Wish
 import ru.endroad.econom.component.wish.model.WishList
 import ru.endroad.econom.feature.wishes.WishFlowRouting
 import ru.endroad.econom.feature.wishes.entity.ListScreenEvent
@@ -35,15 +34,13 @@ class WishListViewModel(
 	override fun reduce(event: ListScreenEvent) {
 		when (event) {
 			is NewWishClick -> router.openWishNewScreen()
-			is PerformClick -> TODO()
-			is DeleteClick  -> TODO()
-			is EditClick    -> TODO()
+			is PerformClick -> viewModelScope.launch { performWish(event.wish) }
+			is DeleteClick  -> viewModelScope.launch { deleteWish(event.wish) }
+			is EditClick    -> router.openWishEditScreen(event.wish.id)
 		}
 	}
 
 	override val data: LiveData<WishList> = liveData { getWishListLiveData().collect(::emit) }
-
-	override fun edit(wish: Wish) = router.openWishEditScreen(wish.id)
 
 	override fun calculateEstimationAsync(sum: Int): Deferred<TotalResult> = async {
 		val estimation = getRandomEstimation()
@@ -51,11 +48,4 @@ class WishListViewModel(
 		TotalResult(estimation.message, (sum / estimation.moneyRate).toInt())
 	}
 
-	override fun perform(wish: Wish) {
-		viewModelScope.launch { performWish(wish) }
-	}
-
-	override fun delete(wish: Wish) {
-		viewModelScope.launch { deleteWish(wish) }
-	}
 }

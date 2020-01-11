@@ -51,12 +51,12 @@ class WishListFragment : ListFragment(), CoroutineScope by CoroutineScope(uiDisp
 	}
 
 	override fun onClickItem(item: IModelItem<*, *>): Boolean {
-		val model = (item.model as? Wish) ?: return false
+		val model = item as? IModelItem<Wish, *> ?: return false
 
 		showBottomSheetActionWish(
-			onClickCompleteListener = { viewModel.perform(model) },
-			onClickEditListener = { viewModel.edit(model) },
-			onClickDeleteListener = { viewModel.delete(model) })
+			onClickCompleteListener = model.bindItemEvent(ListScreenEvent::PerformClick),
+			onClickEditListener = model.bindItemEvent(ListScreenEvent::EditClick),
+			onClickDeleteListener = model.bindItemEvent(ListScreenEvent::DeleteClick))
 
 		return super.onClickItem(item)
 	}
@@ -64,6 +64,8 @@ class WishListFragment : ListFragment(), CoroutineScope by CoroutineScope(uiDisp
 	private fun FloatingActionButton.bindClick(onClick: () -> ListScreenEvent) {
 		setOnClickListener { viewModel.reduce(onClick()) }
 	}
+
+	private fun IModelItem<Wish, *>.bindItemEvent(onEvent: (Wish) -> ListScreenEvent): () -> Unit = { viewModel.reduce(onEvent(model)) }
 
 	companion object {
 		fun getInstance(): Fragment =
