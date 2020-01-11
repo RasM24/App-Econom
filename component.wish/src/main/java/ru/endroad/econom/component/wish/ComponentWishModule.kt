@@ -10,7 +10,7 @@ val componentWishModule = module {
 	single<WishRepository>()
 
 	single<GetWishUseCase>()
-	single<GetWishListLiveDataUseCase>()
+	single<GetWishListUseCase>()
 	single<PerformWishUseCase>()
 	single<DeleteWishUseCase>()
 	single<EditWishUseCase>()

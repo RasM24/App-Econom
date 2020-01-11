@@ -5,5 +5,5 @@ import ru.endroad.econom.component.wish.model.Wish
 
 class DeleteWishUseCase(private val wishRepository: WishRepository) {
 
-	operator fun invoke(wish: Wish) = wishRepository.delete(wish)
+	suspend operator fun invoke(wish: Wish) = wishRepository.delete(wish)
 }

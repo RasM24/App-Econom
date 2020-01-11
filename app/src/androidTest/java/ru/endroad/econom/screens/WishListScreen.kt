@@ -9,7 +9,7 @@ import ru.endroad.tavern.base.Layout
 @Layout(R.layout.wish_fragment_list)
 object WishListScreen : BaseScreen<WishListScreen>() {
 
-	val floatingButton = KView(withId(R.id.fab))
+	val floatingButton = KView(withId(R.id.new_wish))
 	val fulfilledList = KView(TODO("Пока нет списка выполненных желаний"))
 
 	val firstItem = KView(TODO())
