@@ -20,7 +20,7 @@ class EditWishViewModel(
 	private val wishId: Int?,
 	private val getWish: GetWishUseCase,
 	private val addWish: AddWishUseCase,
-	private val editWishUseCase: EditWishUseCase,
+	private val editWish: EditWishUseCase,
 	private val nameValidator: NameValidator,
 	private val costValidator: CostValidator,
 	private val importanceValidator: ImportanceValidator
@@ -79,7 +79,7 @@ class EditWishViewModel(
 	//TODO можно вынести в domain
 	private suspend fun saveWish(name: String, info: String, cost: Int, importance: Importance): EditScreenState {
 		val wish = Wish(name = name, info = info, cost = cost, importance = importance)
-		wishId?.let { editWishUseCase(wish.copy(id = it)) } ?: addWish(wish)
+		wishId?.let { editWish(wish.copy(id = it)) } ?: addWish(wish)
 
 		return EditScreenState.WishSaved
 	}

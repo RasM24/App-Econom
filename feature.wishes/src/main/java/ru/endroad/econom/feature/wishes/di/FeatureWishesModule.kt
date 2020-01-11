@@ -22,7 +22,7 @@ val featureWishesModule = module {
 		EditWishViewModel(
 			getWish = get(),
 			addWish = get(),
-			editWishUseCase = get(),
+			editWish = get(),
 			wishId = id,
 			nameValidator = get(),
 			costValidator = get(),

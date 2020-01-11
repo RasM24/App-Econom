@@ -1,15 +1,13 @@
 package ru.endroad.econom.feature.wishes.presenter
 
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import ru.endroad.arena.data.bgDispatcher
 import ru.endroad.arena.mvi.viewmodel.PresenterMviAbstract
 import ru.endroad.birusa.feature.estimation.GetRandomEstimationUseCase
 import ru.endroad.birusa.feature.estimation.TotalResult
 import ru.endroad.econom.component.wish.domain.DeleteWishUseCase
-import ru.endroad.econom.component.wish.domain.GetWishListLiveDataUseCase
+import ru.endroad.econom.component.wish.domain.GetWishListUseCase
 import ru.endroad.econom.component.wish.domain.PerformWishUseCase
 import ru.endroad.econom.component.wish.model.Wish
 import ru.endroad.econom.feature.wishes.WishFlowRouting
@@ -22,17 +20,16 @@ class WishListViewModel(
 	private val performWish: PerformWishUseCase,
 	private val getRandomEstimation: GetRandomEstimationUseCase,
 	private val router: WishFlowRouting,
-	getWishListLiveData: GetWishListLiveDataUseCase
-) : PresenterMviAbstract<ListScreenEvent, ListScreenState>(),
-	CoroutineScope by CoroutineScope(bgDispatcher) {
+	getWishList: GetWishListUseCase
+) : PresenterMviAbstract<ListScreenEvent, ListScreenState>() {
 
 	init {
 		viewModelScope.launch {
-			getWishListLiveData().collect { wishList ->
+			getWishList().collect { wishList ->
 				val notCompletedList = wishList.filterNot(Wish::complete)
 				val sum = notCompletedList.sumBy(Wish::cost)
 
-				ListScreenState.ShowData(notCompletedList, calculateEstimationAsync(sum)).applyState()
+				ListScreenState.ShowData(notCompletedList, calculateEstimation(sum)).applyState()
 			}
 		}
 	}
@@ -46,7 +43,8 @@ class WishListViewModel(
 		}
 	}
 
-	private fun calculateEstimationAsync(sum: Int): TotalResult {
+	//TODO разобраться с фичей дразнилки, какая то кривая реализация всего этого
+	private fun calculateEstimation(sum: Int): TotalResult {
 		val estimation = getRandomEstimation()
 
 		return TotalResult(estimation.message, (sum / estimation.moneyRate).toInt())
