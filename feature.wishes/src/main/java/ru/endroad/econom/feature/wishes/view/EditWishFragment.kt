@@ -1,8 +1,6 @@
 package ru.endroad.econom.feature.wishes.view
 
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputLayout
@@ -11,8 +9,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import ru.endroad.arena.data.flow.extension.subcribe
 import ru.endroad.arena.data.uiDispatcher
+import ru.endroad.arena.mvi.view.MviView
 import ru.endroad.arena.viewlayer.extension.argumentOptional
 import ru.endroad.arena.viewlayer.extension.withArgument
 import ru.endroad.arena.viewlayer.fragment.BaseFragment
@@ -23,14 +21,28 @@ import ru.endroad.econom.feature.wishes.entity.EditScreenState
 import ru.endroad.econom.feature.wishes.presenter.EditWishViewModel
 import ru.endroad.navigation.finish
 
-class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDispatcher) {
-
-	private val wishId: Int? by argumentOptional(WISH_ID)
-	private val viewModel by viewModel<EditWishViewModel> { parametersOf(wishId) }
+class EditWishFragment : BaseFragment(),
+						 MviView<EditScreenState, EditScreenEvent>,
+						 CoroutineScope by CoroutineScope(uiDispatcher) {
 
 	override val layout: Int = R.layout.wish_edit_fragment
 
+	private val wishId: Int? by argumentOptional(WISH_ID)
+
+	override val presenter by viewModel<EditWishViewModel> { parametersOf(wishId) }
+
+	override val render = { state: EditScreenState ->
+		when (state) {
+			EditScreenState.InitialNewWish     -> renderNewWishScreen()
+			is EditScreenState.InitialEditWish -> renderEditWishScreen(state)
+			is EditScreenState.Validating      -> renderValidatingFieldsScreen(state)
+			EditScreenState.WishSaved          -> finish()
+		}
+	}
+
 	override fun setupViewComponents() {
+		bindRenderState(this)
+
 		input_name.bindChangeFocus(EditScreenEvent::NameInputLostFocus, EditScreenEvent::NameInputReceiveFocus)
 		input_info.bindChangeFocus(EditScreenEvent::InfoInputLostFocus, EditScreenEvent::InfoInputReceiveFocus)
 		input_cost.bindChangeFocus(EditScreenEvent::CostInputLostFocus, EditScreenEvent::CostInputReceiveFocus)
@@ -49,20 +61,9 @@ class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDisp
 		input_important.setAdapter(adapter)
 	}
 
-	override fun setupViewModel() {
-		viewModel.state.subcribe(this) { state ->
-			when (state) {
-				EditScreenState.InitialNewWish     -> renderNewWishScreen()
-				is EditScreenState.InitialEditWish -> renderEditWishScreen(state)
-				is EditScreenState.Validating      -> renderValidatingFieldsScreen(state)
-				EditScreenState.WishSaved          -> finish()
-			}
-		}
-	}
-
 	private fun renderEditWishScreen(state: EditScreenState.InitialEditWish) {
-		title = "Изменить"
-		apply.text = "Изменить"
+		title = getString(R.string.edit_screen_editing_wish)
+		apply.setText(R.string.edit_screen_edit_wish)
 
 		//TODO придумать, как избавиться от корутин на view-слое
 		CoroutineScope(uiDispatcher).launch {
@@ -76,34 +77,22 @@ class EditWishFragment : BaseFragment(), CoroutineScope by CoroutineScope(uiDisp
 	}
 
 	private fun renderNewWishScreen() {
-		title = "Добавить"
-		apply.text = "Добавить"
+		title = getString(R.string.edit_screen_new_wish)
+		apply.setText(R.string.edit_screen_add_wish)
 	}
 
 	private fun renderValidatingFieldsScreen(state: EditScreenState.Validating) {
-		state.nameField?.let { input_name_layout.defineError(R.string.name_input_error, it) }
-		state.costField?.let { if (it) input_cost_layout.defineError(R.string.cost_input_error, it) }
-		state.importanceField?.let { input_important_layout.defineError(R.string.importance_input_error, it) }
+		state.nameField?.let { input_name_layout.defineError(R.string.name_input_error, !it) }
+		state.costField?.let { if (it) input_cost_layout.defineError(R.string.cost_input_error, !it) }
+		state.importanceField?.let { input_important_layout.defineError(R.string.importance_input_error, !it) }
 	}
 
 	private fun TextInputLayout.defineError(@StringRes textErrorId: Int, showError: Boolean) {
 		error = if (showError) resources.getString(textErrorId) else null
 	}
 
-	private fun EditText.bindChangeFocus(onLostFocus: (String) -> EditScreenEvent, onReceiveFocus: () -> EditScreenEvent) {
-		setOnFocusChangeListener { _, hasFocus ->
-			if (hasFocus)
-				viewModel.reduce(onReceiveFocus())
-			else
-				viewModel.reduce(onLostFocus(text.toString()))
-		}
-	}
-
-	private fun Button.bindClick(onClick: () -> EditScreenEvent) {
-		setOnClickListener { viewModel.reduce(onClick()) }
-	}
-
 	companion object {
+		//TODO перейти на другой вариант использования аргументов
 		const val WISH_ID = "WISH_ID"
 
 		fun getInstance(wishId: Int? = null): Fragment =

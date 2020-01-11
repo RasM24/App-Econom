@@ -21,7 +21,7 @@ class WishListViewModel(
 	private val getRandomEstimation: GetRandomEstimationUseCase,
 	private val router: WishFlowRouting,
 	getWishList: GetWishListUseCase
-) : PresenterMviAbstract<ListScreenEvent, ListScreenState>() {
+) : PresenterMviAbstract<ListScreenState, ListScreenEvent>() {
 
 	init {
 		viewModelScope.launch {

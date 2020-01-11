@@ -1,13 +1,12 @@
 package ru.endroad.econom.feature.wishes.view
 
 import androidx.fragment.app.Fragment
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mikepenz.fastadapter.IModelItem
 import kotlinx.android.synthetic.main.wish_fragment_list.*
 import kotlinx.coroutines.CoroutineScope
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.endroad.arena.data.flow.extension.subcribe
 import ru.endroad.arena.data.uiDispatcher
+import ru.endroad.arena.mvi.view.MviView
 import ru.endroad.arena.viewlayer.fragment.ListFragment
 import ru.endroad.birusa.feature.estimation.TotalItem
 import ru.endroad.birusa.feature.estimation.map
@@ -18,16 +17,23 @@ import ru.endroad.econom.feature.wishes.entity.ListScreenState
 import ru.endroad.econom.feature.wishes.presenter.WishListViewModel
 
 //TODO перевести всю навигацию на роутинг в app-модуле
-class WishListFragment : ListFragment(), CoroutineScope by CoroutineScope(uiDispatcher) {
+class WishListFragment : ListFragment(), MviView<ListScreenState, ListScreenEvent>, CoroutineScope by CoroutineScope(uiDispatcher) {
 
-	private val viewModel by viewModel<WishListViewModel>()
+	override val presenter by viewModel<WishListViewModel>()
 
 	override val layout: Int = R.layout.wish_fragment_list
+
+	override val render = { state: ListScreenState ->
+		when (state) {
+			is ListScreenState.ShowData -> renderData(state)
+		}
+	}
 
 	override fun setupViewComponents() {
 		title = "Сколько еще копить?"
 		setDivider(R.drawable.divider_horizontal)
 
+		bindRenderState(this)
 		new_wish.bindClick(ListScreenEvent::NewWishClick)
 	}
 
@@ -42,14 +48,6 @@ class WishListFragment : ListFragment(), CoroutineScope by CoroutineScope(uiDisp
 		return super.onClickItem(item)
 	}
 
-	override fun setupViewModel() {
-		viewModel.state.subcribe(this) { state ->
-			when (state) {
-				is ListScreenState.ShowData -> renderData(state)
-			}
-		}
-	}
-
 	private fun renderData(state: ListScreenState.ShowData) {
 		state.wishList
 			.map(::WishItem)
@@ -60,11 +58,7 @@ class WishListFragment : ListFragment(), CoroutineScope by CoroutineScope(uiDisp
 			.setFooter()
 	}
 
-	private fun FloatingActionButton.bindClick(onClick: () -> ListScreenEvent) {
-		setOnClickListener { viewModel.reduce(onClick()) }
-	}
-
-	private fun IModelItem<Wish, *>.bindItemEvent(onEvent: (Wish) -> ListScreenEvent): () -> Unit = { viewModel.reduce(onEvent(model)) }
+	private fun IModelItem<Wish, *>.bindItemEvent(onEvent: (Wish) -> ListScreenEvent): () -> Unit = { presenter.reduce(onEvent(model)) }
 
 	companion object {
 		fun getInstance(): Fragment =

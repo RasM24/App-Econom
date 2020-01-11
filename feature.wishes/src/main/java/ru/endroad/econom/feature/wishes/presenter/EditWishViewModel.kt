@@ -24,7 +24,7 @@ class EditWishViewModel(
 	private val nameValidator: NameValidator,
 	private val costValidator: CostValidator,
 	private val importanceValidator: ImportanceValidator
-) : PresenterMviAbstract<EditScreenEvent, EditScreenState>() {
+) : PresenterMviAbstract<EditScreenState, EditScreenEvent>() {
 
 	private val initialState: EditScreenState?
 		get() = wishId?.let { EditScreenState.InitialEditWish(viewModelScope.async { getWish(wishId) }) }
