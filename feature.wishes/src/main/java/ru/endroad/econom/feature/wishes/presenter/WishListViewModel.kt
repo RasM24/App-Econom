@@ -29,7 +29,11 @@ class WishListViewModel(
 				val notCompletedList = wishList.filterNot(Wish::complete)
 				val sum = notCompletedList.sumBy(Wish::cost)
 
-				ListScreenState.ShowData(notCompletedList, calculateEstimation(sum)).applyState()
+				when {
+					notCompletedList.isNotEmpty() -> ListScreenState.ShowData(notCompletedList, calculateEstimation(sum)).applyState()
+					wishList.none(Wish::complete) -> router.showStubNoDesire()
+					wishList.any(Wish::complete)  -> router.showStubWishesFulfilled()
+				}
 			}
 		}
 	}

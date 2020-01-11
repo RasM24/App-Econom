@@ -83,7 +83,7 @@ class EditWishFragment : BaseFragment(),
 
 	private fun renderValidatingFieldsScreen(state: EditScreenState.Validating) {
 		state.nameField?.let { input_name_layout.defineError(R.string.name_input_error, !it) }
-		state.costField?.let { if (it) input_cost_layout.defineError(R.string.cost_input_error, !it) }
+		state.costField?.let { input_cost_layout.defineError(R.string.cost_input_error, !it) }
 		state.importanceField?.let { input_important_layout.defineError(R.string.importance_input_error, !it) }
 	}
 
