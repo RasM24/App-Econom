@@ -5,7 +5,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mikepenz.fastadapter.IModelItem
 import kotlinx.android.synthetic.main.wish_fragment_list.*
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.endroad.arena.data.flow.extension.subcribe
 import ru.endroad.arena.data.uiDispatcher
@@ -15,33 +14,15 @@ import ru.endroad.birusa.feature.estimation.map
 import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.econom.component.wish.model.Wish
 import ru.endroad.econom.feature.wishes.entity.ListScreenEvent
+import ru.endroad.econom.feature.wishes.entity.ListScreenState
 import ru.endroad.econom.feature.wishes.presenter.WishListViewModel
 
 //TODO перевести всю навигацию на роутинг в app-модуле
 class WishListFragment : ListFragment(), CoroutineScope by CoroutineScope(uiDispatcher) {
 
-	private val viewModel: IWishListViewModel by viewModel<WishListViewModel>()
+	private val viewModel by viewModel<WishListViewModel>()
 
 	override val layout: Int = R.layout.wish_fragment_list
-
-	override fun setupViewModel() {
-
-		viewModel.data.subcribe(this) { wishList ->
-			wishList
-				.filterNot(Wish::complete) //TODO вынести в useCase
-				.map(::WishItem)
-				.setItems()
-
-			launch {
-				viewModel.calculateEstimationAsync(wishList
-													   .filterNot(Wish::complete)
-													   .sumBy(Wish::cost))
-					.await()
-					.map(::TotalItem)
-					.setFooter()
-			}
-		}
-	}
 
 	override fun setupViewComponents() {
 		title = "Сколько еще копить?"
@@ -59,6 +40,24 @@ class WishListFragment : ListFragment(), CoroutineScope by CoroutineScope(uiDisp
 			onClickDeleteListener = model.bindItemEvent(ListScreenEvent::DeleteClick))
 
 		return super.onClickItem(item)
+	}
+
+	override fun setupViewModel() {
+		viewModel.state.subcribe(this) { state ->
+			when (state) {
+				is ListScreenState.ShowData -> renderData(state)
+			}
+		}
+	}
+
+	private fun renderData(state: ListScreenState.ShowData) {
+		state.wishList
+			.map(::WishItem)
+			.setItems()
+
+		state.estimate
+			.map(::TotalItem)
+			.setFooter()
 	}
 
 	private fun FloatingActionButton.bindClick(onClick: () -> ListScreenEvent) {
