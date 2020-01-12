@@ -26,6 +26,7 @@ class WishListFragment : ListFragment(), MviView<ListScreenState, ListScreenEven
 	override val render = { state: ListScreenState ->
 		when (state) {
 			is ListScreenState.ShowData -> renderData(state)
+			ListScreenState.NoData      -> Unit
 		}
 	}
 
