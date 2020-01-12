@@ -11,6 +11,7 @@ import ru.endroad.econom.feature.wishes.completed.mvi.CompletedScreenEvent.*
 import ru.endroad.econom.feature.wishes.completed.mvi.CompletedScreenState
 
 class CompletedWishListViewModel(
+	private val router: CompletedScreenRouting,
 	getWishList: GetWishListUseCase
 ) : PresenterMviAbstract<CompletedScreenState, CompletedScreenEvent>() {
 
@@ -25,10 +26,15 @@ class CompletedWishListViewModel(
 
 	override fun reduce(event: CompletedScreenEvent) {
 		when (event) {
-			is ChangeData -> event.reduce().applyState()
+			is ChangeData -> event.reduceAndApply()
 		}
 	}
 
-	private fun ChangeData.reduce(): CompletedScreenState = CompletedScreenState.ShowData(completedWishList)
+	private fun ChangeData.reduceAndApply() {
+		when {
+			completedWishList.isEmpty()    -> router.showStubNoCompleted()
+			completedWishList.isNotEmpty() -> CompletedScreenState.ShowData(completedWishList).applyState()
+		}
+	}
 }
 
