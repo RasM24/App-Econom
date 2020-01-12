@@ -10,6 +10,7 @@
 
 	<string name="edit_screen_edit_wish">Изменить</string>
 	<string name="edit_screen_editing_wish">Редактирование</string>
+	<string name="wish_list_menu_completed">Выполненные</string>
 
 
 </resources>

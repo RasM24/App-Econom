@@ -52,10 +52,11 @@ class WishListViewModel(
 
 	override fun reduce(event: ListScreenEvent) {
 		when (event) {
-			is NewWishClick -> router.openWishNewScreen()
-			is PerformClick -> viewModelScope.launch { performWish(event.wish) }
-			is DeleteClick  -> viewModelScope.launch { deleteWish(event.wish) }
-			is EditClick    -> router.openWishEditScreen(event.wish.id)
+			is NewWishClick    -> router.openWishNewScreen()
+			is PerformClick    -> viewModelScope.launch { performWish(event.wish) }
+			is DeleteClick     -> viewModelScope.launch { deleteWish(event.wish) }
+			is EditClick       -> router.openWishEditScreen(event.wish.id)
+			MenuCompletedClick -> router.openCompletedWishScreen()
 		}
 	}
 

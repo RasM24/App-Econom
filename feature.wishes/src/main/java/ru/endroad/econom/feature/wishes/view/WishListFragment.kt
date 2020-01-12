@@ -1,5 +1,6 @@
 package ru.endroad.econom.feature.wishes.view
 
+import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import com.mikepenz.fastadapter.IModelItem
 import kotlinx.android.synthetic.main.wish_fragment_list.*
@@ -21,6 +22,8 @@ class WishListFragment : ListFragment(), MviView<ListScreenState, ListScreenEven
 
 	override val presenter by viewModel<WishListViewModel>()
 
+	override var toolbarMenu: Int? = R.menu.wish_list_menu
+
 	override val layout: Int = R.layout.wish_fragment_list
 
 	override val render = { state: ListScreenState ->
@@ -36,6 +39,12 @@ class WishListFragment : ListFragment(), MviView<ListScreenState, ListScreenEven
 
 		bindRenderState(this)
 		new_wish.bindClick(ListScreenEvent::NewWishClick)
+
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		if (item.itemId == R.id.menu_completed) presenter.reduce(ListScreenEvent.MenuCompletedClick)
+		return true
 	}
 
 	override fun onClickItem(item: IModelItem<*, *>): Boolean {

@@ -6,6 +6,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import ru.endroad.birusa.feature.estimation.featureEstimationModule
 import ru.endroad.econom.component.wish.componentWishModule
+import ru.endroad.econom.feature.wishes.completed.di.featureCompletedWishesModule
 import ru.endroad.econom.feature.wishes.di.featureWishesModule
 import ru.endroad.econom.room.dataModule
 import ru.endroad.econom.router.routerModule
@@ -22,6 +23,7 @@ class App : Application() {
 			modules(
 				featureEstimationModule,
 				featureWishesModule,
+				featureCompletedWishesModule,
 				componentWishModule,
 				routerModule,
 				dataModule

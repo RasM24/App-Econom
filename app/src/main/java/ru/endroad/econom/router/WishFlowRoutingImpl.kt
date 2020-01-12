@@ -6,6 +6,7 @@ import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.econom.feature.stub.view.NoDesireStubFragment
 import ru.endroad.econom.feature.stub.view.WishesFulfilledStubFragment
 import ru.endroad.econom.feature.wishes.WishFlowRouting
+import ru.endroad.econom.feature.wishes.completed.view.CompletedWishesFragment
 import ru.endroad.econom.feature.wishes.view.EditWishFragment
 import ru.endroad.navigation.routing.FragmentRouting
 import ru.endroad.navigation.routing.changeRoot
@@ -39,5 +40,9 @@ class WishFlowRoutingImpl(override val fragmentManager: FragmentManager) : WishF
 			fragmentManager.beginTransaction().attach(it).commit()
 			changeRoot(it, R.id.content)
 		}
+	}
+
+	override fun openCompletedWishScreen() {
+		forwardTo(CompletedWishesFragment(), R.id.content)
 	}
 }
