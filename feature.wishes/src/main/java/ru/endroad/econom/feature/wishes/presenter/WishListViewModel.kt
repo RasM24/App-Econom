@@ -23,6 +23,7 @@ class WishListViewModel(
 	getWishList: GetWishListUseCase
 ) : PresenterMviAbstract<ListScreenState, ListScreenEvent>() {
 
+	//TODO переделать в отправку ивентов, как на скрине выполненных
 	init {
 		viewModelScope.launch {
 			getWishList().collect { wishList ->
