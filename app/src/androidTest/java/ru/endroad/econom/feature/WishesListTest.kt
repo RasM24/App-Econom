@@ -7,8 +7,10 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import ru.endroad.econom.R
 import ru.endroad.econom.application.SingleActivity
 import ru.endroad.econom.mock.wishes
+import ru.endroad.econom.mock.wishesLastPosition
 import ru.endroad.econom.screens.BottomSheetScreen
 import ru.endroad.econom.screens.FulfilledListScreen
 import ru.endroad.econom.screens.WishEditScreen
@@ -18,6 +20,8 @@ import ru.endroad.econom.utils.wishTable
 import ru.endroad.tavern.assertions.*
 import ru.endroad.tavern.interaction.enter
 import ru.endroad.tavern.interaction.tapOn
+import ru.endroad.tavern.interaction.tapOnBack
+import ru.endroad.tavern.interaction.tapOnItem
 
 @RunWith(AndroidJUnit4::class)
 class WishesListTest {
@@ -29,6 +33,9 @@ class WishesListTest {
 	val databaseRule = getDatabasePresetRule {
 		wishTable fill wishes
 	}
+
+	private val estimationCount = 1
+	private val expectedItemsCount = wishes.size + estimationCount //TODO придумать, как выключать дразнилку
 
 	@Before
 	fun setUp() {
@@ -49,13 +56,14 @@ class WishesListTest {
 	@Test
 	fun performWish() {
 		WishListScreen {
+			check(wishList) { itemCount = expectedItemsCount }
 			tapOn(fulfilledList)
 		}
 
 		FulfilledListScreen {
 			check(itemLexusWish) { visibility = GONE }
 
-			TODO("реализовать tapOnBack")
+			tapOnBack()
 		}
 
 		WishListScreen {
@@ -71,6 +79,7 @@ class WishesListTest {
 		}
 
 		WishListScreen {
+			check(wishList) { itemCount = expectedItemsCount - 1 }
 			tapOn(fulfilledList)
 		}
 
@@ -90,6 +99,7 @@ class WishesListTest {
 	@Test
 	fun deleteWish() {
 		WishListScreen {
+			check(wishList) { itemCount = expectedItemsCount }
 			tapOn(itemLexusWish)
 		}
 
@@ -104,6 +114,7 @@ class WishesListTest {
 		}
 
 		FulfilledListScreen {
+			check(WishListScreen.wishList) { itemCount = expectedItemsCount - 1 }
 			check(itemLexusWish) { visibility = GONE }
 		}
 	}
@@ -119,7 +130,8 @@ class WishesListTest {
 	@Test
 	fun editWish() {
 		WishListScreen {
-			tapOn(firstItem)
+			check(wishList) { itemCount = expectedItemsCount }
+			tapOnItem(0)
 		}
 
 		BottomSheetScreen {
@@ -127,9 +139,9 @@ class WishesListTest {
 		}
 
 		WishEditScreen {
-			check(title) {
-				text = "Изменение"
-			}
+			//			check(title) {
+			//				text = "Изменение"
+			//			}
 			check(primaryTitle) {
 				text = "Основная информация"
 				visibility = VISIBLE
@@ -147,8 +159,11 @@ class WishesListTest {
 		}
 
 		WishListScreen {
-			check(firstItem) {
-				TODO("Добавить проверки")
+			check(wishList) { itemCount = expectedItemsCount }
+			item(R.id.list, atPosition = 0) {
+				check(R.id.wish_name) { text = "Автомобиль Honda" }
+				check(R.id.wish_info) { text = "Гнилушка-старушка :)" }
+				check(R.id.wish_cost) { text = "200000р" }
 			}
 		}
 	}
@@ -165,7 +180,8 @@ class WishesListTest {
 	@Test
 	fun newWish() {
 		WishListScreen {
-			tapOn(floatingButton)
+			check(wishList) { itemCount = expectedItemsCount }
+			tapOn(newWishFab)
 		}
 
 		WishEditScreen {
@@ -183,6 +199,15 @@ class WishesListTest {
 			enter(importanceInput) { "BACKLOG" }
 			tapOn(applyButton)
 		}
+
+		WishListScreen {
+			check(wishList) { itemCount = expectedItemsCount + 1 }
+			item(R.id.list, atPosition = wishesLastPosition + 1) {
+				check(R.id.wish_name) { text = "Квартира на рублевке" }
+				check(R.id.wish_info) { text = "Мечтать не вредно" }
+				check(R.id.wish_cost) { text = "1000000000р" }
+			}
+		}
 	}
 
 	/**
@@ -192,7 +217,7 @@ class WishesListTest {
 	@Test
 	fun invalidationTest() {
 		WishListScreen {
-			tapOn(floatingButton)
+			tapOn(newWishFab)
 		}
 
 		WishEditScreen {
@@ -228,5 +253,12 @@ class WishesListTest {
 	@Test
 	fun estimations() {
 		TODO("Придумать как проверить дразнилку")
+	}
+
+	/**
+	 * Тест на заглушки
+	 */
+	@Test
+	fun testCase() {
 	}
 }
