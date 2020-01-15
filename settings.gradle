@@ -1,5 +1,8 @@
 include ':app',
+	':feature.navigation',
 	':feature.estimation',
 	':feature.wishes',
+	':feature.wishes-completed',
+	':feature.stub',
 	':component.wish',
 	':component.design'

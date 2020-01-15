@@ -8,6 +8,7 @@ typealias WishList = List<Wish>
 
 @Entity(tableName = WISH_TABLE) //TODO при необходимости разнести на сущность и pojo-модель
 data class Wish(
+	@PrimaryKey(autoGenerate = true) var id: Int = 0,
 	val name: String,
 	val cost: Int,
 	val importance: Importance = Importance.BACKLOG,
@@ -15,8 +16,6 @@ data class Wish(
 	val complete: Boolean = false
 ) {
 
-	@PrimaryKey(autoGenerate = true)
-	var id: Int = 0
 
 	val costInNoodles: Int get() = cost / NOODLE_COST
 
