@@ -1,0 +1,13 @@
+dependencies {
+	implementation project(":component.design")
+	implementation project(":component.wish")
+
+	implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-rc03'
+	implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0-rc03'
+
+	implementation 'org.koin:koin-core:2.0.0'
+	implementation 'org.koin:koin-core-ext:2.0.0'
+	implementation 'org.koin:koin-androidx-viewmodel:2.0.0'
+
+	implementation 'com.mikepenz:fastadapter:4.1.1'
+}

@@ -33,3 +33,5 @@ val wishes = mutableListOf(
 	Wish(name = "Сцепление/Выжимной подшипник", importance = Importance.LITTLE, cost = 3000),
 	Wish(name = "Лобовое стекло", importance = Importance.LITTLE, cost = 7000)
 )
+
+val wishesLastPosition = wishes.size - 1

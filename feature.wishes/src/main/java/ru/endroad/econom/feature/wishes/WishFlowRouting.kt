@@ -9,4 +9,8 @@ interface WishFlowRouting {
 	fun showStubNoDesire()
 
 	fun showStubWishesFulfilled()
+
+	fun closeStub()
+
+	fun openCompletedWishScreen()
 }

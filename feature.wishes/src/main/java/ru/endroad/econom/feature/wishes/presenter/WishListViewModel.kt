@@ -23,23 +23,40 @@ class WishListViewModel(
 	getWishList: GetWishListUseCase
 ) : PresenterMviAbstract<ListScreenState, ListScreenEvent>() {
 
+	//TODO переделать в отправку ивентов, как на скрине выполненных
 	init {
 		viewModelScope.launch {
 			getWishList().collect { wishList ->
 				val notCompletedList = wishList.filterNot(Wish::complete)
 				val sum = notCompletedList.sumBy(Wish::cost)
 
-				ListScreenState.ShowData(notCompletedList, calculateEstimation(sum)).applyState()
+				when {
+					notCompletedList.isNotEmpty() -> {
+						if (state.value == ListScreenState.NoData) router.closeStub()
+						ListScreenState.ShowData(notCompletedList, calculateEstimation(sum)).applyState()
+					}
+
+					wishList.none(Wish::complete) -> {
+						ListScreenState.NoData.applyState()
+						router.showStubNoDesire()
+					}
+
+					wishList.any(Wish::complete)  -> {
+						ListScreenState.NoData.applyState()
+						router.showStubWishesFulfilled()
+					}
+				}
 			}
 		}
 	}
 
 	override fun reduce(event: ListScreenEvent) {
 		when (event) {
-			is NewWishClick -> router.openWishNewScreen()
-			is PerformClick -> viewModelScope.launch { performWish(event.wish) }
-			is DeleteClick  -> viewModelScope.launch { deleteWish(event.wish) }
-			is EditClick    -> router.openWishEditScreen(event.wish.id)
+			is NewWishClick    -> router.openWishNewScreen()
+			is PerformClick    -> viewModelScope.launch { performWish(event.wish) }
+			is DeleteClick     -> viewModelScope.launch { deleteWish(event.wish) }
+			is EditClick       -> router.openWishEditScreen(event.wish.id)
+			MenuCompletedClick -> router.openCompletedWishScreen()
 		}
 	}
 

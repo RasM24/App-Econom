@@ -12,7 +12,7 @@ android {
 	}
 }
 dependencies {
-	androidTestImplementation 'ru.endroad:tavern:0.2.0'
+	androidTestImplementation 'ru.endroad:tavern:0.3.0'
 
 	api 'androidx.test.espresso:espresso-core:3.2.0'
 	api 'androidx.test.espresso:espresso-contrib:3.2.0'
@@ -25,6 +25,7 @@ dependencies {
 	androidTestImplementation 'com.android.support.test:rules:1.0.2'
 
 	implementation project(':feature.wishes')
+	implementation project(':feature.wishes-completed')
 	implementation project(':feature.navigation')
 	implementation project(":feature.estimation")
 	implementation project(":feature.stub")
