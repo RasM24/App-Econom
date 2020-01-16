@@ -51,6 +51,7 @@ class WishListFragment : ListFragment(), MviView<ListScreenState, ListScreenEven
 		val model = item as? IModelItem<Wish, *> ?: return false
 
 		showBottomSheetActionWish(
+			model.model.name,
 			onClickCompleteListener = model.bindItemEvent(ListScreenEvent::PerformClick),
 			onClickEditListener = model.bindItemEvent(ListScreenEvent::EditClick),
 			onClickDeleteListener = model.bindItemEvent(ListScreenEvent::DeleteClick))
