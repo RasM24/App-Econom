@@ -27,7 +27,7 @@ class WishListViewModel(
 	init {
 		viewModelScope.launch {
 			getWishList().collect { wishList ->
-				val notCompletedList = wishList.filterNot(Wish::complete)
+				val notCompletedList = wishList.filterNot(Wish::complete).reversed()
 				val sum = notCompletedList.sumBy(Wish::cost)
 
 				when {
