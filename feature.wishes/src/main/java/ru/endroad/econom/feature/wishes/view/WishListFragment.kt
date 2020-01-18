@@ -2,10 +2,13 @@ package ru.endroad.econom.feature.wishes.view
 
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.BaseTransientBottomBar.*
+import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.fastadapter.IModelItem
 import kotlinx.android.synthetic.main.wish_fragment_list.*
 import kotlinx.coroutines.CoroutineScope
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.endroad.arena.data.flow.extension.subcribe
 import ru.endroad.arena.data.uiDispatcher
 import ru.endroad.arena.mvi.view.MviView
 import ru.endroad.arena.viewlayer.fragment.ListFragment
@@ -14,6 +17,7 @@ import ru.endroad.birusa.feature.estimation.map
 import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.econom.component.wish.model.Wish
 import ru.endroad.econom.feature.wishes.entity.ListScreenEvent
+import ru.endroad.econom.feature.wishes.entity.ListScreenSingleEvent
 import ru.endroad.econom.feature.wishes.entity.ListScreenState
 import ru.endroad.econom.feature.wishes.presenter.WishListViewModel
 
@@ -33,13 +37,30 @@ class WishListFragment : ListFragment(), MviView<ListScreenState, ListScreenEven
 		}
 	}
 
+	//TODO нужен рефактор
+	private val messageHandler: (ListScreenSingleEvent) -> Unit = { singleEvent: ListScreenSingleEvent ->
+		when (singleEvent) {
+			is ListScreenSingleEvent.PerformWish -> {
+				Snackbar.make(fragment_root, "Выполнено", LENGTH_LONG)
+					.setAction("отменить") { presenter.reduce(ListScreenEvent.UndoDeleteClick(singleEvent.wish)) }
+					.show()
+			}
+
+			is ListScreenSingleEvent.DeleteWish  -> {
+				Snackbar.make(fragment_root, "Удалено", LENGTH_LONG)
+					.setAction("отменить") { presenter.reduce(ListScreenEvent.UndoDeleteClick(singleEvent.wish)) }
+					.show()
+			}
+		}
+	}
+
 	override fun setupViewComponents() {
 		title = "Сколько еще копить?"
 		setDivider(R.drawable.divider_horizontal)
 
 		bindRenderState(this)
 		new_wish.bindClick(ListScreenEvent::NewWishClick)
-
+		presenter.message.subcribe(this, messageHandler)
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
