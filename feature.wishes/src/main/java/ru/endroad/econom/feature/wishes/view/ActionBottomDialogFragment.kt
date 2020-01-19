@@ -8,6 +8,7 @@ import ru.endroad.arena.viewlayer.fragment.BaseBottomSheetDialogFragment
 import ru.endroad.birusa.feature.wishes.R
 
 class ActionBottomDialogFragment(
+	private val wishName: String,
 	private val onClickCompleteListener: () -> Unit,
 	private val onClickEditListener: () -> Unit,
 	private val onClickDeleteListener: () -> Unit
@@ -17,6 +18,8 @@ class ActionBottomDialogFragment(
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+		wish_name.text = wishName
+
 		complete.setOnClickListener {
 			onClickCompleteListener()
 			dismiss()
@@ -32,11 +35,19 @@ class ActionBottomDialogFragment(
 	}
 }
 
+//TODO попробовать вынести в роутер
+//TODO перенести wishName в bundle
 fun Fragment.showBottomSheetActionWish(
+	wishName: String,
 	onClickCompleteListener: () -> Unit,
 	onClickEditListener: () -> Unit,
 	onClickDeleteListener: () -> Unit
 ) = fragmentManager?.let {
-	ActionBottomDialogFragment(onClickCompleteListener, onClickEditListener, onClickDeleteListener)
+	ActionBottomDialogFragment(
+		wishName,
+		onClickCompleteListener,
+		onClickEditListener,
+		onClickDeleteListener
+	)
 		.show(it, null)
 }
