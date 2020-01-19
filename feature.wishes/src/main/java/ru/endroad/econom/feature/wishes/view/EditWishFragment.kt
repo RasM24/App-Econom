@@ -22,6 +22,7 @@ import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.econom.component.wish.model.Importance
 import ru.endroad.econom.feature.wishes.entity.EditScreenEvent
 import ru.endroad.econom.feature.wishes.entity.EditScreenState
+import ru.endroad.econom.feature.wishes.entity.NameFieldValidate
 import ru.endroad.econom.feature.wishes.presenter.EditWishViewModel
 
 class EditWishFragment : Fragment() {
@@ -91,9 +92,15 @@ class EditWishFragment : Fragment() {
 	}
 
 	private fun renderValidatingFieldsScreen(state: EditScreenState.Validating) {
-		state.nameField?.let { input_name_layout.defineError(R.string.name_input_error, !it) }
 		state.costField?.let { input_cost_layout.defineError(R.string.cost_input_error, !it) }
 		state.importanceField?.let { input_important_layout.defineError(R.string.importance_input_error, !it) }
+		state.nameField?.let {
+			input_name_layout.error = when (it) {
+				NameFieldValidate.EMPTY    -> resources.getString(R.string.name_input_error_empty)
+				NameFieldValidate.LONG     -> resources.getString(R.string.name_input_error_long)
+				NameFieldValidate.VALIDATE -> null
+			}
+		}
 	}
 
 	private fun TextInputLayout.defineError(@StringRes textErrorId: Int, showError: Boolean) {

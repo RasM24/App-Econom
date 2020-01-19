@@ -16,6 +16,7 @@ import ru.endroad.econom.feature.wishes.domain.NameValidator
 import ru.endroad.econom.feature.wishes.entity.EditScreenEvent
 import ru.endroad.econom.feature.wishes.entity.EditScreenEvent.*
 import ru.endroad.econom.feature.wishes.entity.EditScreenState
+import ru.endroad.econom.feature.wishes.entity.NameFieldValidate
 
 class EditWishViewModel(
 	private val wishId: Int?,
@@ -50,7 +51,11 @@ class EditWishViewModel(
 	}
 
 	private fun NameInputLostFocus.reduce(): EditScreenState {
-		val nameField = nameValidator.isNotEmpty(name) && nameValidator.isNotLong(name)
+		val nameField = when {
+			!nameValidator.isNotEmpty(name) -> NameFieldValidate.EMPTY
+			!nameValidator.isNotLong(name)  -> NameFieldValidate.LONG
+			else                            -> NameFieldValidate.VALIDATE
+		}
 		return EditScreenState.Validating(nameField = nameField)
 	}
 
@@ -58,18 +63,22 @@ class EditWishViewModel(
 
 	private fun ImportanceInputLostFocus.reduce() = EditScreenState.Validating(importanceField = importanceValidator(importance))
 
-	private fun NameInputReceiveFocus.reduce() = EditScreenState.Validating(nameField = true)
+	private fun NameInputReceiveFocus.reduce() = EditScreenState.Validating(nameField = NameFieldValidate.VALIDATE)
 
 	private fun CostInputReceiveFocus.reduce() = EditScreenState.Validating(costField = true)
 
 	private fun ImportanceInputReceiveFocus.reduce() = EditScreenState.Validating(importanceField = true)
 
 	private fun ApplyClick.reduceAndApply() {
-		val nameField = nameValidator.isNotEmpty(name) && nameValidator.isNotLong(name)
+		val nameField = when {
+			!nameValidator.isNotEmpty(name) -> NameFieldValidate.EMPTY
+			!nameValidator.isNotLong(name)  -> NameFieldValidate.LONG
+			else                            -> NameFieldValidate.VALIDATE
+		}
 		val costField = costValidator(cost)
 		val importanceField = importanceValidator(importance)
 
-		if (nameField && costField && importanceField)
+		if (nameField == NameFieldValidate.VALIDATE && costField && importanceField)
 			viewModelScope.launch { saveWish(name, info, cost.toInt(), Importance.valueOf(importance)).applyState() }
 		else
 			EditScreenState.Validating(nameField, costField, importanceField).applyState()
