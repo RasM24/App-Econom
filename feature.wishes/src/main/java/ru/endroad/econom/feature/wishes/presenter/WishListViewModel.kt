@@ -3,7 +3,7 @@ package ru.endroad.econom.feature.wishes.presenter
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import ru.endroad.arena.mvi.storage.SingleLiveData
+import ru.endroad.arena.mvi.storage.SingleLiveEvent
 import ru.endroad.arena.mvi.viewmodel.PresenterMviAbstract
 import ru.endroad.birusa.feature.estimation.GetRandomEstimationUseCase
 import ru.endroad.birusa.feature.estimation.TotalResult
@@ -12,11 +12,10 @@ import ru.endroad.econom.component.wish.domain.DeleteWishUseCase
 import ru.endroad.econom.component.wish.domain.GetWishListUseCase
 import ru.endroad.econom.component.wish.domain.PerformWishUseCase
 import ru.endroad.econom.component.wish.model.Wish
+import ru.endroad.econom.component.wish.model.WishList
 import ru.endroad.econom.feature.wishes.WishFlowRouting
-import ru.endroad.econom.feature.wishes.entity.ListScreenEvent
+import ru.endroad.econom.feature.wishes.entity.*
 import ru.endroad.econom.feature.wishes.entity.ListScreenEvent.*
-import ru.endroad.econom.feature.wishes.entity.ListScreenSingleEvent
-import ru.endroad.econom.feature.wishes.entity.ListScreenState
 
 class WishListViewModel(
 	private val addWish: AddWishUseCase,
@@ -27,19 +26,19 @@ class WishListViewModel(
 	getWishList: GetWishListUseCase
 ) : PresenterMviAbstract<ListScreenState, ListScreenEvent>() {
 
-	val message = SingleLiveData<ListScreenSingleEvent>()
+	val message = SingleLiveEvent<ListScreenSingleEvent>()
 
 	//TODO переделать в отправку ивентов, как на скрине выполненных
 	init {
 		viewModelScope.launch {
 			getWishList().collect { wishList ->
 				val notCompletedList = wishList.filterNot(Wish::complete).reversed()
-				val sum = notCompletedList.sumBy(Wish::cost)
 
 				when {
 					notCompletedList.isNotEmpty() -> {
 						if (state.value == ListScreenState.NoData) router.closeStub()
-						ListScreenState.ShowData(notCompletedList, calculateEstimation(sum)).applyState()
+						val currentState = state.value
+						currentState.reduce(notCompletedList).applyState()
 					}
 
 					wishList.none(Wish::complete) -> {
@@ -79,5 +78,28 @@ class WishListViewModel(
 		val estimation = getRandomEstimation()
 
 		return TotalResult(estimation.message, (sum / estimation.moneyRate).toInt())
+	}
+
+	private fun ListScreenState?.reduce(notCompletedList: List<Wish>): ListScreenState {
+		val sum = notCompletedList.sumBy(Wish::cost)
+
+		return if (this is ListScreenState.ShowData) {
+			val changedItem = diff(this.wishList, notCompletedList)
+			ListScreenState.ShowData(notCompletedList, calculateEstimation(sum), changedItem)
+		} else
+			ListScreenState.ShowData(notCompletedList, calculateEstimation(sum))
+	}
+
+	private fun diff(oldList: WishList, newList: WishList): ChangedItem? {
+		val itemAction: ItemAction = when (newList.size) {
+			oldList.size + 1 -> ItemAction.ADDED
+			oldList.size - 1 -> ItemAction.DELETED
+			else -> return null
+		}
+
+		val position = oldList.zip(newList)
+			.indexOfFirst { it.first.id != it.second.id }
+
+		return ChangedItem(position, itemAction)
 	}
 }

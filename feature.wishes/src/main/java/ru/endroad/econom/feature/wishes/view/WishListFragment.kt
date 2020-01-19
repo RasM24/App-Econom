@@ -2,9 +2,10 @@ package ru.endroad.econom.feature.wishes.view
 
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
-import com.google.android.material.snackbar.BaseTransientBottomBar.*
+import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
 import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.fastadapter.IModelItem
+import com.mikepenz.itemanimators.SlideInOutRightAnimator
 import kotlinx.android.synthetic.main.wish_fragment_list.*
 import kotlinx.coroutines.CoroutineScope
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -16,6 +17,7 @@ import ru.endroad.birusa.feature.estimation.TotalItem
 import ru.endroad.birusa.feature.estimation.map
 import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.econom.component.wish.model.Wish
+import ru.endroad.econom.feature.wishes.entity.ItemAction
 import ru.endroad.econom.feature.wishes.entity.ListScreenEvent
 import ru.endroad.econom.feature.wishes.entity.ListScreenSingleEvent
 import ru.endroad.econom.feature.wishes.entity.ListScreenState
@@ -57,6 +59,7 @@ class WishListFragment : ListFragment(), MviView<ListScreenState, ListScreenEven
 	override fun setupViewComponents() {
 		title = "Сколько еще копить?"
 		setDivider(R.drawable.divider_horizontal)
+		list.itemAnimator = SlideInOutRightAnimator(list)
 
 		bindRenderState(this)
 		new_wish.bindClick(ListScreenEvent::NewWishClick)
@@ -81,9 +84,16 @@ class WishListFragment : ListFragment(), MviView<ListScreenState, ListScreenEven
 	}
 
 	private fun renderData(state: ListScreenState.ShowData) {
-		state.wishList
-			.map(::WishItem)
-			.setItems()
+		val list = state.wishList.map(::WishItem)
+
+		when (state.changedItem?.action) {
+			ItemAction.DELETED -> itemAdapter.remove(state.changedItem.position)
+			ItemAction.ADDED -> itemAdapter.add(
+				state.changedItem.position,
+				list[state.changedItem.position]
+			)
+			else -> list.setItems()
+		}
 
 		state.estimate
 			.map(::TotalItem)

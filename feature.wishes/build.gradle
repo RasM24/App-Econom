@@ -12,4 +12,5 @@ dependencies {
 	implementation 'org.koin:koin-androidx-viewmodel:2.0.0'
 
 	implementation 'com.mikepenz:fastadapter:4.1.1'
+	implementation "com.mikepenz:itemanimators:1.1.0"
 }
