@@ -14,7 +14,7 @@ import ru.endroad.econom.feature.wishes.view.EditWishFragment
 class WishFlowRoutingImpl(private val navigator: Navigator) : WishFlowRouting {
 
 	//TODO нельзя так, надо что-нибудь придумать
-	var fragment: Fragment? = null
+	private var fragment: Fragment? = null
 
 	private val fragmentManager : FragmentManager get() = navigator.hubActivity.let(::requireNotNull).supportFragmentManager
 
@@ -33,7 +33,7 @@ class WishFlowRoutingImpl(private val navigator: Navigator) : WishFlowRouting {
 		fragment = fragmentManager.findFragmentById(R.id.content)
 
 		fragment?.let { fragmentManager.beginTransaction().detach(it).commit() }
-		fragmentManager.changeRoot(WishesFulfilledStubFragment(::openWishNewScreen), R.id.content)
+		fragmentManager.changeRoot(WishesFulfilledStubFragment(::openWishNewScreen, ::openCompletedWishScreen), R.id.content)
 	}
 
 	override fun closeStub() {
