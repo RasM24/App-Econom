@@ -5,6 +5,7 @@
 	<!-- TODO добавить иконочку -->
 	<item
 		android:id="@+id/menu_completed"
+		android:icon="@drawable/ic_completed_list"
 		android:orderInCategory="1"
 		android:title="@string/wish_list_menu_completed"
 		app:showAsAction="always" />

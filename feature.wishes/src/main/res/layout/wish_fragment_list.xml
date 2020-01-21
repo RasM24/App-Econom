@@ -17,7 +17,7 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="end|bottom"
 		android:layout_margin="16dp"
-		android:src="@drawable/note_add_24px"
+		android:src="@drawable/add_24px"
 		app:elevation="6dp"
 		app:tint="#EEE" />
 
