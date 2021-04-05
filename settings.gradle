@@ -5,4 +5,5 @@ include ':app',
 	':feature.wishes-completed',
 	':feature.stub',
 	':component.wish',
-	':component.design'
+	':component.design',
+	':component-legacy'
