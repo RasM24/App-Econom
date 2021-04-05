@@ -1,20 +1,19 @@
 package ru.endroad.econom.feature.wishes.view
 
-import android.view.MenuItem
+import android.os.Bundle
+import android.view.*
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
 import com.google.android.material.snackbar.Snackbar
-import com.mikepenz.fastadapter.IModelItem
 import com.mikepenz.itemanimators.SlideInOutRightAnimator
 import kotlinx.android.synthetic.main.wish_fragment_list.*
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.endroad.arena.data.flow.extension.subcribe
-import ru.endroad.arena.data.uiDispatcher
-import ru.endroad.arena.mvi.view.MviView
-import ru.endroad.arena.viewlayer.fragment.ListFragment
-import ru.endroad.birusa.feature.estimation.TotalItem
-import ru.endroad.birusa.feature.estimation.map
 import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.econom.component.wish.model.Wish
 import ru.endroad.econom.feature.wishes.entity.ItemAction
@@ -24,23 +23,59 @@ import ru.endroad.econom.feature.wishes.entity.ListScreenState
 import ru.endroad.econom.feature.wishes.presenter.WishListViewModel
 
 //TODO перевести всю навигацию на роутинг в app-модуле
-class WishListFragment : ListFragment(), MviView<ListScreenState, ListScreenEvent>, CoroutineScope by CoroutineScope(uiDispatcher) {
+class WishListFragment : Fragment() {
 
-	override val presenter by viewModel<WishListViewModel>()
+	private val presenter by viewModel<WishListViewModel>()
 
-	override var toolbarMenu: Int? = R.menu.wish_list_menu
+	private val adapter = WishAdapter(onItemClick = { showBottomSheet(it) })
 
-	override val layout: Int = R.layout.wish_fragment_list
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+		inflater.inflate(R.layout.wish_fragment_list, container, false)
 
-	override val render = { state: ListScreenState ->
+	override fun onActivityCreated(savedInstanceState: Bundle?) {
+		super.onActivityCreated(savedInstanceState)
+		setHasOptionsMenu(true)
+
+		requireActivity().title = "Сколько еще копить?"
+
+		val divider = DividerItemDecoration(requireContext(), LinearLayout.VERTICAL)
+			.apply { setDrawable(resources.getDrawable(R.drawable.divider_horizontal)) }
+		list.itemAnimator = SlideInOutRightAnimator(list)
+		list.adapter = adapter
+		list.addItemDecoration(divider)
+
+		new_wish.setOnClickListener { presenter.reduce(ListScreenEvent.NewWishClick) }
+		presenter.message.subscribe(this, messageHandler)
+
+		presenter.state.asStateFlow()
+			.onEach { render(it) }
+			.launchIn(lifecycleScope)
+	}
+
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+		inflater.inflate(R.menu.wish_list_menu, menu)
+		super.onCreateOptionsMenu(menu, inflater)
+	}
+
+	private fun render(state: ListScreenState) {
 		when (state) {
 			is ListScreenState.ShowData -> renderData(state)
-			ListScreenState.NoData      -> Unit
+			ListScreenState.NoData -> Unit
+			ListScreenState.Init -> Unit
 		}
 	}
 
+	private fun showBottomSheet(wish: Wish) {
+		showBottomSheetActionWish(
+			wish.name,
+			onClickCompleteListener = { presenter.reduce(ListScreenEvent.PerformClick(wish)) },
+			onClickEditListener = { presenter.reduce(ListScreenEvent.EditClick(wish)) },
+			onClickDeleteListener = { presenter.reduce(ListScreenEvent.DeleteClick(wish)) }
+		)
+	}
+
 	//TODO нужен рефактор
-	private val messageHandler: (ListScreenSingleEvent) -> Unit = { singleEvent: ListScreenSingleEvent ->
+	private val messageHandler: (ListScreenSingleEvent?) -> Unit = { singleEvent: ListScreenSingleEvent? ->
 		when (singleEvent) {
 			is ListScreenSingleEvent.PerformWish -> {
 				Snackbar.make(fragment_root, "Выполнено", LENGTH_LONG)
@@ -48,7 +83,7 @@ class WishListFragment : ListFragment(), MviView<ListScreenState, ListScreenEven
 					.show()
 			}
 
-			is ListScreenSingleEvent.DeleteWish  -> {
+			is ListScreenSingleEvent.DeleteWish -> {
 				Snackbar.make(fragment_root, "Удалено", LENGTH_LONG)
 					.setAction("отменить") { presenter.reduce(ListScreenEvent.UndoDeleteClick(singleEvent.wish)) }
 					.show()
@@ -56,51 +91,25 @@ class WishListFragment : ListFragment(), MviView<ListScreenState, ListScreenEven
 		}
 	}
 
-	override fun setupViewComponents() {
-		title = "Сколько еще копить?"
-		setDivider(R.drawable.divider_horizontal)
-		list.itemAnimator = SlideInOutRightAnimator(list)
-
-		bindRenderState(this)
-		new_wish.bindClick(ListScreenEvent::NewWishClick)
-		presenter.message.subcribe(this, messageHandler)
-	}
-
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 		if (item.itemId == R.id.menu_completed) presenter.reduce(ListScreenEvent.MenuCompletedClick)
 		return true
 	}
 
-	override fun onClickItem(item: IModelItem<*, *>): Boolean {
-		val model = item as? IModelItem<Wish, *> ?: return false
-
-		showBottomSheetActionWish(
-			model.model.name,
-			onClickCompleteListener = model.bindItemEvent(ListScreenEvent::PerformClick),
-			onClickEditListener = model.bindItemEvent(ListScreenEvent::EditClick),
-			onClickDeleteListener = model.bindItemEvent(ListScreenEvent::DeleteClick))
-
-		return super.onClickItem(item)
-	}
-
 	private fun renderData(state: ListScreenState.ShowData) {
-		val list = state.wishList.map(::WishItem)
+		val list = state.wishList
 
 		when (state.changedItem?.action) {
-			ItemAction.DELETED -> itemAdapter.remove(state.changedItem.position)
-			ItemAction.ADDED -> itemAdapter.add(
-				state.changedItem.position,
-				list[state.changedItem.position]
-			)
-			else -> list.setItems()
+			ItemAction.DELETED -> adapter.remove(state.changedItem.position)
+			ItemAction.ADDED   -> adapter.add(state.changedItem.position, list[state.changedItem.position])
+			else               -> adapter.items = list.toMutableList()
 		}
 
-		state.estimate
-			.map(::TotalItem)
-			.setFooter()
+//TODO может и вернуть
+//		state.estimate
+//			.map(::TotalItem)
+//			.setFooter()
 	}
-
-	private fun IModelItem<Wish, *>.bindItemEvent(onEvent: (Wish) -> ListScreenEvent): () -> Unit = { presenter.reduce(onEvent(model)) }
 
 	companion object {
 		fun getInstance(): Fragment =

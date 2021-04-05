@@ -2,8 +2,9 @@ package ru.endroad.econom.feature.wishes.presenter
 
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import ru.endroad.arena.mvi.viewmodel.PresenterMviAbstract
+import ru.endroad.component.core.PresenterMviAbstract
 import ru.endroad.econom.component.wish.domain.AddWishUseCase
 import ru.endroad.econom.component.wish.domain.EditWishUseCase
 import ru.endroad.econom.component.wish.domain.GetWishUseCase
@@ -26,13 +27,11 @@ class EditWishViewModel(
 	private val importanceValidator: ImportanceValidator
 ) : PresenterMviAbstract<EditScreenState, EditScreenEvent>() {
 
-	private val initialState: EditScreenState?
+	private val initialState: EditScreenState
 		get() = wishId?.let { EditScreenState.InitialEditWish(viewModelScope.async { getWish(wishId) }) }
 			?: EditScreenState.InitialNewWish
 
-	init {
-		initialState?.applyState()
-	}
+	override val state: MutableStateFlow<EditScreenState> = MutableStateFlow(initialState)
 
 	override fun reduce(event: EditScreenEvent) {
 		when (event) {

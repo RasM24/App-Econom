@@ -1,10 +1,12 @@
 package ru.endroad.econom.feature.wishes.view
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.bottom_sheet.*
-import ru.endroad.arena.viewlayer.fragment.BaseBottomSheetDialogFragment
 import ru.endroad.birusa.feature.wishes.R
 
 class ActionBottomDialogFragment(
@@ -12,9 +14,10 @@ class ActionBottomDialogFragment(
 	private val onClickCompleteListener: () -> Unit,
 	private val onClickEditListener: () -> Unit,
 	private val onClickDeleteListener: () -> Unit
-) : BaseBottomSheetDialogFragment() {
+) : BottomSheetDialogFragment() {
 
-	override val layout: Int = R.layout.bottom_sheet
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+		inflater.inflate(R.layout.bottom_sheet, container, false)
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)

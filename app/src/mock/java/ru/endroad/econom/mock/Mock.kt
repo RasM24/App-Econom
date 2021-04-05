@@ -1,7 +1,7 @@
 package ru.endroad.econom.mock
 
 import androidx.sqlite.db.SupportSQLiteDatabase
-import ru.endroad.arena.data.runTransaction
+import ru.endroad.component.core.runTransaction
 import ru.endroad.econom.component.wish.datasource.WISH_TABLE
 import ru.endroad.econom.component.wish.model.Importance
 import ru.endroad.econom.component.wish.model.Wish

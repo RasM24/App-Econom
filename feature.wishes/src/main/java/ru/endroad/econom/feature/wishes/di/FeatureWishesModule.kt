@@ -3,7 +3,6 @@ package ru.endroad.econom.feature.wishes.di
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import org.koin.experimental.builder.single
-import ru.endroad.arena.viewmodellayer.viewModel
 import ru.endroad.econom.feature.wishes.domain.CostValidator
 import ru.endroad.econom.feature.wishes.domain.ImportanceValidator
 import ru.endroad.econom.feature.wishes.domain.NameValidator
@@ -16,7 +15,7 @@ val featureWishesModule = module {
 	single<CostValidator>()
 	single<ImportanceValidator>()
 
-	viewModel<WishListViewModel>()
+	viewModel { WishListViewModel(get(), get(), get(), get(), get(), get()) }
 
 	viewModel { (id: Int?) ->
 		EditWishViewModel(
