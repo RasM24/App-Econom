@@ -1,38 +1,33 @@
 package ru.endroad.econom.application
 
 import android.os.Bundle
-import org.koin.core.context.loadKoinModules
-import org.koin.core.context.unloadKoinModules
-import org.koin.dsl.module
-import ru.endroad.arena.viewlayer.activity.BaseActivity
+import androidx.appcompat.app.AppCompatActivity
+import org.koin.android.ext.android.inject
+import ru.endroad.component.core.Navigator
+import ru.endroad.component.core.changeRoot
 import ru.endroad.econom.R
 import ru.endroad.econom.feature.navigation.AppBarFragment
 import ru.endroad.econom.feature.wishes.view.WishListFragment
-import ru.endroad.navigation.routing.FragmentRouting
-import ru.endroad.navigation.routing.changeRoot
 
-class SingleActivity : BaseActivity(), FragmentRouting {
+class SingleActivity : AppCompatActivity() {
 
-	private val fragmentManagerModule = module { factory { supportFragmentManager } }
-
-	override val fragmentManager = supportFragmentManager
-
-	override val layout: Int = R.layout.base_activity
-
-	override val theme: Int = R.style.AppTheme
-
-	override fun onFirstCreate() {
-		changeRoot(AppBarFragment(), R.id.root)
-		changeRoot(WishListFragment.getInstance(), R.id.content)
-	}
+	private val navigator: Navigator by inject()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
-		loadKoinModules(fragmentManagerModule)
+		setTheme(R.style.AppTheme)
 		super.onCreate(savedInstanceState)
+		setContentView(R.layout.base_activity)
+		navigator.hubActivity = this
+
+		if (savedInstanceState == null) {
+			supportFragmentManager.changeRoot(AppBarFragment(), R.id.root)
+			supportFragmentManager.changeRoot(WishListFragment.getInstance(), R.id.content)
+		}
 	}
 
+
 	override fun onDestroy() {
-		unloadKoinModules(fragmentManagerModule)
+		navigator.hubActivity = null
 		super.onDestroy()
 	}
 }

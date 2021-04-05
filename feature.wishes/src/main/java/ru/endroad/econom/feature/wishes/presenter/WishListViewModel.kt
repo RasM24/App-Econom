@@ -1,12 +1,13 @@
 package ru.endroad.econom.feature.wishes.presenter
 
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import ru.endroad.arena.mvi.storage.SingleLiveEvent
-import ru.endroad.arena.mvi.viewmodel.PresenterMviAbstract
 import ru.endroad.birusa.feature.estimation.GetRandomEstimationUseCase
 import ru.endroad.birusa.feature.estimation.TotalResult
+import ru.endroad.component.core.PresenterMviAbstract
+import ru.endroad.component.core.SingleLiveEvent
 import ru.endroad.econom.component.wish.domain.AddWishUseCase
 import ru.endroad.econom.component.wish.domain.DeleteWishUseCase
 import ru.endroad.econom.component.wish.domain.GetWishListUseCase
@@ -27,6 +28,8 @@ class WishListViewModel(
 ) : PresenterMviAbstract<ListScreenState, ListScreenEvent>() {
 
 	val message = SingleLiveEvent<ListScreenSingleEvent>()
+
+	override val state = MutableStateFlow<ListScreenState>(ListScreenState.Init)
 
 	//TODO переделать в отправку ивентов, как на скрине выполненных
 	init {

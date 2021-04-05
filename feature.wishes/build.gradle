@@ -1,6 +1,7 @@
 dependencies {
 	implementation project(":component.design")
 	implementation project(":component.wish")
+	implementation project(":component-legacy")
 
 	implementation project(":feature.estimation")
 

@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.stub_fragment.*
-import ru.endroad.arena.viewlayer.extension.hideViews
-import ru.endroad.arena.viewlayer.extension.showViews
 import ru.endroad.econom.feature.stub.R
 
 abstract class StubFragment : Fragment() {
@@ -44,9 +42,12 @@ abstract class StubFragment : Fragment() {
 		secondaryButton.setOnClickListener { doTheSecondaryAction() }
 	}
 
-	private fun TextView.setOrHide(stringId: Int?) =
-		stringId?.let {
-			setText(it)
-			showViews(this)
-		} ?: hideViews(this)
+	private fun TextView.setOrHide(stringId: Int?) {
+		if (stringId != null) {
+			setText(stringId)
+			visibility = View.VISIBLE
+		} else {
+			visibility = View.GONE
+		}
+	}
 }
