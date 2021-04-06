@@ -1,9 +1,9 @@
-*.iml
 .gradle
-*.properties
-/.idea/
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+.idea
+/gradle
+/gradle/wrapper
+**/build
+**/generated
+libs
+local.properties
+*.iml
