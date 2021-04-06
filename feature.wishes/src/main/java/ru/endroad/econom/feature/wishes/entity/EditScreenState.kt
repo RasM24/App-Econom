@@ -12,5 +12,11 @@ sealed class EditScreenState {
 
 	//TODO разделить валидацию nameField
 	//TODO Вместо boolean использоать VALIDATE/INVALIDATE
-	data class Validating(val nameField: Boolean? = null, val costField: Boolean? = null, val importanceField: Boolean? = null) : EditScreenState()
+	data class Validating(val nameField: NameFieldValidate? = null, val costField: Boolean? = null, val importanceField: Boolean? = null) : EditScreenState()
+}
+
+enum class NameFieldValidate {
+	EMPTY,
+	LONG,
+	VALIDATE
 }

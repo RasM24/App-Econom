@@ -97,12 +97,22 @@ class WishListViewModel(
 		val itemAction: ItemAction = when (newList.size) {
 			oldList.size + 1 -> ItemAction.ADDED
 			oldList.size - 1 -> ItemAction.DELETED
-			else -> return null
+			else             -> return null
 		}
 
 		val position = oldList.zip(newList)
-			.indexOfFirst { it.first.id != it.second.id }
+			.indexOrLast { it.first.id != it.second.id }
 
 		return ChangedItem(position, itemAction)
+	}
+
+	private inline fun <T> List<T>.indexOrLast(predicate: (T) -> Boolean): Int {
+		val iterator = this.listIterator(size)
+		while (iterator.hasPrevious()) {
+			if (predicate(iterator.previous())) {
+				return iterator.nextIndex()
+			}
+		}
+		return size
 	}
 }

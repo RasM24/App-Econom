@@ -2,15 +2,13 @@
 <resources>
 	<string name="importance_input_error">Выберите важность</string>
 	<string name="cost_input_error">Введите ценник</string>
-	<string name="name_input_error">Текст не должен быть длиннее 40 символов</string>
+	<string name="name_input_error_empty">Введите название</string>
+	<string name="name_input_error_long">Текст не должен быть длиннее 40 символов</string>
 
 	<string name="edit_screen_add_wish">Добавить</string>
 	<string name="edit_screen_new_wish">Новое желание</string>
 
-
 	<string name="edit_screen_edit_wish">Изменить</string>
 	<string name="edit_screen_editing_wish">Редактирование</string>
 	<string name="wish_list_menu_completed">Выполненные</string>
-
-
 </resources>
