@@ -11,13 +11,13 @@ android {
 	}
 }
 dependencies {
-	api 'androidx.test.espresso:espresso-core:3.2.0'
-	api 'androidx.test.espresso:espresso-contrib:3.2.0'
+	api 'androidx.test.espresso:espresso-core:3.3.0'
+	api 'androidx.test.espresso:espresso-contrib:3.3.0'
 	api 'androidx.test.uiautomator:uiautomator:2.2.0'
-	api 'androidx.test.espresso:espresso-intents:3.2.0'
+	api 'androidx.test.espresso:espresso-intents:3.3.0'
 
-	androidTestImplementation 'junit:junit:4.12'
-	androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+	androidTestImplementation 'junit:junit:4.13.2'
+	androidTestImplementation 'androidx.test.ext:junit:1.1.2'
 
 	androidTestImplementation 'com.android.support.test:rules:1.0.2'
 
@@ -30,8 +30,8 @@ dependencies {
 	implementation project(":component.wish")
 	implementation project(":component-legacy")
 
-	implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-rc03'
-	implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0-rc03'
+	implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0-alpha01'
+	implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0-alpha01'
 
 	implementation 'org.koin:koin-core:2.0.0'
 	implementation 'org.koin:koin-core-ext:2.0.0'
