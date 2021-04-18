@@ -1,6 +1,6 @@
 package ru.endroad.econom.feature.wishes.entity
 
-import ru.endroad.econom.component.wish.model.Wish
+import ru.endroad.shared.wish.core.entity.Wish
 
 sealed class ListScreenEvent {
 	object MenuCompletedClick : ListScreenEvent()

@@ -1,7 +1,7 @@
 package ru.endroad.econom.feature.wishes.entity
 
 import kotlinx.coroutines.Deferred
-import ru.endroad.econom.component.wish.model.Wish
+import ru.endroad.shared.wish.core.entity.Wish
 
 sealed class EditScreenState {
 

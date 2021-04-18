@@ -5,11 +5,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.endroad.component.core.PresenterMviAbstract
-import ru.endroad.econom.component.wish.domain.GetWishListUseCase
-import ru.endroad.econom.component.wish.model.Wish
 import ru.endroad.econom.feature.wishes.completed.mvi.CompletedScreenEvent
 import ru.endroad.econom.feature.wishes.completed.mvi.CompletedScreenEvent.ChangeData
 import ru.endroad.econom.feature.wishes.completed.mvi.CompletedScreenState
+import ru.endroad.shared.wish.core.domain.GetWishListUseCase
+import ru.endroad.shared.wish.core.entity.Wish
 
 class CompletedWishListViewModel(
 	private val router: CompletedScreenRouting,

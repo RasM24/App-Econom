@@ -2,7 +2,7 @@ package ru.endroad.econom.feature.wishes.completed.view
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import ru.endroad.econom.component.wish.model.Wish
+import ru.endroad.shared.wish.core.entity.Wish
 
 internal class WishAdapter : RecyclerView.Adapter<CompletedWishViewHolder>() {
 

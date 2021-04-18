@@ -1,8 +1,8 @@
 package ru.endroad.econom.feature.wishes.completed.mvi
 
-import ru.endroad.econom.component.wish.model.WishList
+import ru.endroad.shared.wish.core.entity.Wish
 
 sealed class CompletedScreenEvent {
 
-	class ChangeData(val completedWishList: WishList) : CompletedScreenEvent()
+	class ChangeData(val completedWishList: List<Wish>) : CompletedScreenEvent()
 }

@@ -1,6 +1,6 @@
 package ru.endroad.econom.feature.wishes.domain
 
-import ru.endroad.econom.component.wish.model.Importance
+import ru.endroad.shared.wish.core.entity.Importance
 
 class ImportanceValidator {
 
