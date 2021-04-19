@@ -1,4 +1,4 @@
-package ru.endroad.econom.feature.wishes.view
+package ru.endroad.feature.wish.detail.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,7 +11,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputLayout
-import kotlinx.android.synthetic.main.wish_edit_fragment.apply
+import kotlinx.android.synthetic.main.wish_edit_fragment.apply_button
 import kotlinx.android.synthetic.main.wish_edit_fragment.input_cost
 import kotlinx.android.synthetic.main.wish_edit_fragment.input_cost_layout
 import kotlinx.android.synthetic.main.wish_edit_fragment.input_important
@@ -25,11 +25,10 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import ru.endroad.birusa.feature.wishes.R
-import ru.endroad.econom.feature.wishes.entity.EditScreenEvent
-import ru.endroad.econom.feature.wishes.entity.EditScreenState
-import ru.endroad.econom.feature.wishes.entity.NameFieldValidate
-import ru.endroad.econom.feature.wishes.presenter.EditWishViewModel
+import ru.endroad.feature.wish.detail.R
+import ru.endroad.feature.wish.detail.presentation.EditScreenEvent
+import ru.endroad.feature.wish.detail.presentation.EditScreenState
+import ru.endroad.feature.wish.detail.presentation.EditWishViewModel
 import ru.endroad.shared.wish.core.entity.Importance
 
 class EditWishFragment : Fragment() {
@@ -53,7 +52,7 @@ class EditWishFragment : Fragment() {
 		input_cost.bindChangeFocus(EditScreenEvent::CostInputLostFocus, EditScreenEvent::CostInputReceiveFocus)
 		input_important.bindChangeFocus(EditScreenEvent::ImportanceInputLostFocus, EditScreenEvent::ImportanceInputReceiveFocus)
 
-		apply.setOnClickListener {
+		apply_button.setOnClickListener {
 			presenter.reduce(
 				EditScreenEvent.ApplyClick(
 					name = input_name.text.toString(),
@@ -72,16 +71,16 @@ class EditWishFragment : Fragment() {
 
 	private suspend fun render(state: EditScreenState) {
 		when (state) {
-			EditScreenState.InitialNewWish -> renderNewWishScreen()
+			EditScreenState.InitialNewWish     -> renderNewWishScreen()
 			is EditScreenState.InitialEditWish -> renderEditWishScreen(state)
-			is EditScreenState.Validating -> renderValidatingFieldsScreen(state)
-			EditScreenState.WishSaved -> requireFragmentManager().popBackStack()
+			is EditScreenState.Validating      -> renderValidatingFieldsScreen(state)
+			EditScreenState.WishSaved          -> requireFragmentManager().popBackStack()
 		}
 	}
 
 	private fun renderEditWishScreen(state: EditScreenState.InitialEditWish) {
 		requireActivity().title = getString(R.string.edit_screen_editing_wish)
-		apply.setText(R.string.edit_screen_edit_wish)
+		apply_button.setText(R.string.edit_screen_edit_wish)
 
 		lifecycleScope.launch {
 			state.wish.await().run {
@@ -95,7 +94,7 @@ class EditWishFragment : Fragment() {
 
 	private fun renderNewWishScreen() {
 		requireActivity().title = getString(R.string.edit_screen_new_wish)
-		apply.setText(R.string.edit_screen_add_wish)
+		apply_button.setText(R.string.edit_screen_add_wish)
 	}
 
 	private fun renderValidatingFieldsScreen(state: EditScreenState.Validating) {
@@ -103,9 +102,9 @@ class EditWishFragment : Fragment() {
 		state.importanceField?.let { input_important_layout.defineError(R.string.importance_input_error, !it) }
 		state.nameField?.let {
 			input_name_layout.error = when (it) {
-				NameFieldValidate.EMPTY    -> resources.getString(R.string.name_input_error_empty)
-				NameFieldValidate.LONG     -> resources.getString(R.string.name_input_error_long)
-				NameFieldValidate.VALIDATE -> null
+				ru.endroad.feature.wish.detail.presentation.NameFieldValidate.EMPTY    -> resources.getString(R.string.name_input_error_empty)
+				ru.endroad.feature.wish.detail.presentation.NameFieldValidate.LONG     -> resources.getString(R.string.name_input_error_long)
+				ru.endroad.feature.wish.detail.presentation.NameFieldValidate.VALIDATE -> null
 			}
 		}
 	}

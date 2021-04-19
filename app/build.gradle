@@ -23,6 +23,7 @@ dependencies {
 
 	implementation project(':feature.wishes')
 	implementation project(':feature.wishes-completed')
+	implementation project(':feature-wish-detail')
 	implementation project(':feature.navigation')
 	implementation project(":feature.estimation")
 	implementation project(":feature.stub")

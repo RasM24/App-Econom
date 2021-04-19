@@ -1,4 +1,4 @@
-package ru.endroad.econom.feature.wishes.entity
+package ru.endroad.feature.wish.detail.presentation
 
 import kotlinx.coroutines.Deferred
 import ru.endroad.shared.wish.core.entity.Wish

@@ -1,4 +1,4 @@
-package ru.endroad.econom.feature.wishes.entity
+package ru.endroad.feature.wish.detail.presentation
 
 sealed class EditScreenEvent {
 	class ApplyClick(val name: String, val cost: String, val importance: String, val info: String) : EditScreenEvent()

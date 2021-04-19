@@ -10,6 +10,7 @@ import ru.endroad.econom.feature.wishes.completed.di.featureCompletedWishesModul
 import ru.endroad.econom.feature.wishes.di.featureWishesModule
 import ru.endroad.econom.room.dataModule
 import ru.endroad.econom.router.routerModule
+import ru.endroad.feature.wish.detail.di.featureWishDetailModule
 
 class App : Application() {
 
@@ -23,6 +24,7 @@ class App : Application() {
 			modules(
 				featureEstimationModule,
 				featureWishesModule,
+				featureWishDetailModule,
 				featureCompletedWishesModule,
 				componentWishModule,
 				routerModule,

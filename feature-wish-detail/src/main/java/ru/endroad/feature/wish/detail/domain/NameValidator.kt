@@ -1,4 +1,4 @@
-package ru.endroad.econom.feature.wishes.domain
+package ru.endroad.feature.wish.detail.domain
 
 class NameValidator(private val maxLengthName: Int) {
 
