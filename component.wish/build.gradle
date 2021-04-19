@@ -1,4 +1,5 @@
 dependencies {
+	implementation project(":shared-wish-core")
 	implementation project(":component.design")
 
 	implementation 'org.koin:koin-core:2.1.5'

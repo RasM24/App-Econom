@@ -5,18 +5,26 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.endroad.component.core.PresenterMviAbstract
-import ru.endroad.econom.component.wish.domain.AddWishUseCase
-import ru.endroad.econom.component.wish.domain.EditWishUseCase
-import ru.endroad.econom.component.wish.domain.GetWishUseCase
-import ru.endroad.econom.component.wish.model.Importance
-import ru.endroad.econom.component.wish.model.Wish
 import ru.endroad.econom.feature.wishes.domain.CostValidator
 import ru.endroad.econom.feature.wishes.domain.ImportanceValidator
 import ru.endroad.econom.feature.wishes.domain.NameValidator
 import ru.endroad.econom.feature.wishes.entity.EditScreenEvent
-import ru.endroad.econom.feature.wishes.entity.EditScreenEvent.*
+import ru.endroad.econom.feature.wishes.entity.EditScreenEvent.ApplyClick
+import ru.endroad.econom.feature.wishes.entity.EditScreenEvent.CostInputLostFocus
+import ru.endroad.econom.feature.wishes.entity.EditScreenEvent.CostInputReceiveFocus
+import ru.endroad.econom.feature.wishes.entity.EditScreenEvent.ImportanceInputLostFocus
+import ru.endroad.econom.feature.wishes.entity.EditScreenEvent.ImportanceInputReceiveFocus
+import ru.endroad.econom.feature.wishes.entity.EditScreenEvent.InfoInputLostFocus
+import ru.endroad.econom.feature.wishes.entity.EditScreenEvent.InfoInputReceiveFocus
+import ru.endroad.econom.feature.wishes.entity.EditScreenEvent.NameInputLostFocus
+import ru.endroad.econom.feature.wishes.entity.EditScreenEvent.NameInputReceiveFocus
 import ru.endroad.econom.feature.wishes.entity.EditScreenState
 import ru.endroad.econom.feature.wishes.entity.NameFieldValidate
+import ru.endroad.shared.wish.core.domain.AddWishUseCase
+import ru.endroad.shared.wish.core.domain.EditWishUseCase
+import ru.endroad.shared.wish.core.domain.GetWishUseCase
+import ru.endroad.shared.wish.core.entity.Importance
+import ru.endroad.shared.wish.core.entity.Wish
 
 class EditWishViewModel(
 	private val wishId: Int?,

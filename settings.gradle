@@ -4,6 +4,8 @@ include ':app',
 	':feature.wishes',
 	':feature.wishes-completed',
 	':feature.stub',
-	':component.wish',
+	':shared-wish-core',
+	':component-compose-theme',
 	':component.design',
-	':component-legacy'
+	':component-legacy',
+	':component.wish'

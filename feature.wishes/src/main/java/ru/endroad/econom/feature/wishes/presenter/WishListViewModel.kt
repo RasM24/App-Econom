@@ -8,23 +8,33 @@ import ru.endroad.birusa.feature.estimation.GetRandomEstimationUseCase
 import ru.endroad.birusa.feature.estimation.TotalResult
 import ru.endroad.component.core.PresenterMviAbstract
 import ru.endroad.component.core.SingleLiveEvent
-import ru.endroad.econom.component.wish.domain.AddWishUseCase
-import ru.endroad.econom.component.wish.domain.DeleteWishUseCase
-import ru.endroad.econom.component.wish.domain.GetWishListUseCase
-import ru.endroad.econom.component.wish.domain.PerformWishUseCase
-import ru.endroad.econom.component.wish.model.Wish
-import ru.endroad.econom.component.wish.model.WishList
 import ru.endroad.econom.feature.wishes.WishFlowRouting
-import ru.endroad.econom.feature.wishes.entity.*
-import ru.endroad.econom.feature.wishes.entity.ListScreenEvent.*
+import ru.endroad.econom.feature.wishes.entity.ChangedItem
+import ru.endroad.econom.feature.wishes.entity.ItemAction
+import ru.endroad.econom.feature.wishes.entity.ListScreenEvent
+import ru.endroad.econom.feature.wishes.entity.ListScreenEvent.DeleteClick
+import ru.endroad.econom.feature.wishes.entity.ListScreenEvent.EditClick
+import ru.endroad.econom.feature.wishes.entity.ListScreenEvent.MenuCompletedClick
+import ru.endroad.econom.feature.wishes.entity.ListScreenEvent.NewWishClick
+import ru.endroad.econom.feature.wishes.entity.ListScreenEvent.PerformClick
+import ru.endroad.econom.feature.wishes.entity.ListScreenEvent.UndoDeleteClick
+import ru.endroad.econom.feature.wishes.entity.ListScreenEvent.UndoPerformClick
+import ru.endroad.econom.feature.wishes.entity.ListScreenSingleEvent
+import ru.endroad.econom.feature.wishes.entity.ListScreenState
+import ru.endroad.shared.wish.core.domain.AddWishUseCase
+import ru.endroad.shared.wish.core.domain.DeleteWishUseCase
+import ru.endroad.shared.wish.core.domain.GetWishListUseCase
+import ru.endroad.shared.wish.core.domain.PerformWishUseCase
+import ru.endroad.shared.wish.core.entity.Wish
 
+//TODO чет работает плохо - разобраться
 class WishListViewModel(
 	private val addWish: AddWishUseCase,
 	private val deleteWish: DeleteWishUseCase,
 	private val performWish: PerformWishUseCase,
 	private val getRandomEstimation: GetRandomEstimationUseCase,
 	private val router: WishFlowRouting,
-	getWishList: GetWishListUseCase
+	getWishList: GetWishListUseCase,
 ) : PresenterMviAbstract<ListScreenState, ListScreenEvent>() {
 
 	val message = SingleLiveEvent<ListScreenSingleEvent>()
@@ -93,7 +103,7 @@ class WishListViewModel(
 			ListScreenState.ShowData(notCompletedList, calculateEstimation(sum))
 	}
 
-	private fun diff(oldList: WishList, newList: WishList): ChangedItem? {
+	private fun diff(oldList: List<Wish>, newList: List<Wish>): ChangedItem? {
 		val itemAction: ItemAction = when (newList.size) {
 			oldList.size + 1 -> ItemAction.ADDED
 			oldList.size - 1 -> ItemAction.DELETED

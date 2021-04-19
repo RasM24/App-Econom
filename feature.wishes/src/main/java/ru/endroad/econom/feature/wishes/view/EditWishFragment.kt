@@ -11,7 +11,14 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputLayout
-import kotlinx.android.synthetic.main.wish_edit_fragment.*
+import kotlinx.android.synthetic.main.wish_edit_fragment.apply
+import kotlinx.android.synthetic.main.wish_edit_fragment.input_cost
+import kotlinx.android.synthetic.main.wish_edit_fragment.input_cost_layout
+import kotlinx.android.synthetic.main.wish_edit_fragment.input_important
+import kotlinx.android.synthetic.main.wish_edit_fragment.input_important_layout
+import kotlinx.android.synthetic.main.wish_edit_fragment.input_info
+import kotlinx.android.synthetic.main.wish_edit_fragment.input_name
+import kotlinx.android.synthetic.main.wish_edit_fragment.input_name_layout
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -19,11 +26,11 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import ru.endroad.birusa.feature.wishes.R
-import ru.endroad.econom.component.wish.model.Importance
 import ru.endroad.econom.feature.wishes.entity.EditScreenEvent
 import ru.endroad.econom.feature.wishes.entity.EditScreenState
 import ru.endroad.econom.feature.wishes.entity.NameFieldValidate
 import ru.endroad.econom.feature.wishes.presenter.EditWishViewModel
+import ru.endroad.shared.wish.core.entity.Importance
 
 class EditWishFragment : Fragment() {
 
