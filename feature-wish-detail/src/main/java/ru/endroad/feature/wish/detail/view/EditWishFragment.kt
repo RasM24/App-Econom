@@ -33,7 +33,6 @@ class EditWishFragment : Fragment() {
 			when (val renderedState = state.value) {
 				is EditScreenState.InitialEditWish -> RenderEditWish(renderedState.wish)
 				EditScreenState.InitialNewWish     -> RenderWishDetail(createWish = createWishFunction)
-				is EditScreenState.Validating      -> requireFragmentManager().popBackStack()
 				EditScreenState.WishSaved          -> requireFragmentManager().popBackStack()
 			}
 		}
