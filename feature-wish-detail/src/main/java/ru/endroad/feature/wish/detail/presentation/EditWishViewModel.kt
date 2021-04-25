@@ -8,6 +8,7 @@ import ru.endroad.component.core.PresenterMviAbstract
 import ru.endroad.feature.wish.detail.domain.CostValidator
 import ru.endroad.feature.wish.detail.domain.ImportanceValidator
 import ru.endroad.feature.wish.detail.domain.NameValidator
+import ru.endroad.feature.wish.detail.domain.ValidationResult
 
 import ru.endroad.shared.wish.core.domain.AddWishUseCase
 import ru.endroad.shared.wish.core.domain.EditWishUseCase
@@ -62,9 +63,9 @@ class EditWishViewModel(
 
 	private fun EditScreenEvent.NameInputReceiveFocus.reduce() = EditScreenState.Validating(nameField = NameFieldValidate.VALIDATE)
 
-	private fun EditScreenEvent.CostInputReceiveFocus.reduce() = EditScreenState.Validating(costField = true)
+	private fun EditScreenEvent.CostInputReceiveFocus.reduce() = EditScreenState.Validating(costField = ValidationResult.Unchecked)
 
-	private fun EditScreenEvent.ImportanceInputReceiveFocus.reduce() = EditScreenState.Validating(importanceField = true)
+	private fun EditScreenEvent.ImportanceInputReceiveFocus.reduce() = EditScreenState.Validating(importanceField = ValidationResult.Unchecked)
 
 	private fun EditScreenEvent.ApplyClick.reduceAndApply() {
 		val nameField = when {
@@ -75,7 +76,7 @@ class EditWishViewModel(
 		val costField = costValidator(cost)
 		val importanceField = importanceValidator(importance)
 
-		if (nameField == NameFieldValidate.VALIDATE && costField && importanceField)
+		if (nameField == NameFieldValidate.VALIDATE && costField !is ValidationResult.Invalid && importanceField !is ValidationResult.Invalid)
 			viewModelScope.launch { saveWish(name, info, cost.toInt(), Importance.valueOf(importance)).applyState() }
 		else
 			EditScreenState.Validating(nameField, costField, importanceField).applyState()

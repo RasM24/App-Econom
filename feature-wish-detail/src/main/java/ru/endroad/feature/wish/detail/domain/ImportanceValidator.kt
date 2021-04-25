@@ -2,9 +2,10 @@ package ru.endroad.feature.wish.detail.domain
 
 import ru.endroad.shared.wish.core.entity.Importance
 
-class ImportanceValidator {
+object ImportanceValidator {
 
-	operator fun invoke(value: String): Boolean =
+	operator fun invoke(value: String): ValidationResult =
 		runCatching { Importance.valueOf(value) }
-			.fold({ true }, { false })
+			.fold(onSuccess = { ValidationResult.Valid },
+				  onFailure = { ValidationResult.Invalid("Выберите важность") }) //TODO Hardcore Text
 }

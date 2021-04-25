@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import ru.endroad.feature.wish.detail.R
+import ru.endroad.feature.wish.detail.domain.ValidationResult
 import ru.endroad.feature.wish.detail.presentation.EditScreenEvent
 import ru.endroad.feature.wish.detail.presentation.EditScreenState
 import ru.endroad.feature.wish.detail.presentation.EditWishViewModel
@@ -98,8 +99,8 @@ class EditWishFragment : Fragment() {
 	}
 
 	private fun renderValidatingFieldsScreen(state: EditScreenState.Validating) {
-		state.costField?.let { input_cost_layout.defineError(R.string.cost_input_error, !it) }
-		state.importanceField?.let { input_important_layout.defineError(R.string.importance_input_error, !it) }
+		state.costField?.let { input_cost_layout.defineError(R.string.cost_input_error, it is ValidationResult.Invalid) }
+		state.importanceField?.let { input_important_layout.defineError(R.string.importance_input_error, it is ValidationResult.Invalid) }
 		state.nameField?.let {
 			input_name_layout.error = when (it) {
 				ru.endroad.feature.wish.detail.presentation.NameFieldValidate.EMPTY    -> resources.getString(R.string.name_input_error_empty)
