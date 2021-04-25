@@ -1,13 +1,13 @@
 package ru.endroad.feature.wish.detail.presentation
 
-import kotlinx.coroutines.Deferred
 import ru.endroad.feature.wish.detail.domain.ValidationResult
 import ru.endroad.shared.wish.core.entity.Wish
 
 sealed class EditScreenState {
 
+	object Initial : EditScreenState()
 	object InitialNewWish : EditScreenState()
-	class InitialEditWish(val wish: Deferred<Wish>) : EditScreenState()
+	class InitialEditWish(val wish: Wish) : EditScreenState()
 
 	object WishSaved : EditScreenState()
 

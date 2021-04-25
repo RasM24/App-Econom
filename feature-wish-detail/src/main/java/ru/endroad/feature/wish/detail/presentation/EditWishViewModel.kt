@@ -1,7 +1,6 @@
 package ru.endroad.feature.wish.detail.presentation
 
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.endroad.component.core.PresenterMviAbstract
@@ -9,7 +8,6 @@ import ru.endroad.feature.wish.detail.domain.CostValidator
 import ru.endroad.feature.wish.detail.domain.ImportanceValidator
 import ru.endroad.feature.wish.detail.domain.NameValidator
 import ru.endroad.feature.wish.detail.domain.ValidationResult
-
 import ru.endroad.shared.wish.core.domain.AddWishUseCase
 import ru.endroad.shared.wish.core.domain.EditWishUseCase
 import ru.endroad.shared.wish.core.domain.GetWishUseCase
@@ -26,14 +24,15 @@ class EditWishViewModel(
 	private val importanceValidator: ImportanceValidator
 ) : PresenterMviAbstract<EditScreenState, EditScreenEvent>() {
 
-	private val initialState: EditScreenState
-		get() = wishId?.let { EditScreenState.InitialEditWish(viewModelScope.async { getWish(wishId) }) }
-			?: EditScreenState.InitialNewWish
+	override val state: MutableStateFlow<EditScreenState> = MutableStateFlow(EditScreenState.Initial)
 
-	override val state: MutableStateFlow<EditScreenState> = MutableStateFlow(initialState)
+	init {
+		reduce(EditScreenEvent.LoadDraft)
+	}
 
 	override fun reduce(event: EditScreenEvent) {
 		when (event) {
+			is EditScreenEvent.LoadDraft                   -> loadDraft()
 			is EditScreenEvent.ApplyClick                  -> event.reduceAndApply()
 
 			is EditScreenEvent.NameInputLostFocus          -> event.reduce().applyState()
@@ -45,6 +44,14 @@ class EditWishViewModel(
 			is EditScreenEvent.InfoInputReceiveFocus       -> Unit
 			is EditScreenEvent.CostInputReceiveFocus       -> event.reduce().applyState()
 			is EditScreenEvent.ImportanceInputReceiveFocus -> event.reduce().applyState()
+		}
+	}
+
+	private fun loadDraft() {
+		viewModelScope.launch {
+			val wish = wishId?.let { getWish(it) }
+			val newState = wish?.let(EditScreenState::InitialEditWish) ?: EditScreenState.InitialNewWish
+			newState.applyState()
 		}
 	}
 

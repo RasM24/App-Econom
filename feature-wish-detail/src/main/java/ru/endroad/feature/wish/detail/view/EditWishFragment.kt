@@ -22,7 +22,6 @@ import kotlinx.android.synthetic.main.wish_edit_fragment.input_name_layout
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import ru.endroad.feature.wish.detail.R
@@ -70,8 +69,9 @@ class EditWishFragment : Fragment() {
 		input_important.setAdapter(adapter)
 	}
 
-	private suspend fun render(state: EditScreenState) {
+	private fun render(state: EditScreenState) {
 		when (state) {
+			EditScreenState.Initial            -> Unit
 			EditScreenState.InitialNewWish     -> renderNewWishScreen()
 			is EditScreenState.InitialEditWish -> renderEditWishScreen(state)
 			is EditScreenState.Validating      -> renderValidatingFieldsScreen(state)
@@ -83,13 +83,11 @@ class EditWishFragment : Fragment() {
 		requireActivity().title = getString(R.string.edit_screen_editing_wish)
 		apply_button.setText(R.string.edit_screen_edit_wish)
 
-		lifecycleScope.launch {
-			state.wish.await().run {
-				input_name.setText(name)
-				input_cost.setText("$cost")
-				input_info.setText(info)
-				input_important.setText(importance.name, false)
-			}
+		state.wish.run {
+			input_name.setText(name)
+			input_cost.setText("$cost")
+			input_info.setText(info)
+			input_important.setText(importance.name, false)
 		}
 	}
 
@@ -125,6 +123,7 @@ class EditWishFragment : Fragment() {
 	}
 
 	companion object {
+
 		const val WISH_ID = "WISH_ID"
 
 		fun getInstance(wishId: Int? = null): Fragment =
