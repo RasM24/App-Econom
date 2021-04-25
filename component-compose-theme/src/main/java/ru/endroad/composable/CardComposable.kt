@@ -1,4 +1,4 @@
-package composable
+package ru.endroad.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
