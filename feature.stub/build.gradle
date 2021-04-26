@@ -1,3 +1,5 @@
 dependencies {
 	implementation project(":component.design")
+	implementation project(":component-legacy")
+	implementation project(":component-compose-theme")
 }

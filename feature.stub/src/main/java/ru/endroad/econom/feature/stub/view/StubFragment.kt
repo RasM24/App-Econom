@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.stub_fragment.*
-import ru.endroad.econom.feature.stub.R
+import ru.endroad.component.core.setComposeView
+import ru.endroad.composable.TwoActionStub
 
 abstract class StubFragment : Fragment() {
-
-	private val layout = R.layout.stub_fragment
 
 	abstract val imageId: Int
 	abstract val titleText: Int
@@ -23,31 +22,16 @@ abstract class StubFragment : Fragment() {
 	open val doTheSecondaryAction: () -> Unit = {}
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-		inflater.inflate(layout, container, false)
-
-	override fun onActivityCreated(savedInstanceState: Bundle?) {
-		super.onActivityCreated(savedInstanceState)
-		setupViewComponents()
-	}
-
-	private fun setupViewComponents() {
-		image.setImageResource(imageId)
-
-		title.setText(titleText)
-		description.setOrHide(descriptionText)
-		mainButton.setOrHide(mainButtonText)
-		secondaryButton.setOrHide(secondaryButtonText)
-
-		mainButton.setOnClickListener { doTheMainAction() }
-		secondaryButton.setOnClickListener { doTheSecondaryAction() }
-	}
-
-	private fun TextView.setOrHide(stringId: Int?) {
-		if (stringId != null) {
-			setText(stringId)
-			visibility = View.VISIBLE
-		} else {
-			visibility = View.GONE
+		setComposeView {
+			TwoActionStub(
+				painter = painterResource(id = imageId),
+				contentDescription = null,
+				titleText = stringResource(id = titleText),
+				descriptionText = descriptionText?.let { stringResource(id = it) },
+				mainButtonText = mainButtonText?.let { stringResource(id = it) },
+				secondaryButtonText = secondaryButtonText?.let { stringResource(id = it) },
+				doTheMainAction = doTheMainAction,
+				doTheSecondaryAction = doTheSecondaryAction
+			)
 		}
-	}
 }
