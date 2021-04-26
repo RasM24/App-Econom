@@ -9,7 +9,7 @@ import ru.endroad.econom.feature.stub.view.NoDesireStubFragment
 import ru.endroad.econom.feature.stub.view.WishesFulfilledStubFragment
 import ru.endroad.econom.feature.wishes.WishFlowRouting
 import ru.endroad.econom.feature.wishes.completed.view.CompletedWishesFragment
-import ru.endroad.econom.feature.wishes.view.EditWishFragment
+import ru.endroad.feature.wish.detail.view.EditWishFragment
 
 class WishFlowRoutingImpl(private val navigator: Navigator) : WishFlowRouting {
 

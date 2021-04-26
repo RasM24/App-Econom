@@ -1,0 +1,6 @@
+dependencies {
+	implementation project(":shared-wish-core")
+	implementation project(":component.design")
+	implementation project(":component-legacy")
+	implementation project(":component-compose-theme")
+}
