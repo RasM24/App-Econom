@@ -62,5 +62,5 @@ fun UnelevatedTextButton(
 	border = border,
 	colors = colors,
 	contentPadding = contentPadding,
-	content = { Text(text = text) }
+	content = { ActionText(text = text) }
 )
