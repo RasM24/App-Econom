@@ -64,3 +64,17 @@ fun CaptionText(
 	style = MaterialTheme.typography.caption,
 	textAlign = textAlign,
 )
+
+@Composable
+fun ActionText(
+	text: String,
+	modifier: Modifier = Modifier,
+	color: Color = Color.Unspecified,
+	textAlign: TextAlign? = null,
+) = Text(
+	text = text,
+	modifier = modifier,
+	color = color,
+	style = MaterialTheme.typography.button,
+	textAlign = textAlign,
+)

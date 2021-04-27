@@ -31,6 +31,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import ru.endroad.composable.ActionText
 import ru.endroad.composable.MaterialTextField
 import ru.endroad.composable.PrimaryText
 import ru.endroad.feature.wish.detail.domain.ValidationResult
@@ -123,7 +124,7 @@ internal fun PinnedButton(
 	onClick: () -> Unit,
 ) = Box(modifier = Modifier.padding(horizontal = 32.dp, vertical = 8.dp)) {
 	Button(modifier = modifier, onClick = onClick) {
-		Text(text = text)
+		ActionText(text = text)
 	}
 }
 

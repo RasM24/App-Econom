@@ -6,8 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.bottom_sheet.*
-import ru.endroad.birusa.feature.wishes.R
+import ru.endroad.component.core.setComposeView
 
 class ActionBottomDialogFragment(
 	private val wishName: String,
@@ -16,26 +15,24 @@ class ActionBottomDialogFragment(
 	private val onClickDeleteListener: () -> Unit
 ) : BottomSheetDialogFragment() {
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-		inflater.inflate(R.layout.bottom_sheet, container, false)
-
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
-		wish_name.text = wishName
-
-		complete.setOnClickListener {
-			onClickCompleteListener()
-			dismiss()
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+		setComposeView {
+			WishActionBottomSheet(
+				title = wishName,
+				onClickEdit = {
+					onClickEditListener()
+					dismiss()
+				},
+				onClickComplete = {
+					onClickCompleteListener()
+					dismiss()
+				},
+				onClickDelete = {
+					onClickDeleteListener()
+					dismiss()
+				},
+			)
 		}
-		edit.setOnClickListener {
-			onClickEditListener()
-			dismiss()
-		}
-		delete.setOnClickListener {
-			onClickDeleteListener()
-			dismiss()
-		}
-	}
 }
 
 //TODO попробовать вынести в роутер
