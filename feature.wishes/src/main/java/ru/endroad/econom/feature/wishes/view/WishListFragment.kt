@@ -13,7 +13,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
 import com.google.android.material.snackbar.Snackbar
-import com.mikepenz.itemanimators.SlideInOutRightAnimator
 import kotlinx.android.synthetic.main.wish_fragment_list.fragment_root
 import kotlinx.android.synthetic.main.wish_fragment_list.list
 import kotlinx.android.synthetic.main.wish_fragment_list.new_wish
@@ -47,7 +46,6 @@ class WishListFragment : Fragment() {
 
 		val divider = DividerItemDecoration(requireContext(), LinearLayout.VERTICAL)
 			.apply { setDrawable(resources.getDrawable(R.drawable.divider_horizontal)) }
-		list.itemAnimator = SlideInOutRightAnimator(list)
 		list.adapter = adapter
 		list.addItemDecoration(divider)
 
