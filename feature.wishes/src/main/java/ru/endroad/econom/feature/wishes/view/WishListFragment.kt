@@ -16,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.wish_fragment_list.fragment_root
 import kotlinx.android.synthetic.main.wish_fragment_list.list
 import kotlinx.android.synthetic.main.wish_fragment_list.new_wish
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -50,7 +51,9 @@ class WishListFragment : Fragment() {
 		list.addItemDecoration(divider)
 
 		new_wish.setOnClickListener { presenter.reduce(ListScreenEvent.NewWishClick) }
-		presenter.message.subscribe(this, messageHandler)
+		presenter.message.asSharedFlow()
+			.onEach { messageHandler(it) }
+			.launchIn(lifecycleScope)
 
 		presenter.state.asStateFlow()
 			.onEach { render(it) }
@@ -109,11 +112,6 @@ class WishListFragment : Fragment() {
 			ItemAction.ADDED   -> adapter.add(state.changedItem.position, list[state.changedItem.position])
 			else               -> adapter.items = list.toMutableList()
 		}
-
-//TODO может и вернуть
-//		state.estimate
-//			.map(::TotalItem)
-//			.setFooter()
 	}
 
 	companion object {
