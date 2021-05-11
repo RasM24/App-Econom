@@ -3,16 +3,5 @@ dependencies {
 	implementation project(":component.design")
 	implementation project(":component-legacy")
 	implementation project(":component-compose-theme")
-
 	implementation project(":feature.estimation")
-
-	implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0-alpha01'
-	implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0-alpha01'
-
-	implementation 'org.koin:koin-core:2.1.5'
-	implementation 'org.koin:koin-core-ext:2.1.5'
-	implementation 'org.koin:koin-androidx-viewmodel:2.1.5'
-
-	implementation 'com.mikepenz:fastadapter:4.1.1'
-	implementation "com.mikepenz:itemanimators:1.1.0"
 }

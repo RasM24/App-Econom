@@ -1,13 +1,13 @@
 package ru.endroad.econom.feature.wishes.presenter
 
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.endroad.birusa.feature.estimation.GetRandomEstimationUseCase
 import ru.endroad.birusa.feature.estimation.TotalResult
 import ru.endroad.component.core.PresenterMviAbstract
-import ru.endroad.component.core.SingleLiveEvent
 import ru.endroad.econom.feature.wishes.WishFlowRouting
 import ru.endroad.econom.feature.wishes.entity.ChangedItem
 import ru.endroad.econom.feature.wishes.entity.ItemAction
@@ -37,7 +37,7 @@ class WishListViewModel(
 	getWishList: GetWishListUseCase,
 ) : PresenterMviAbstract<ListScreenState, ListScreenEvent>() {
 
-	val message = SingleLiveEvent<ListScreenSingleEvent>()
+	val message = MutableSharedFlow<ListScreenSingleEvent?>()
 
 	override val state = MutableStateFlow<ListScreenState>(ListScreenState.Init)
 
@@ -73,16 +73,16 @@ class WishListViewModel(
 			is NewWishClick     -> router.openWishNewScreen()
 			is PerformClick     -> viewModelScope.launch {
 				performWish(event.wish)
-				message(ListScreenSingleEvent.PerformWish(event.wish))
+				message.emit(ListScreenSingleEvent.PerformWish(event.wish))
 			}
 			is DeleteClick      -> viewModelScope.launch {
 				deleteWish(event.wish)
-				message(ListScreenSingleEvent.DeleteWish(event.wish))
+				message.emit(ListScreenSingleEvent.DeleteWish(event.wish))
 			}
 			is EditClick        -> router.openWishEditScreen(event.wish.id)
 			MenuCompletedClick  -> router.openCompletedWishScreen()
 			is UndoDeleteClick  -> viewModelScope.launch { addWish(event.wish) }
-			is UndoPerformClick -> viewModelScope.launch { performWish(event.wish) }
+			is UndoPerformClick -> viewModelScope.launch { performWish(event.wish, complete = false) }
 		}
 	}
 
