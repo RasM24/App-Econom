@@ -5,10 +5,10 @@ import androidx.fragment.app.FragmentManager
 import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.component.core.Navigator
 import ru.endroad.component.core.changeRoot
-import ru.endroad.econom.feature.stub.view.NoDesireStubFragment
-import ru.endroad.econom.feature.stub.view.WishesFulfilledStubFragment
 import ru.endroad.econom.feature.wishes.WishFlowRouting
 import ru.endroad.econom.feature.wishes.completed.view.CompletedWishesFragment
+import ru.endroad.econom.feature.wishes.view.NoDesireStubFragment
+import ru.endroad.econom.feature.wishes.view.WishesFulfilledStubFragment
 import ru.endroad.feature.wish.detail.view.EditWishFragment
 
 class WishFlowRoutingImpl(private val navigator: Navigator) : WishFlowRouting {

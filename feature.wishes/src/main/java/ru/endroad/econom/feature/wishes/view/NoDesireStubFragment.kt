@@ -1,4 +1,4 @@
-package ru.endroad.econom.feature.stub.view
+package ru.endroad.econom.feature.wishes.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
