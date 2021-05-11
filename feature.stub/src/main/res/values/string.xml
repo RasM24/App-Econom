@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
 	<string name="noDesireTitle">Добрый день!</string>
 	<string name="noDesireDescriptor">Добавьте свое первое желание</string>
 	<string name="noDesireMainButton">Добавить первое желание</string>
@@ -9,8 +8,4 @@
 	<string name="wishesFulfilledDescriptor">Наверняка у вас остались цели в жизни, можете их добавить в список</string>
 	<string name="wishesFulfilledMainButton">Добавить</string>
 	<string name="wishesFulfilledSecondButton">Что я уже сделал?</string>
-
-	<string name="noCompletedTitle">Эх :(</string>
-	<string name="noCompletedDescriptor">Вы еще ничего не выполнили. Перейдите в раздел списка желаний и отметите то желание, которое вы уже исполнили</string>
-
 </resources>
