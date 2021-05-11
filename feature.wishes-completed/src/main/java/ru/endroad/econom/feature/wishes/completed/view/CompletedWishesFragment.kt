@@ -24,7 +24,11 @@ class CompletedWishesFragment : Fragment() {
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
 		setComposeView {
 			val state = presenter.state.collectAsState()
-			RenderState(state.value)
+
+			when (val screenState = state.value) {
+				is CompletedScreenState.ShowData -> RenderData(screenState)
+				else                             -> Unit
+			}
 		}
 
 	override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -33,17 +37,13 @@ class CompletedWishesFragment : Fragment() {
 	}
 
 	@Composable
-	private fun RenderState(state: CompletedScreenState) {
-		when (state) {
-			is CompletedScreenState.ShowData -> RenderData(state)
-			else                             -> Unit
-		}
-	}
-
-	@Composable
 	private fun RenderData(state: CompletedScreenState.ShowData) {
-		LazyColumn(modifier = Modifier.fillMaxSize()) {
-			items(state.completedWishList, Wish::id) { WishItem(wish = it) }
+		if (state.completedWishList.isEmpty()) {
+			RenderNoCompletedStub()
+		} else {
+			LazyColumn(modifier = Modifier.fillMaxSize()) {
+				items(state.completedWishList, Wish::id) { WishItem(wish = it) }
+			}
 		}
 	}
 }
