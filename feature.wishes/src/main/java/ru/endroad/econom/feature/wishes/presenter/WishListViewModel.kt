@@ -5,8 +5,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import ru.endroad.birusa.feature.estimation.GetRandomEstimationUseCase
-import ru.endroad.birusa.feature.estimation.TotalResult
 import ru.endroad.component.core.PresenterMviAbstract
 import ru.endroad.econom.feature.wishes.WishFlowRouting
 import ru.endroad.econom.feature.wishes.entity.ChangedItem
@@ -32,7 +30,6 @@ class WishListViewModel(
 	private val addWish: AddWishUseCase,
 	private val deleteWish: DeleteWishUseCase,
 	private val performWish: PerformWishUseCase,
-	private val getRandomEstimation: GetRandomEstimationUseCase,
 	private val router: WishFlowRouting,
 	getWishList: GetWishListUseCase,
 ) : PresenterMviAbstract<ListScreenState, ListScreenEvent>() {
@@ -74,22 +71,12 @@ class WishListViewModel(
 		}
 	}
 
-	//TODO разобраться с фичей дразнилки, какая то кривая реализация всего этого
-	private fun calculateEstimation(sum: Int): TotalResult {
-		val estimation = getRandomEstimation()
-
-		return TotalResult(estimation.message, (sum / estimation.moneyRate).toInt())
-	}
-
-	private fun ListScreenState?.reduce(notCompletedList: List<Wish>): ListScreenState {
-		val sum = notCompletedList.sumBy(Wish::cost)
-
-		return if (this is ListScreenState.ShowData) {
+	private fun ListScreenState?.reduce(notCompletedList: List<Wish>): ListScreenState =
+		if (this is ListScreenState.ShowData) {
 			val changedItem = diff(this.wishList, notCompletedList)
-			ListScreenState.ShowData(notCompletedList, calculateEstimation(sum), changedItem)
+			ListScreenState.ShowData(notCompletedList, changedItem)
 		} else
-			ListScreenState.ShowData(notCompletedList, calculateEstimation(sum))
-	}
+			ListScreenState.ShowData(notCompletedList)
 
 	private fun diff(oldList: List<Wish>, newList: List<Wish>): ChangedItem? {
 		val itemAction: ItemAction = when (newList.size) {
