@@ -6,5 +6,5 @@ import ru.endroad.econom.feature.wishes.completed.presenter.CompletedWishListVie
 
 val featureCompletedWishesModule = module {
 
-	viewModel { CompletedWishListViewModel(get(), get()) }
+	viewModel { CompletedWishListViewModel(get()) }
 }

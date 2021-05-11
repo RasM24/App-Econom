@@ -12,7 +12,6 @@ import ru.endroad.shared.wish.core.domain.GetWishListUseCase
 import ru.endroad.shared.wish.core.entity.Wish
 
 class CompletedWishListViewModel(
-	private val router: CompletedScreenRouting,
 	getWishList: GetWishListUseCase
 ) : PresenterMviAbstract<CompletedScreenState, CompletedScreenEvent>() {
 
@@ -29,14 +28,7 @@ class CompletedWishListViewModel(
 
 	override fun reduce(event: CompletedScreenEvent) {
 		when (event) {
-			is ChangeData -> event.reduceAndApply()
-		}
-	}
-
-	private fun ChangeData.reduceAndApply() {
-		when {
-			completedWishList.isEmpty()    -> router.showStubNoCompleted()
-			completedWishList.isNotEmpty() -> CompletedScreenState.ShowData(completedWishList).applyState()
+			is ChangeData -> CompletedScreenState.ShowData(event.completedWishList).applyState()
 		}
 	}
 }

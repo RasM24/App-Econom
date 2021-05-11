@@ -24,7 +24,6 @@ dependencies {
 	implementation project(':feature-wish-detail')
 	implementation project(':feature.navigation')
 	implementation project(":feature.estimation")
-	implementation project(":feature.stub")
 	implementation project(":component.design")
 	implementation project(":component.wish")
 	implementation project(":component-legacy")

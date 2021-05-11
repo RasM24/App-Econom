@@ -11,7 +11,8 @@ sealed class ListScreenState {
 		val changedItem: ChangedItem? = null
 	) : ListScreenState()
 
-	object NoData : ListScreenState()
+	object NoDesire : ListScreenState()
+	object AllCompleted : ListScreenState()
 }
 
 data class ChangedItem(val position: Int, val action: ItemAction)

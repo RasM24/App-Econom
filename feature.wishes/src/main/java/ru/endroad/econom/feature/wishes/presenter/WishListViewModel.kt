@@ -48,21 +48,9 @@ class WishListViewModel(
 				val notCompletedList = wishList.filterNot(Wish::complete).reversed()
 
 				when {
-					notCompletedList.isNotEmpty() -> {
-						if (state.value == ListScreenState.NoData) router.closeStub()
-						val currentState = state.value
-						currentState.reduce(notCompletedList).applyState()
-					}
-
-					wishList.none(Wish::complete) -> {
-						ListScreenState.NoData.applyState()
-						router.showStubNoDesire()
-					}
-
-					wishList.any(Wish::complete)  -> {
-						ListScreenState.NoData.applyState()
-						router.showStubWishesFulfilled()
-					}
+					notCompletedList.isNotEmpty() -> state.value.reduce(notCompletedList).applyState()
+					wishList.none(Wish::complete) -> ListScreenState.NoDesire.applyState()
+					wishList.any(Wish::complete)  -> ListScreenState.AllCompleted.applyState()
 				}
 			}
 		}
