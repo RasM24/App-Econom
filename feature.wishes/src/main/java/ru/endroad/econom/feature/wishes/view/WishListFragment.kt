@@ -37,9 +37,12 @@ class WishListFragment : Fragment() {
 
 			Crossfade(targetState = state) {
 				when (val screenState = it.value) {
-					ListScreenState.Init        -> Unit
-					ListScreenState.NoData      -> Unit
-					is ListScreenState.ShowData -> RenderDataScene(state = screenState)
+					ListScreenState.Init         -> Unit
+					ListScreenState.NoDesire     -> RenderNoDesireStub(doTheMainAction = { presenter.reduce(ListScreenEvent.NewWishClick) })
+					ListScreenState.AllCompleted -> RenderAllCompletedStub(
+						doTheMainAction = { presenter.reduce(ListScreenEvent.NewWishClick) },
+						doTheSecondaryAction = { presenter.reduce(ListScreenEvent.MenuCompletedClick) })
+					is ListScreenState.ShowData  -> RenderDataScene(state = screenState)
 				}
 			}
 		}
