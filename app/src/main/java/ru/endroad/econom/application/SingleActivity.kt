@@ -21,7 +21,7 @@ class SingleActivity : AppCompatActivity() {
 
 		if (savedInstanceState == null) {
 			supportFragmentManager.changeRoot(AppBarFragment(), R.id.root)
-			supportFragmentManager.changeRoot(WishListFragment.getInstance(), R.id.content)
+			supportFragmentManager.changeRoot(WishListFragment(), R.id.content)
 		}
 	}
 

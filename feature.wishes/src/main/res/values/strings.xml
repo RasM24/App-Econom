@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="wish_list_title">Ваш список</string>
 	<string name="wish_list_menu_completed">Выполненные</string>
 
 	<string name="noDesireTitle">Добрый день!</string>

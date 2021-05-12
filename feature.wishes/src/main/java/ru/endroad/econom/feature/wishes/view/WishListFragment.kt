@@ -1,13 +1,8 @@
 package ru.endroad.econom.feature.wishes.view
 
-import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,10 +11,9 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.fragment.app.Fragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.endroad.birusa.feature.wishes.R
-import ru.endroad.component.core.setComposeView
+import ru.endroad.component.core.MigrateComposeScreen
 import ru.endroad.econom.feature.wishes.entity.ListScreenEvent
 import ru.endroad.econom.feature.wishes.entity.ListScreenSingleEvent
 import ru.endroad.econom.feature.wishes.entity.ListScreenState
@@ -27,25 +21,23 @@ import ru.endroad.econom.feature.wishes.presenter.WishListViewModel
 import ru.endroad.shared.wish.core.entity.Wish
 
 //TODO перевести всю навигацию на роутинг в app-модуле
-class WishListFragment : Fragment() {
+class WishListFragment : MigrateComposeScreen<ListScreenState, ListScreenEvent>() {
 
-	private val presenter by viewModel<WishListViewModel>()
+	override val presenter by viewModel<WishListViewModel>()
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-		setComposeView {
-			val state = presenter.state.collectAsState()
+	override val titleRes = R.string.wish_list_title
 
-			Crossfade(targetState = state) {
-				when (val screenState = it.value) {
-					ListScreenState.Init         -> Unit
-					ListScreenState.NoDesire     -> RenderNoDesireStub(doTheMainAction = { presenter.reduce(ListScreenEvent.NewWishClick) })
-					ListScreenState.AllCompleted -> RenderAllCompletedStub(
-						doTheMainAction = { presenter.reduce(ListScreenEvent.NewWishClick) },
-						doTheSecondaryAction = { presenter.reduce(ListScreenEvent.MenuCompletedClick) })
-					is ListScreenState.ShowData  -> RenderDataScene(state = screenState)
-				}
-			}
+	@Composable
+	override fun Render(screenState: ListScreenState) {
+		when (screenState) {
+			ListScreenState.Init         -> Unit
+			ListScreenState.NoDesire     -> RenderNoDesireStub(doTheMainAction = { presenter.reduce(ListScreenEvent.NewWishClick) })
+			ListScreenState.AllCompleted -> RenderAllCompletedStub(
+				doTheMainAction = { presenter.reduce(ListScreenEvent.NewWishClick) },
+				doTheSecondaryAction = { presenter.reduce(ListScreenEvent.MenuCompletedClick) })
+			is ListScreenState.ShowData  -> RenderDataScene(state = screenState)
 		}
+	}
 
 	@Composable
 	private fun RenderDataScene(state: ListScreenState.ShowData) {
@@ -68,11 +60,6 @@ class WishListFragment : Fragment() {
 		}
 	}
 
-	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-		inflater.inflate(R.menu.wish_list_menu, menu)
-		super.onCreateOptionsMenu(menu, inflater)
-	}
-
 	private fun showBottomSheet(wish: Wish) {
 		showBottomSheetActionWish(
 			wish.name,
@@ -82,14 +69,15 @@ class WishListFragment : Fragment() {
 		)
 	}
 
+	//region fragment legacy
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+		inflater.inflate(R.menu.wish_list_menu, menu)
+		super.onCreateOptionsMenu(menu, inflater)
+	}
+
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 		if (item.itemId == R.id.menu_completed) presenter.reduce(ListScreenEvent.MenuCompletedClick)
 		return true
 	}
-
-	companion object {
-
-		fun getInstance(): Fragment =
-			WishListFragment()
-	}
+	//endregion
 }
