@@ -1,39 +1,28 @@
 package ru.endroad.econom.feature.wishes.completed.view
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.fragment.app.Fragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.endroad.component.core.setComposeView
+import ru.endroad.component.core.MigrateComposeScreen
+import ru.endroad.econom.feature.wishes.completed.R
+import ru.endroad.econom.feature.wishes.completed.mvi.CompletedScreenEvent
 import ru.endroad.econom.feature.wishes.completed.mvi.CompletedScreenState
 import ru.endroad.econom.feature.wishes.completed.presenter.CompletedWishListViewModel
 import ru.endroad.shared.wish.core.entity.Wish
 
-class CompletedWishesFragment : Fragment() {
+class CompletedWishesFragment : MigrateComposeScreen<CompletedScreenState, CompletedScreenEvent>() {
 
-	private val presenter by viewModel<CompletedWishListViewModel>()
+	override val presenter by viewModel<CompletedWishListViewModel>()
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-		setComposeView {
-			val state = presenter.state.collectAsState()
+	override val titleRes = R.string.completed_list_title
 
-			when (val screenState = state.value) {
-				is CompletedScreenState.ShowData -> RenderData(screenState)
-				else                             -> Unit
-			}
-		}
-
-	override fun onActivityCreated(savedInstanceState: Bundle?) {
-		super.onActivityCreated(savedInstanceState)
-		requireActivity().title = "Сколько еще копить?"
+	@Composable
+	override fun Render(screenState: CompletedScreenState) = when (screenState) {
+		is CompletedScreenState.ShowData -> RenderData(screenState)
+		else                             -> Unit
 	}
 
 	@Composable
