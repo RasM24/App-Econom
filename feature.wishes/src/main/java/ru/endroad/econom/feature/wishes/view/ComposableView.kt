@@ -41,8 +41,8 @@ internal fun WishList(
 }
 
 @Composable
-internal fun LaunchCompletedSnackbar(scaffoldState: ScaffoldState, onAction: () -> Unit) {
-	LaunchedEffect(scaffoldState) {
+internal fun LaunchCompletedSnackbar(scaffoldState: ScaffoldState, onAction: () -> Unit, onCloseSnack: () -> Unit) {
+	LaunchedEffect(null) {
 		val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
 			message = "Выполнено",
 			actionLabel = "отменить"
@@ -52,12 +52,14 @@ internal fun LaunchCompletedSnackbar(scaffoldState: ScaffoldState, onAction: () 
 			SnackbarResult.Dismissed       -> Unit
 			SnackbarResult.ActionPerformed -> onAction()
 		}
+
+		onCloseSnack()
 	}
 }
 
 @Composable
-internal fun LaunchDeletedSnackbar(scaffoldState: ScaffoldState, onAction: () -> Unit) {
-	LaunchedEffect(scaffoldState) {
+internal fun LaunchDeletedSnackbar(scaffoldState: ScaffoldState, onAction: () -> Unit, onCloseSnack: () -> Unit) {
+	LaunchedEffect(null) {
 		val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
 			message = "Удалено",
 			actionLabel = "отменить"
@@ -67,5 +69,7 @@ internal fun LaunchDeletedSnackbar(scaffoldState: ScaffoldState, onAction: () ->
 			SnackbarResult.Dismissed       -> Unit
 			SnackbarResult.ActionPerformed -> onAction()
 		}
+
+		onCloseSnack()
 	}
 }
