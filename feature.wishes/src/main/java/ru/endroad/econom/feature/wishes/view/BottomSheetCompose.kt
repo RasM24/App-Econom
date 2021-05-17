@@ -65,12 +65,3 @@ private fun ActionIconText(
 		ActionText(modifier = modifier, text = text, color = MaterialTheme.colors.primary)
 	}
 }
-//
-//<item name="android:layout_width">match_parent</item>
-//<item name="android:layout_height">wrap_content</item>
-//<item name="iconPadding">8dp</item>
-//<item name="android:layout_marginLeft">16dp</item>
-//<item name="android:layout_marginRight">16dp</item>
-//<item name="android:layout_marginTop">8dp</item>
-//<item name="android:layout_marginBottom">8dp</item>
-//<item name="android:gravity">left|center_vertical</item>
