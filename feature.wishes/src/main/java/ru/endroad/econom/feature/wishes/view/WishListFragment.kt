@@ -1,25 +1,23 @@
 package ru.endroad.econom.feature.wishes.view
 
-import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Scaffold
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Modifier
-import androidx.fragment.app.Fragment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.endroad.birusa.feature.wishes.R
-import ru.endroad.component.core.setComposeView
+import ru.endroad.component.core.MigrateComposeScreen
 import ru.endroad.econom.feature.wishes.entity.ListScreenEvent
 import ru.endroad.econom.feature.wishes.entity.ListScreenSingleEvent
 import ru.endroad.econom.feature.wishes.entity.ListScreenState
@@ -27,69 +25,97 @@ import ru.endroad.econom.feature.wishes.presenter.WishListViewModel
 import ru.endroad.shared.wish.core.entity.Wish
 
 //TODO перевести всю навигацию на роутинг в app-модуле
-class WishListFragment : Fragment() {
+class WishListFragment : MigrateComposeScreen<ListScreenState, ListScreenEvent>() {
 
-	private val presenter by viewModel<WishListViewModel>()
+	override val presenter by viewModel<WishListViewModel>()
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-		setComposeView {
-			val state = presenter.state.collectAsState()
+	override val titleRes = R.string.wish_list_title
 
-			Crossfade(targetState = state) {
-				when (val screenState = it.value) {
-					ListScreenState.Init         -> Unit
-					ListScreenState.NoDesire     -> RenderNoDesireStub(doTheMainAction = { presenter.reduce(ListScreenEvent.NewWishClick) })
-					ListScreenState.AllCompleted -> RenderAllCompletedStub(
-						doTheMainAction = { presenter.reduce(ListScreenEvent.NewWishClick) },
-						doTheSecondaryAction = { presenter.reduce(ListScreenEvent.MenuCompletedClick) })
-					is ListScreenState.ShowData  -> RenderDataScene(state = screenState)
-				}
-			}
+	@Composable
+	override fun Render(screenState: ListScreenState) {
+		when (screenState) {
+			ListScreenState.Init         -> Unit
+			ListScreenState.NoDesire     -> RenderNoDesireStub(doTheMainAction = { presenter.reduce(ListScreenEvent.NewWishClick) })
+			ListScreenState.AllCompleted -> RenderAllCompletedStub(
+				doTheMainAction = { presenter.reduce(ListScreenEvent.NewWishClick) },
+				doTheSecondaryAction = { presenter.reduce(ListScreenEvent.MenuCompletedClick) })
+			is ListScreenState.ShowData  -> RenderDataScene(state = screenState)
 		}
 
+		//TODO fragment legacy
+		val hasWishes = screenState is ListScreenState.ShowData
+		setHasOptionsMenu(hasWishes)
+	}
+
+	//TODO Много говнокода. Изучить детальнее compose и навести здесь порядок
+	@OptIn(ExperimentalMaterialApi::class)
 	@Composable
 	private fun RenderDataScene(state: ListScreenState.ShowData) {
 		val scaffoldState = rememberScaffoldState()
-		val singleEvent = presenter.message.collectAsState(null)
 
-		when (val event = singleEvent.value) {
-			is ListScreenSingleEvent.PerformWish -> LaunchCompletedSnackbar(scaffoldState) { presenter.reduce(ListScreenEvent.UndoPerformClick(event.wish)) }
-			is ListScreenSingleEvent.DeleteWish  -> LaunchDeletedSnackbar(scaffoldState) { presenter.reduce(ListScreenEvent.UndoDeleteClick(event.wish)) }
-			else                                 -> Unit
+		//TODO придумать, как работать с BottomSheet и selectable entity
+		var selectedWish: Wish by remember { mutableStateOf(Wish(name = "mock", cost = 0)) }
+		var lastAction: ListScreenSingleEvent by remember { mutableStateOf(ListScreenSingleEvent.Nothing) }
+
+		when (val action = lastAction) {
+			is ListScreenSingleEvent.PerformWish -> LaunchCompletedSnackbar(scaffoldState,
+																			onAction = { presenter.reduce(ListScreenEvent.UndoPerformClick(action.wish)) },
+																			onCloseSnack = { lastAction = ListScreenSingleEvent.Nothing }
+			)
+			is ListScreenSingleEvent.DeleteWish  -> LaunchDeletedSnackbar(scaffoldState,
+																		  onAction = { presenter.reduce(ListScreenEvent.UndoDeleteClick(action.wish)) },
+																		  onCloseSnack = { lastAction = ListScreenSingleEvent.Nothing }
+			)
+			ListScreenSingleEvent.Nothing        -> Unit
 		}
 
-		Scaffold(
-			floatingActionButton = newWishFab { presenter.reduce(ListScreenEvent.NewWishClick) },
-			scaffoldState = scaffoldState,
-		) {
-			LazyColumn(modifier = Modifier.fillMaxSize()) {
-				items(state.wishList, Wish::id) { WishItem(wish = it, onClick = { showBottomSheet(it) }) }
+		val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+		val scope = rememberCoroutineScope()
+
+		ModalBottomSheetLayout(
+			sheetState = bottomSheetState,
+			sheetContent = {
+				WishActionBottomSheet(
+					title = selectedWish.name,
+					onClickEdit = {
+						presenter.reduce(ListScreenEvent.EditClick(selectedWish))
+						scope.launch { bottomSheetState.hide() }
+					},
+					onClickComplete = {
+						presenter.reduce(ListScreenEvent.PerformClick(selectedWish))
+						lastAction = ListScreenSingleEvent.PerformWish(selectedWish)
+						scope.launch { bottomSheetState.hide() }
+					},
+					onClickDelete = {
+						presenter.reduce(ListScreenEvent.DeleteClick(selectedWish))
+						lastAction = ListScreenSingleEvent.DeleteWish(selectedWish)
+						scope.launch { bottomSheetState.hide() }
+					},
+				)
+			},
+			content = {
+				WishList(
+					wishList = state.wishList,
+					onNewWishClick = { presenter.reduce(ListScreenEvent.NewWishClick) },
+					onSelectWish = {
+						selectedWish = it
+						scope.launch { bottomSheetState.show() }
+					},
+					scaffoldState = scaffoldState
+				)
 			}
-		}
+		)
 	}
 
+	//region fragment legacy
 	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 		inflater.inflate(R.menu.wish_list_menu, menu)
 		super.onCreateOptionsMenu(menu, inflater)
-	}
-
-	private fun showBottomSheet(wish: Wish) {
-		showBottomSheetActionWish(
-			wish.name,
-			onClickCompleteListener = { presenter.reduce(ListScreenEvent.PerformClick(wish)) },
-			onClickEditListener = { presenter.reduce(ListScreenEvent.EditClick(wish)) },
-			onClickDeleteListener = { presenter.reduce(ListScreenEvent.DeleteClick(wish)) }
-		)
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 		if (item.itemId == R.id.menu_completed) presenter.reduce(ListScreenEvent.MenuCompletedClick)
 		return true
 	}
-
-	companion object {
-
-		fun getInstance(): Fragment =
-			WishListFragment()
-	}
+	//endregion
 }

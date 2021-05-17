@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="completed_list_title">Завершенные</string>
+
 	<string name="noCompletedTitle">Эх :(</string>
 	<string name="noCompletedDescriptor">Вы еще ничего не выполнили. Перейдите в раздел списка желаний и отметите то желание, которое вы уже исполнили</string>
 </resources>
