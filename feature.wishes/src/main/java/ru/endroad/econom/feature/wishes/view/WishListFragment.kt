@@ -37,6 +37,10 @@ class WishListFragment : MigrateComposeScreen<ListScreenState, ListScreenEvent>(
 				doTheSecondaryAction = { presenter.reduce(ListScreenEvent.MenuCompletedClick) })
 			is ListScreenState.ShowData  -> RenderDataScene(state = screenState)
 		}
+
+		//TODO fragment legacy
+		val hasWishes = screenState is ListScreenState.ShowData
+		setHasOptionsMenu(hasWishes)
 	}
 
 	@Composable
