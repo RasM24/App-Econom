@@ -8,7 +8,7 @@ import ru.endroad.econom.R
 import ru.endroad.econom.feature.wishes.WishFlowRouting
 
 val routerModule = module {
-	single<Navigator> { ContentNavigator(R.id.content) }
+	single<Navigator> { ContentNavigator(R.id.root) }
 
 	singleBy<WishFlowRouting, WishFlowRoutingImpl>()
 }

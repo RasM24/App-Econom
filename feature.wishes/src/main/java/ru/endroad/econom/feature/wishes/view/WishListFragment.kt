@@ -1,23 +1,31 @@
 package ru.endroad.econom.feature.wishes.view
 
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.Scaffold
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Task
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.component.core.MigrateComposeScreen
+import ru.endroad.component.core.composeFlatTopBar
 import ru.endroad.econom.feature.wishes.entity.ListScreenEvent
 import ru.endroad.econom.feature.wishes.entity.ListScreenSingleEvent
 import ru.endroad.econom.feature.wishes.entity.ListScreenState
@@ -33,17 +41,22 @@ class WishListFragment : MigrateComposeScreen<ListScreenState, ListScreenEvent>(
 
 	@Composable
 	override fun Render(screenState: ListScreenState) {
-		when (screenState) {
-			ListScreenState.Init         -> Unit
-			ListScreenState.NoDesire     -> RenderNoDesireStub(doTheMainAction = { presenter.reduce(ListScreenEvent.NewWishClick) })
-			ListScreenState.AllCompleted -> RenderAllCompletedStub(
-				doTheMainAction = { presenter.reduce(ListScreenEvent.NewWishClick) },
-				doTheSecondaryAction = { presenter.reduce(ListScreenEvent.MenuCompletedClick) })
-			is ListScreenState.ShowData  -> RenderDataScene(state = screenState)
+		val hasWishes = screenState is ListScreenState.ShowData
+
+		Scaffold(
+			topBar = composeFlatTopBar(actions = composeActions())
+		) {
+			when (screenState) {
+				ListScreenState.Init         -> Unit
+				ListScreenState.NoDesire     -> RenderNoDesireStub(doTheMainAction = { presenter.reduce(ListScreenEvent.NewWishClick) })
+				ListScreenState.AllCompleted -> RenderAllCompletedStub(
+					doTheMainAction = { presenter.reduce(ListScreenEvent.NewWishClick) },
+					doTheSecondaryAction = { presenter.reduce(ListScreenEvent.MenuCompletedClick) })
+				is ListScreenState.ShowData  -> RenderDataScene(state = screenState)
+			}
 		}
 
 		//TODO fragment legacy
-		val hasWishes = screenState is ListScreenState.ShowData
 		setHasOptionsMenu(hasWishes)
 	}
 
@@ -93,6 +106,7 @@ class WishListFragment : MigrateComposeScreen<ListScreenState, ListScreenEvent>(
 					},
 				)
 			},
+			//TODO вынести Scaffold наверх
 			content = {
 				WishList(
 					wishList = state.wishList,
@@ -107,15 +121,14 @@ class WishListFragment : MigrateComposeScreen<ListScreenState, ListScreenEvent>(
 		)
 	}
 
-	//region fragment legacy
-	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-		inflater.inflate(R.menu.wish_list_menu, menu)
-		super.onCreateOptionsMenu(menu, inflater)
+	private fun composeActions(): @Composable RowScope.() -> Unit = {
+		CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+			IconButton(onClick = { presenter.reduce(ListScreenEvent.MenuCompletedClick) }) {
+				Icon(
+					imageVector = Icons.Outlined.Task,
+					contentDescription = stringResource(R.string.wish_list_menu_completed)
+				)
+			}
+		}
 	}
-
-	override fun onOptionsItemSelected(item: MenuItem): Boolean {
-		if (item.itemId == R.id.menu_completed) presenter.reduce(ListScreenEvent.MenuCompletedClick)
-		return true
-	}
-	//endregion
 }

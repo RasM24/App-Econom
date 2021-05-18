@@ -6,7 +6,6 @@ import org.koin.android.ext.android.inject
 import ru.endroad.component.core.Navigator
 import ru.endroad.component.core.changeRoot
 import ru.endroad.econom.R
-import ru.endroad.econom.feature.navigation.AppBarFragment
 import ru.endroad.econom.feature.wishes.view.WishListFragment
 
 class SingleActivity : AppCompatActivity() {
@@ -20,8 +19,7 @@ class SingleActivity : AppCompatActivity() {
 		navigator.hubActivity = this
 
 		if (savedInstanceState == null) {
-			supportFragmentManager.changeRoot(AppBarFragment(), R.id.root)
-			supportFragmentManager.changeRoot(WishListFragment(), R.id.content)
+			supportFragmentManager.changeRoot(WishListFragment(), R.id.root)
 		}
 	}
 
