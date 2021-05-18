@@ -1,5 +1,4 @@
 include ':app',
-	':feature.navigation',
 	':feature.wishes',
 	':feature.wishes-completed',
 	':feature-wish-detail',
