@@ -4,14 +4,14 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 import ru.endroad.component.core.MigrateComposeScreen
 import ru.endroad.component.core.composeFlatTopBar
 import ru.endroad.feature.wish.detail.R
 import ru.endroad.feature.wish.detail.presentation.EditScreenEvent
 import ru.endroad.feature.wish.detail.presentation.EditScreenState
-import ru.endroad.feature.wish.detail.presentation.EditWishViewModel
+import ru.endroad.feature.wish.detail.presentation.EditWishViewPresenter
 import ru.endroad.shared.wish.core.entity.Wish
 
 class EditWishFragment : MigrateComposeScreen<EditScreenState, EditScreenEvent>() {
@@ -30,7 +30,7 @@ class EditWishFragment : MigrateComposeScreen<EditScreenState, EditScreenEvent>(
 	private val wishId: Int? by lazy { arguments?.getInt(WISH_ID) }
 	//endregion
 
-	override val presenter by viewModel<EditWishViewModel> { parametersOf(wishId) }
+	override val presenter by inject<EditWishViewPresenter> { parametersOf(wishId) }
 
 	@Deprecated("разобраться с логикой title")
 	override val titleRes = R.string.edit_wish_title

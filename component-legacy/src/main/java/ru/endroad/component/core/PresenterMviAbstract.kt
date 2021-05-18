@@ -1,9 +1,8 @@
 package ru.endroad.component.core
 
-import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
-abstract class PresenterMviAbstract<STATE, EVENT> : ViewModel() {
+abstract class PresenterMviAbstract<STATE, EVENT> {
 
 	abstract val state: MutableStateFlow<STATE>
 

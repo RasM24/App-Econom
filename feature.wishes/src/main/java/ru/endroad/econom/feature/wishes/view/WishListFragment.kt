@@ -22,20 +22,20 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.android.ext.android.inject
 import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.component.core.MigrateComposeScreen
 import ru.endroad.component.core.composeFlatTopBar
 import ru.endroad.econom.feature.wishes.entity.ListScreenEvent
 import ru.endroad.econom.feature.wishes.entity.ListScreenSingleEvent
 import ru.endroad.econom.feature.wishes.entity.ListScreenState
-import ru.endroad.econom.feature.wishes.presenter.WishListViewModel
+import ru.endroad.econom.feature.wishes.presenter.WishListViewPresenter
 import ru.endroad.shared.wish.core.entity.Wish
 
 //TODO перевести всю навигацию на роутинг в app-модуле
 class WishListFragment : MigrateComposeScreen<ListScreenState, ListScreenEvent>() {
 
-	override val presenter by viewModel<WishListViewModel>()
+	override val presenter by inject<WishListViewPresenter>()
 
 	override val titleRes = R.string.wish_list_title
 

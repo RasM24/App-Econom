@@ -1,6 +1,7 @@
 package ru.endroad.econom.feature.wishes.completed.presenter
 
-import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -11,14 +12,14 @@ import ru.endroad.econom.feature.wishes.completed.mvi.CompletedScreenState
 import ru.endroad.shared.wish.core.domain.GetWishListUseCase
 import ru.endroad.shared.wish.core.entity.Wish
 
-class CompletedWishListViewModel(
+class CompletedWishListPresenter(
 	getWishList: GetWishListUseCase
 ) : PresenterMviAbstract<CompletedScreenState, CompletedScreenEvent>() {
 
 	override val state = MutableStateFlow<CompletedScreenState>(CompletedScreenState.Init)
 
 	init {
-		viewModelScope.launch {
+		CoroutineScope(Dispatchers.Main).launch {
 			getWishList().collect { wishList ->
 				val event = ChangeData(wishList.filter(Wish::complete))
 				reduce(event)

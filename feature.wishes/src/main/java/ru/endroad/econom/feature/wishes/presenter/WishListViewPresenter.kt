@@ -1,6 +1,7 @@
 package ru.endroad.econom.feature.wishes.presenter
 
-import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
@@ -26,7 +27,7 @@ import ru.endroad.shared.wish.core.domain.PerformWishUseCase
 import ru.endroad.shared.wish.core.entity.Wish
 
 //TODO чет работает плохо - разобраться
-class WishListViewModel(
+class WishListViewPresenter(
 	private val addWish: AddWishUseCase,
 	private val deleteWish: DeleteWishUseCase,
 	private val performWish: PerformWishUseCase,
@@ -40,7 +41,7 @@ class WishListViewModel(
 
 	//TODO переделать в отправку ивентов, как на скрине выполненных
 	init {
-		viewModelScope.launch {
+		CoroutineScope(Dispatchers.Main).launch {
 			getWishList().collect { wishList ->
 				val notCompletedList = wishList.filterNot(Wish::complete).reversed()
 
@@ -56,18 +57,18 @@ class WishListViewModel(
 	override fun reduce(event: ListScreenEvent) {
 		when (event) {
 			is NewWishClick     -> router.openWishNewScreen()
-			is PerformClick     -> viewModelScope.launch {
+			is PerformClick     -> CoroutineScope(Dispatchers.Main).launch {
 				performWish(event.wish)
 				message.emit(ListScreenSingleEvent.PerformWish(event.wish))
 			}
-			is DeleteClick      -> viewModelScope.launch {
+			is DeleteClick      -> CoroutineScope(Dispatchers.Main).launch {
 				deleteWish(event.wish)
 				message.emit(ListScreenSingleEvent.DeleteWish(event.wish))
 			}
 			is EditClick        -> router.openWishEditScreen(event.wish.id)
 			MenuCompletedClick  -> router.openCompletedWishScreen()
-			is UndoDeleteClick  -> viewModelScope.launch { addWish(event.wish) }
-			is UndoPerformClick -> viewModelScope.launch { performWish(event.wish, complete = false) }
+			is UndoDeleteClick  -> CoroutineScope(Dispatchers.Main).launch { addWish(event.wish) }
+			is UndoPerformClick -> CoroutineScope(Dispatchers.Main).launch { performWish(event.wish, complete = false) }
 		}
 	}
 

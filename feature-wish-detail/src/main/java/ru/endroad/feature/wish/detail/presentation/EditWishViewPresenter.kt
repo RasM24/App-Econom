@@ -1,6 +1,7 @@
 package ru.endroad.feature.wish.detail.presentation
 
-import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.endroad.component.core.PresenterMviAbstract
@@ -11,7 +12,7 @@ import ru.endroad.shared.wish.core.entity.Importance
 import ru.endroad.shared.wish.core.entity.Wish
 
 //TODO требуется пересмотр подходов в сязи с внедрением JetpackCompose
-class EditWishViewModel(
+class EditWishViewPresenter(
 	private val wishId: Int?,
 	private val getWish: GetWishUseCase,
 	private val addWish: AddWishUseCase,
@@ -32,7 +33,7 @@ class EditWishViewModel(
 	}
 
 	private fun loadDraft() {
-		viewModelScope.launch {
+		CoroutineScope(Dispatchers.Main).launch {
 			val wish = wishId?.let { getWish(it) }
 			val newState = wish?.let(EditScreenState::InitialEditWish) ?: EditScreenState.InitialNewWish
 			newState.applyState()
@@ -40,7 +41,7 @@ class EditWishViewModel(
 	}
 
 	private fun EditScreenEvent.ApplyClick.reduceAndApply() {
-		viewModelScope.launch { saveWish(name, info, cost.toInt(), Importance.valueOf(importance)).applyState() }
+		CoroutineScope(Dispatchers.Main).launch { saveWish(name, info, cost.toInt(), Importance.valueOf(importance)).applyState() }
 	}
 
 	//TODO можно вынести в domain

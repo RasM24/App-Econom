@@ -1,9 +1,9 @@
 package ru.endroad.econom.feature.wishes.di
 
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import ru.endroad.econom.feature.wishes.presenter.WishListViewModel
+import org.koin.experimental.builder.factory
+import ru.endroad.econom.feature.wishes.presenter.WishListViewPresenter
 
 val featureWishesModule = module {
-	viewModel { WishListViewModel(get(), get(), get(), get(), get()) }
+	factory<WishListViewPresenter>()
 }
