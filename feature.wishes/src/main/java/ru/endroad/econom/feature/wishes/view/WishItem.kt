@@ -13,7 +13,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import ru.endroad.composable.GradientCard
 import ru.endroad.composable.PrimaryText
@@ -31,7 +30,7 @@ internal fun WishItem(wish: Wish, onClick: () -> Unit) =
 			.fillMaxWidth()
 			.wrapContentHeight()
 			.padding(horizontal = 16.dp, vertical = 8.dp),
-		markerColor = colorResource(id = wish.markerColor),
+		markerColor = wish.markerColor,
 	) {
 		Box(
 			modifier = Modifier

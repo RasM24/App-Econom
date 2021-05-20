@@ -4,6 +4,5 @@ include ':app',
 	':feature-wish-detail',
 	':shared-wish-core',
 	':component-compose-theme',
-	':component.design',
 	':component-legacy',
 	':component.wish'

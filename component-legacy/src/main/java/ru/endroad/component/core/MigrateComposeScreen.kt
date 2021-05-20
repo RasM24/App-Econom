@@ -3,6 +3,7 @@ package ru.endroad.component.core
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 
+@Deprecated("Переформировать базовый класс")
 abstract class MigrateComposeScreen<STATE, EVENT> {
 
 	abstract val titleRes: Int

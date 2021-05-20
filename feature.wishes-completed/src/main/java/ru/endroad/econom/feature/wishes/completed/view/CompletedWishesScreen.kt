@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import org.koin.java.KoinJavaComponent.inject
 import ru.endroad.component.core.MigrateComposeScreen
-import ru.endroad.component.core.composeNavigationIcon
+import ru.endroad.composable.NavigationIcon
 import ru.endroad.econom.feature.wishes.completed.R
 import ru.endroad.econom.feature.wishes.completed.mvi.CompletedScreenEvent
 import ru.endroad.econom.feature.wishes.completed.mvi.CompletedScreenState
@@ -49,7 +49,7 @@ class CompletedWishesScreen : MigrateComposeScreen<CompletedScreenState, Complet
 	): @Composable () -> Unit = {
 		TopAppBar(
 			title = { Text(text = stringResource(id = titleRes)) },
-			navigationIcon = composeNavigationIcon(onNavigationClick = { presenter.reduce(CompletedScreenEvent.Back) }),
+			navigationIcon = { NavigationIcon(onClick = { presenter.reduce(CompletedScreenEvent.Back) }) },
 		)
 	}
 }

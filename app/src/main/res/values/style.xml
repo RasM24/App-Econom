@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!-- TODO посмотреть, что можно придумать -->
+	<style name="Theme.AppCompat.Econom">
+		<item name="colorPrimary">#3EB48A</item>
+		<item name="colorPrimaryDark">#147553</item>
+		<item name="colorAccent">#3EB48A</item>
+
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
+	</style>
+</resources>
