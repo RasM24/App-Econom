@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import org.koin.android.ext.android.inject
+import org.koin.java.KoinJavaComponent.inject
 import ru.endroad.component.core.MigrateComposeScreen
 import ru.endroad.component.core.composeFlatTopBar
 import ru.endroad.econom.feature.wishes.completed.R
@@ -15,9 +15,9 @@ import ru.endroad.econom.feature.wishes.completed.mvi.CompletedScreenState
 import ru.endroad.econom.feature.wishes.completed.presenter.CompletedWishListPresenter
 import ru.endroad.shared.wish.core.entity.Wish
 
-class CompletedWishesFragment : MigrateComposeScreen<CompletedScreenState, CompletedScreenEvent>() {
+class CompletedWishesScreen : MigrateComposeScreen<CompletedScreenState, CompletedScreenEvent>() {
 
-	override val presenter by inject<CompletedWishListPresenter>()
+	override val presenter by inject(CompletedWishListPresenter::class.java)
 
 	override val titleRes = R.string.completed_list_title
 

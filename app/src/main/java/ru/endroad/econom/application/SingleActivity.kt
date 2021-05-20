@@ -4,9 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import org.koin.android.ext.android.inject
 import ru.endroad.component.core.Navigator
-import ru.endroad.component.core.changeRoot
 import ru.endroad.econom.R
-import ru.endroad.econom.feature.wishes.view.WishListFragment
 
 class SingleActivity : AppCompatActivity() {
 
@@ -17,10 +15,6 @@ class SingleActivity : AppCompatActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.base_activity)
 		navigator.hubActivity = this
-
-		if (savedInstanceState == null) {
-			supportFragmentManager.changeRoot(WishListFragment(), R.id.root)
-		}
 	}
 
 

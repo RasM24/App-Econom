@@ -1,17 +1,12 @@
 package ru.endroad.econom.router
 
-import ru.endroad.component.core.Navigator
 import ru.endroad.econom.feature.wishes.WishFlowRouting
-import ru.endroad.econom.feature.wishes.completed.view.CompletedWishesFragment
-import ru.endroad.feature.wish.detail.view.EditWishFragment
 
-class WishFlowRoutingImpl(private val navigator: Navigator) : WishFlowRouting {
+class WishFlowRoutingImpl : WishFlowRouting {
 
-	override fun openWishEditScreen(wishId: Int) = navigator.open(EditWishFragment.getInstance(wishId))
+	override fun openWishEditScreen(wishId: Int) = Unit
 
-	override fun openWishNewScreen() = navigator.open(EditWishFragment.getInstance())
+	override fun openWishNewScreen() = Unit
 
-	override fun openCompletedWishScreen() {
-		navigator.open(CompletedWishesFragment())
-	}
+	override fun openCompletedWishScreen() = Unit
 }

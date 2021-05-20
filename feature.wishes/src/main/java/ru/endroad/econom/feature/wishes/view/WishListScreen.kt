@@ -22,7 +22,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
+import org.koin.java.KoinJavaComponent.inject
 import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.component.core.MigrateComposeScreen
 import ru.endroad.component.core.composeFlatTopBar
@@ -33,14 +33,15 @@ import ru.endroad.econom.feature.wishes.presenter.WishListViewPresenter
 import ru.endroad.shared.wish.core.entity.Wish
 
 //TODO перевести всю навигацию на роутинг в app-модуле
-class WishListFragment : MigrateComposeScreen<ListScreenState, ListScreenEvent>() {
+class WishListScreen : MigrateComposeScreen<ListScreenState, ListScreenEvent>() {
 
-	override val presenter by inject<WishListViewPresenter>()
+	override val presenter by inject(WishListViewPresenter::class.java)
 
 	override val titleRes = R.string.wish_list_title
 
 	@Composable
 	override fun Render(screenState: ListScreenState) {
+		//TODO забыл использовать этот флаг
 		val hasWishes = screenState is ListScreenState.ShowData
 
 		Scaffold(
@@ -55,9 +56,6 @@ class WishListFragment : MigrateComposeScreen<ListScreenState, ListScreenEvent>(
 				is ListScreenState.ShowData  -> RenderDataScene(state = screenState)
 			}
 		}
-
-		//TODO fragment legacy
-		setHasOptionsMenu(hasWishes)
 	}
 
 	//TODO Много говнокода. Изучить детальнее compose и навести здесь порядок
