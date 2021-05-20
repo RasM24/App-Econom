@@ -8,7 +8,7 @@ import androidx.compose.ui.res.stringResource
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.inject
 import ru.endroad.component.core.MigrateComposeScreen
-import ru.endroad.component.core.composeNavigationIcon
+import ru.endroad.composable.NavigationIcon
 import ru.endroad.feature.wish.detail.R
 import ru.endroad.feature.wish.detail.presentation.EditScreenEvent
 import ru.endroad.feature.wish.detail.presentation.EditScreenState
@@ -48,11 +48,10 @@ class EditWishScreen(wishId: Int?) : MigrateComposeScreen<EditScreenState, EditS
 		)
 	}
 
-	private fun composeFlatTopBar(
-	): @Composable () -> Unit = {
+	private fun composeFlatTopBar(): @Composable () -> Unit = {
 		TopAppBar(
 			title = { Text(text = stringResource(id = titleRes)) },
-			navigationIcon = composeNavigationIcon(onNavigationClick = { presenter.reduce(EditScreenEvent.Back) }),
+			navigationIcon = { NavigationIcon(onClick = { presenter.reduce(EditScreenEvent.Back) }) },
 		)
 	}
 }
