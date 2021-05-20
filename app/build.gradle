@@ -22,7 +22,6 @@ dependencies {
 	implementation project(':feature.wishes')
 	implementation project(':feature.wishes-completed')
 	implementation project(':feature-wish-detail')
-	implementation project(":component.design")
 	implementation project(":component.wish")
 	implementation project(":component-legacy")
 	implementation project(":component-compose-theme")
