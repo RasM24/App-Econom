@@ -13,6 +13,7 @@ import ru.endroad.shared.wish.core.domain.GetWishListUseCase
 import ru.endroad.shared.wish.core.entity.Wish
 
 class CompletedWishListPresenter(
+	private val router: WishCompletedListRouter,
 	getWishList: GetWishListUseCase
 ) : PresenterMviAbstract<CompletedScreenState, CompletedScreenEvent>() {
 
@@ -29,7 +30,8 @@ class CompletedWishListPresenter(
 
 	override fun reduce(event: CompletedScreenEvent) {
 		when (event) {
-			is ChangeData -> CompletedScreenState.ShowData(event.completedWishList).applyState()
+			is ChangeData             -> CompletedScreenState.ShowData(event.completedWishList).applyState()
+			CompletedScreenEvent.Back -> router.close()
 		}
 	}
 }

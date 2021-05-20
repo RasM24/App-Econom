@@ -9,6 +9,7 @@ val featureWishDetailModule = module {
 			getWish = get(),
 			addWish = get(),
 			editWish = get(),
+			router = get(),
 			wishId = id,
 		)
 	}
