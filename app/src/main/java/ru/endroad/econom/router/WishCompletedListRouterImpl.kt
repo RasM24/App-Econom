@@ -1,8 +1,11 @@
 package ru.endroad.econom.router
 
 import ru.endroad.econom.feature.wishes.completed.presenter.WishCompletedListRouter
+import ru.endroad.econom.state.StateHolder
 
-class WishCompletedListRouterImpl : WishCompletedListRouter {
+class WishCompletedListRouterImpl(private val stateHolder: StateHolder) : WishCompletedListRouter {
 
-	override fun close() = Unit
+	override fun close() {
+		stateHolder.back()
+	}
 }
