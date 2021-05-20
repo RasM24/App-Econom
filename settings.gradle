@@ -3,6 +3,6 @@ include ':app',
 	':feature.wishes-completed',
 	':feature-wish-detail',
 	':shared-wish-core',
+	':shared-wish-datasource',
 	':component-compose-theme',
-	':component-legacy',
-	':component.wish'
+	':component-legacy'
