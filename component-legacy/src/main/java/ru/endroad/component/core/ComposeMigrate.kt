@@ -27,7 +27,7 @@ fun <S, E> MigrateComposeScreen<S, E>.composeFlatTopBar(
 ): @Composable () -> Unit = {
 	TopAppBar(
 		title = { Text(text = stringResource(id = titleRes)) },
-		navigationIcon = composeNavigationIcon(onNavigationClick = { finish() }).takeIf { hasBackStack },
+		navigationIcon = composeNavigationIcon(onNavigationClick = { TODO() }).takeIf { hasBackStack },
 		actions = actions,
 	)
 }
@@ -42,4 +42,5 @@ fun composeNavigationIcon(onNavigationClick: () -> Unit): @Composable () -> Unit
 	}
 }
 
-val Fragment.hasBackStack: Boolean get() = requireActivity().supportFragmentManager.backStackEntryCount > 0
+//TODO заменить
+val hasBackStack: Boolean get() = true

@@ -1,10 +1,10 @@
 package ru.endroad.econom.feature.wishes.completed.di
 
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import ru.endroad.econom.feature.wishes.completed.presenter.CompletedWishListViewModel
+import org.koin.experimental.builder.factory
+import ru.endroad.econom.feature.wishes.completed.presenter.CompletedWishListPresenter
 
 val featureCompletedWishesModule = module {
 
-	viewModel { CompletedWishListViewModel(get()) }
+	factory<CompletedWishListPresenter>()
 }

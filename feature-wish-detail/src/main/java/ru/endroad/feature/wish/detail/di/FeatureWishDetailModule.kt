@@ -1,15 +1,15 @@
 package ru.endroad.feature.wish.detail.di
 
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import ru.endroad.feature.wish.detail.presentation.EditWishViewModel
+import ru.endroad.feature.wish.detail.presentation.EditWishViewPresenter
 
 val featureWishDetailModule = module {
-	viewModel { (id: Int?) ->
-		EditWishViewModel(
+	factory { (id: Int?) ->
+		EditWishViewPresenter(
 			getWish = get(),
 			addWish = get(),
 			editWish = get(),
+			router = get(),
 			wishId = id,
 		)
 	}

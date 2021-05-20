@@ -1,31 +1,40 @@
 package ru.endroad.econom.application
 
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import org.koin.android.ext.android.inject
-import ru.endroad.component.core.Navigator
-import ru.endroad.component.core.changeRoot
-import ru.endroad.econom.R
-import ru.endroad.econom.feature.wishes.view.WishListFragment
+import androidx.compose.animation.Crossfade
+import androidx.compose.runtime.collectAsState
+import org.koin.java.KoinJavaComponent.inject
+import ru.endroad.compose.theme.ApplicationTheme
+import ru.endroad.econom.feature.wishes.completed.view.CompletedWishesScreen
+import ru.endroad.econom.feature.wishes.view.WishListScreen
+import ru.endroad.econom.state.ApplicationState
+import ru.endroad.econom.state.StateHolder
+import ru.endroad.feature.wish.detail.view.EditWishScreen
 
 class SingleActivity : AppCompatActivity() {
 
-	private val navigator: Navigator by inject()
+	private val stateHolder by inject(StateHolder::class.java)
 
 	override fun onCreate(savedInstanceState: Bundle?) {
-		setTheme(R.style.AppTheme)
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.base_activity)
-		navigator.hubActivity = this
+		setContent {
+			val applicationState = stateHolder.applicationState.collectAsState()
 
-		if (savedInstanceState == null) {
-			supportFragmentManager.changeRoot(WishListFragment(), R.id.root)
+			ApplicationTheme {
+				Crossfade(targetState = applicationState) { state ->
+					when(val screen = state.value){
+						ApplicationState.WishCompleted -> CompletedWishesScreen().SceneCompose()
+						is ApplicationState.WishDetail -> EditWishScreen(screen.wishId).SceneCompose()
+						ApplicationState.WishList      -> WishListScreen().SceneCompose()
+					}
+				}
+			}
 		}
 	}
 
-
-	override fun onDestroy() {
-		navigator.hubActivity = null
-		super.onDestroy()
+	override fun onBackPressed() {
+		stateHolder.back()
 	}
 }

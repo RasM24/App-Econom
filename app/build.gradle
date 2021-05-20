@@ -25,6 +25,7 @@ dependencies {
 	implementation project(":component.design")
 	implementation project(":component.wish")
 	implementation project(":component-legacy")
+	implementation project(":component-compose-theme")
 
 	implementation 'com.facebook.stetho:stetho:1.5.1'
 }

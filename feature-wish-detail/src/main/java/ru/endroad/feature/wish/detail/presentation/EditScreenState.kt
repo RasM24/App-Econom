@@ -7,5 +7,4 @@ sealed class EditScreenState {
 	object Initial : EditScreenState()
 	object InitialNewWish : EditScreenState()
 	class InitialEditWish(val wish: Wish) : EditScreenState()
-	object WishSaved : EditScreenState()
 }

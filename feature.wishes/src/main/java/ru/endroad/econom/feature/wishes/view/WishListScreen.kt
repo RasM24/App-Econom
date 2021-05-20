@@ -9,6 +9,8 @@ import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Task
 import androidx.compose.material.rememberModalBottomSheetState
@@ -22,29 +24,29 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.java.KoinJavaComponent.inject
 import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.component.core.MigrateComposeScreen
-import ru.endroad.component.core.composeFlatTopBar
 import ru.endroad.econom.feature.wishes.entity.ListScreenEvent
 import ru.endroad.econom.feature.wishes.entity.ListScreenSingleEvent
 import ru.endroad.econom.feature.wishes.entity.ListScreenState
-import ru.endroad.econom.feature.wishes.presenter.WishListViewModel
+import ru.endroad.econom.feature.wishes.presenter.WishListViewPresenter
 import ru.endroad.shared.wish.core.entity.Wish
 
 //TODO перевести всю навигацию на роутинг в app-модуле
-class WishListFragment : MigrateComposeScreen<ListScreenState, ListScreenEvent>() {
+class WishListScreen : MigrateComposeScreen<ListScreenState, ListScreenEvent>() {
 
-	override val presenter by viewModel<WishListViewModel>()
+	override val presenter by inject(WishListViewPresenter::class.java)
 
 	override val titleRes = R.string.wish_list_title
 
 	@Composable
 	override fun Render(screenState: ListScreenState) {
+		//TODO забыл использовать этот флаг
 		val hasWishes = screenState is ListScreenState.ShowData
 
 		Scaffold(
-			topBar = composeFlatTopBar(actions = composeActions())
+			topBar = composeFlatTopBar(actions = composeActions(hasWishes))
 		) {
 			when (screenState) {
 				ListScreenState.Init         -> Unit
@@ -55,9 +57,6 @@ class WishListFragment : MigrateComposeScreen<ListScreenState, ListScreenEvent>(
 				is ListScreenState.ShowData  -> RenderDataScene(state = screenState)
 			}
 		}
-
-		//TODO fragment legacy
-		setHasOptionsMenu(hasWishes)
 	}
 
 	//TODO Много говнокода. Изучить детальнее compose и навести здесь порядок
@@ -121,14 +120,23 @@ class WishListFragment : MigrateComposeScreen<ListScreenState, ListScreenEvent>(
 		)
 	}
 
-	private fun composeActions(): @Composable RowScope.() -> Unit = {
+	private fun composeActions(hasWishes: Boolean): @Composable RowScope.() -> Unit = {
 		CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-			IconButton(onClick = { presenter.reduce(ListScreenEvent.MenuCompletedClick) }) {
-				Icon(
-					imageVector = Icons.Outlined.Task,
-					contentDescription = stringResource(R.string.wish_list_menu_completed)
-				)
+			if (hasWishes) {
+				IconButton(onClick = { presenter.reduce(ListScreenEvent.MenuCompletedClick) }) {
+					Icon(
+						imageVector = Icons.Outlined.Task,
+						contentDescription = stringResource(R.string.wish_list_menu_completed)
+					)
+				}
 			}
 		}
+	}
+
+	private fun composeFlatTopBar(actions: @Composable RowScope.() -> Unit = {}): @Composable () -> Unit = {
+		TopAppBar(
+			title = { Text(text = stringResource(id = titleRes)) },
+			actions = actions,
+		)
 	}
 }

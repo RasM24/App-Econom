@@ -1,36 +1,23 @@
 package ru.endroad.feature.wish.detail.view
 
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import androidx.compose.ui.res.stringResource
 import org.koin.core.parameter.parametersOf
+import org.koin.java.KoinJavaComponent.inject
 import ru.endroad.component.core.MigrateComposeScreen
-import ru.endroad.component.core.composeFlatTopBar
+import ru.endroad.component.core.composeNavigationIcon
 import ru.endroad.feature.wish.detail.R
 import ru.endroad.feature.wish.detail.presentation.EditScreenEvent
 import ru.endroad.feature.wish.detail.presentation.EditScreenState
-import ru.endroad.feature.wish.detail.presentation.EditWishViewModel
+import ru.endroad.feature.wish.detail.presentation.EditWishViewPresenter
 import ru.endroad.shared.wish.core.entity.Wish
 
-class EditWishFragment : MigrateComposeScreen<EditScreenState, EditScreenEvent>() {
+class EditWishScreen(wishId: Int?) : MigrateComposeScreen<EditScreenState, EditScreenEvent>() {
 
-	//region fragment legacy
-	companion object {
-
-		private const val WISH_ID = "WISH_ID"
-
-		fun getInstance(wishId: Int? = null): Fragment =
-			EditWishFragment().apply {
-				wishId?.let { arguments = bundleOf(WISH_ID to wishId) }
-			}
-	}
-
-	private val wishId: Int? by lazy { arguments?.getInt(WISH_ID) }
-	//endregion
-
-	override val presenter by viewModel<EditWishViewModel> { parametersOf(wishId) }
+	override val presenter by inject(EditWishViewPresenter::class.java) { parametersOf(wishId) }
 
 	@Deprecated("разобраться с логикой title")
 	override val titleRes = R.string.edit_wish_title
@@ -42,7 +29,6 @@ class EditWishFragment : MigrateComposeScreen<EditScreenState, EditScreenEvent>(
 				EditScreenState.Initial            -> Unit
 				is EditScreenState.InitialEditWish -> RenderEditWish(screenState.wish)
 				EditScreenState.InitialNewWish     -> RenderWishDetail(createWish = createWishFunction)
-				EditScreenState.WishSaved          -> requireFragmentManager().popBackStack() //TODO fragment legacy
 			}
 		}
 	}
@@ -59,6 +45,14 @@ class EditWishFragment : MigrateComposeScreen<EditScreenState, EditScreenEvent>(
 			costDraft = wish.cost.toString(),
 			importanceDraft = wish.importance.name,
 			createWish = createWishFunction
+		)
+	}
+
+	private fun composeFlatTopBar(
+	): @Composable () -> Unit = {
+		TopAppBar(
+			title = { Text(text = stringResource(id = titleRes)) },
+			navigationIcon = composeNavigationIcon(onNavigationClick = { presenter.reduce(EditScreenEvent.Back) }),
 		)
 	}
 }
