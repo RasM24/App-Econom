@@ -1,20 +1,8 @@
 package ru.endroad.econom.mock
 
-import androidx.sqlite.db.SupportSQLiteDatabase
-import ru.endroad.component.core.runTransaction
-import ru.endroad.econom.component.wish.datasource.WISH_TABLE
 import ru.endroad.econom.component.wish.model.WishModel
 
-const val SQL_INSERT_WISH = "INSERT INTO $WISH_TABLE (name, cost, importance, info, complete) VALUES(?,?,?,?,?)"
-const val SQL_UPDATE_WISH = "UPDATE $WISH_TABLE SET name = ?,cost = ?,importance = ?,info= ?,complete = ? WHERE id = ?"
-
-val WishModel.arrayValues get() = arrayOf(name, cost, importance, info, complete)
-
-fun SupportSQLiteDatabase.mockWishes() = runTransaction {
-	wishes.forEach { wish -> execSQL(SQL_INSERT_WISH, wish.arrayValues) }
-}
-
-val wishes = mutableListOf(
+internal val mockWishes = mutableListOf(
 	WishModel(name = "Автомобиль Lexus", cost = 400000, importance = "LITTLE", info = "Lexus GS300, на коже с черным салоном"),
 	WishModel(name = "Велосипед", cost = 30000, importance = "LITTLE", info = "На лето хорошо бы купить велосипед"),
 	WishModel(name = "Аккумулятор", importance = "CRITICAL", cost = 4000),
@@ -32,5 +20,3 @@ val wishes = mutableListOf(
 	WishModel(name = "Сцепление/Выжимной подшипник", importance = "LITTLE", cost = 3000),
 	WishModel(name = "Лобовое стекло", importance = "LITTLE", cost = 7000)
 )
-
-val wishesLastPosition = wishes.size - 1

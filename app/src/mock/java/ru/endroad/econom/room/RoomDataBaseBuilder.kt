@@ -3,9 +3,9 @@ package ru.endroad.econom.room
 import android.content.Context
 import androidx.room.Room
 import ru.endroad.component.core.preload
-import ru.endroad.econom.mock.mockWishes
+import ru.endroad.econom.mock.fillWishTable
 
 fun buildDatabase(context: Context): AppDatabase =
 	Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME)
-		.preload { mockWishes() }
+		.preload { fillWishTable() }
 		.build()
