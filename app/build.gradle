@@ -22,9 +22,10 @@ dependencies {
 	implementation project(':feature.wishes')
 	implementation project(':feature.wishes-completed')
 	implementation project(':feature-wish-detail')
-	implementation project(":component.wish")
+	implementation project(":shared-wish-datasource")
 	implementation project(":component-legacy")
 	implementation project(":component-compose-theme")
 
+	mockImplementation project(":mock-wish")
 	implementation 'com.facebook.stetho:stetho:1.5.1'
 }

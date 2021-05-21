@@ -4,17 +4,6 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Deprecated("Вынести")
-fun SupportSQLiteDatabase.runTransaction(transaction: SupportSQLiteDatabase.() -> Unit) {
-	try {
-		beginTransaction()
-		this.transaction()
-		setTransactionSuccessful()
-	} finally {
-		endTransaction()
-	}
-}
-
-@Deprecated("Вынести")
 fun <T : RoomDatabase> RoomDatabase.Builder<T>.preload(preloader: SupportSQLiteDatabase.() -> Unit): RoomDatabase.Builder<T> {
 	this.addCallback(object : RoomDatabase.Callback() {
 		override fun onCreate(db: SupportSQLiteDatabase) {
