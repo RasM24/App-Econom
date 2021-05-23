@@ -8,11 +8,11 @@ import androidx.compose.ui.res.stringResource
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.inject
 import ru.endroad.component.core.MigrateComposeScreen
+import ru.endroad.composable.IdleScreen
 import ru.endroad.composable.NavigationIcon
 import ru.endroad.feature.wish.detail.R
 import ru.endroad.feature.wish.detail.presentation.EditScreenState
 import ru.endroad.feature.wish.detail.presentation.EditWishViewPresenter
-import ru.endroad.shared.wish.core.entity.Wish
 
 class EditWishScreen(wishId: Int?) : MigrateComposeScreen<EditScreenState>() {
 
@@ -22,26 +22,18 @@ class EditWishScreen(wishId: Int?) : MigrateComposeScreen<EditScreenState>() {
 	override fun Render(screenState: EditScreenState) {
 		Scaffold(topBar = composeFlatTopBar()) {
 			when (screenState) {
-				EditScreenState.Initial            -> Unit
-				is EditScreenState.InitialEditWish -> RenderEditWish(screenState.wish)
-				EditScreenState.InitialNewWish     -> RenderWishDetail(createWish = createWishFunction)
+				EditScreenState.Idle -> IdleScreen()
+				is EditScreenState.DraftWish -> RenderWishDetail(
+					nameDraft = screenState.name,
+					infoDraft = screenState.info,
+					costDraft = screenState.cost?.toString(),
+					importanceDraft = screenState.importance?.name,
+					createWish = { name, info, cost, importance ->
+						presenter.saveWish(name = name, info = info, cost = cost, importance = importance)
+					}
+				)
 			}
 		}
-	}
-
-	private val createWishFunction = { name: String, info: String, cost: String, importance: String ->
-		presenter.saveWish(name = name, info = info, cost = cost, importance = importance)
-	}
-
-	@Composable
-	private fun RenderEditWish(wish: Wish) {
-		RenderWishDetail(
-			nameDraft = wish.name,
-			infoDraft = wish.info,
-			costDraft = wish.cost.toString(),
-			importanceDraft = wish.importance.name,
-			createWish = createWishFunction
-		)
 	}
 
 	@Deprecated("разобраться с логикой title")

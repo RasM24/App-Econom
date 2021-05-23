@@ -20,7 +20,7 @@ class EditWishViewPresenter(
 	private val router: WishDetailRouter
 ) : PresenterMviAbstract<EditScreenState>() {
 
-	override val state: MutableStateFlow<EditScreenState> = MutableStateFlow(EditScreenState.Initial)
+	override val state: MutableStateFlow<EditScreenState> = MutableStateFlow(EditScreenState.Idle)
 
 	init {
 		loadDraft()
@@ -29,8 +29,13 @@ class EditWishViewPresenter(
 	private fun loadDraft() {
 		CoroutineScope(Dispatchers.Main).launch {
 			val wish = wishId?.let { getWish(it) }
-			val newState = wish?.let(EditScreenState::InitialEditWish) ?: EditScreenState.InitialNewWish
-			newState.applyState()
+
+			EditScreenState.DraftWish(
+				name = wish?.name,
+				cost = wish?.cost,
+				importance = wish?.importance,
+				info = wish?.info,
+			).applyState()
 		}
 	}
 
