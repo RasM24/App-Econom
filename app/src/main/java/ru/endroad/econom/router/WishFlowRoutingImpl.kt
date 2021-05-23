@@ -1,6 +1,6 @@
 package ru.endroad.econom.router
 
-import ru.endroad.econom.feature.wishes.presenter.WishFlowRouting
+import ru.endroad.econom.feature.wish.active.presenter.WishFlowRouting
 import ru.endroad.econom.state.ApplicationState
 import ru.endroad.econom.state.StateHolder
 

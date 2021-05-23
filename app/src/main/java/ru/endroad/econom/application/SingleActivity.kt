@@ -7,8 +7,8 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.collectAsState
 import org.koin.java.KoinJavaComponent.inject
 import ru.endroad.compose.theme.ApplicationTheme
-import ru.endroad.econom.feature.wishes.completed.view.CompletedWishesScreen
-import ru.endroad.econom.feature.wishes.view.WishListScreen
+import ru.endroad.econom.feature.wish.active.view.WishListScreen
+import ru.endroad.econom.feature.wish.completed.view.CompletedWishesScreen
 import ru.endroad.econom.state.ApplicationState
 import ru.endroad.econom.state.StateHolder
 import ru.endroad.feature.wish.detail.view.EditWishScreen
@@ -24,7 +24,7 @@ class SingleActivity : AppCompatActivity() {
 
 			ApplicationTheme {
 				Crossfade(targetState = applicationState) { state ->
-					when(val screen = state.value){
+					when (val screen = state.value) {
 						ApplicationState.WishCompleted -> CompletedWishesScreen().SceneCompose()
 						is ApplicationState.WishDetail -> EditWishScreen(screen.wishId).SceneCompose()
 						ApplicationState.WishList      -> WishListScreen().SceneCompose()
@@ -35,6 +35,6 @@ class SingleActivity : AppCompatActivity() {
 	}
 
 	override fun onBackPressed() {
-		stateHolder.back()
+		if (!stateHolder.back()) super.onBackPressed()
 	}
 }
