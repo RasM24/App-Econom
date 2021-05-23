@@ -23,7 +23,6 @@ dependencies {
 	implementation project(':feature-wish-completed')
 	implementation project(':feature-wish-detail')
 	implementation project(":shared-wish-datasource")
-	implementation project(":component-legacy")
 	implementation project(":component-compose-theme")
 
 	mockImplementation project(":mock-wish")

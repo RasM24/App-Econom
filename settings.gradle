@@ -6,5 +6,4 @@ include ':app',
 	':shared-wish-core',
 	':shared-wish-datasource',
 	':component-compose-theme',
-	':component-room',
-	':component-legacy'
+	':component-room'
