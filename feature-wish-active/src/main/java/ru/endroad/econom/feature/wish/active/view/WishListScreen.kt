@@ -17,29 +17,81 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
-import ru.endroad.component.core.MigrateComposeScreen
 import ru.endroad.composable.IdleScreen
+import ru.endroad.compose.core.ComposeScreen
 import ru.endroad.econom.feature.wish.active.R
 import ru.endroad.econom.feature.wish.active.entity.ListScreenSingleEvent
 import ru.endroad.econom.feature.wish.active.entity.ListScreenState
-import ru.endroad.econom.feature.wish.active.presenter.WishListViewPresenter
+import ru.endroad.econom.feature.wish.active.presenter.WishFlowRouting
+import ru.endroad.shared.wish.core.domain.AddWishUseCase
+import ru.endroad.shared.wish.core.domain.DeleteWishUseCase
+import ru.endroad.shared.wish.core.domain.GetWishListUseCase
+import ru.endroad.shared.wish.core.domain.PerformWishUseCase
 import ru.endroad.shared.wish.core.entity.Wish
 
 //TODO Много говнокода. Изучить детальнее compose и навести здесь порядок
-class WishListScreen : MigrateComposeScreen<ListScreenState>() {
+class WishListScreen : ComposeScreen {
 
-	override val presenter by inject(WishListViewPresenter::class.java)
+	private val addWishUseCase by inject(AddWishUseCase::class.java)
+	private val deleteWishUseCase by inject(DeleteWishUseCase::class.java)
+	private val performWishUseCase by inject(PerformWishUseCase::class.java)
+	private val getWishListUseCase by inject(GetWishListUseCase::class.java)
+	private val router by inject(WishFlowRouting::class.java)
+
+	private val message = MutableSharedFlow<ListScreenSingleEvent?>()
+
+	private val state = MutableStateFlow<ListScreenState>(ListScreenState.Idle)
+
+	init {
+		CoroutineScope(Dispatchers.Main).launch {
+			getWishListUseCase().collect { wishList ->
+				ListScreenState.Data(wishList = wishList.filterNot(Wish::complete).reversed(), hasCompletedWish = wishList.any(Wish::complete))
+					.let { state.emit(it) }
+			}
+		}
+	}
+
+	private fun perform(wish: Wish) {
+		CoroutineScope(Dispatchers.Main).launch {
+			performWishUseCase(wish)
+			message.emit(ListScreenSingleEvent.PerformWish(wish))
+		}
+	}
+
+	private fun delete(wish: Wish) {
+		CoroutineScope(Dispatchers.Main).launch {
+			deleteWishUseCase(wish)
+			message.emit(ListScreenSingleEvent.DeleteWish(wish))
+		}
+	}
+
+	private fun undoDeleteWish(wish: Wish) {
+		CoroutineScope(Dispatchers.Main).launch { addWishUseCase(wish) }
+	}
+
+	private fun undoPerformWish(wish: Wish) {
+		CoroutineScope(Dispatchers.Main).launch { performWishUseCase(wish, complete = false) }
+	}
 
 	@Composable
-	override fun Render(screenState: ListScreenState) {
+	override fun SceneCompose() {
+		val rememberState = state.collectAsState()
+		val screenState = rememberState.value
+
 		val hasWishes = (screenState as? ListScreenState.Data)?.wishList?.isNotEmpty() ?: false
 
 		Scaffold(topBar = composeFlatTopBar(actions = composeActions(hasWishes))) {
@@ -53,10 +105,10 @@ class WishListScreen : MigrateComposeScreen<ListScreenState>() {
 	@Composable
 	private fun RenderSelector(state: ListScreenState.Data) = when {
 		state.wishList.isNotEmpty() -> RenderDataScene(state.wishList)
-		!state.hasCompletedWish     -> RenderNoDesireStub(doTheMainAction = presenter::openNewWishScreen)
+		!state.hasCompletedWish     -> RenderNoDesireStub(doTheMainAction = router::openNewWishScreen)
 		else                        -> RenderAllCompletedStub(
-			doTheMainAction = presenter::openNewWishScreen,
-			doTheSecondaryAction = presenter::openCompletedWishScreen
+			doTheMainAction = router::openNewWishScreen,
+			doTheSecondaryAction = router::openCompletedWishScreen
 		)
 	}
 
@@ -71,11 +123,11 @@ class WishListScreen : MigrateComposeScreen<ListScreenState>() {
 
 		when (val action = lastAction) {
 			is ListScreenSingleEvent.PerformWish -> LaunchCompletedSnackbar(scaffoldState,
-																			onAction = { presenter.undoPerformWish(action.wish) },
+																			onAction = { undoPerformWish(action.wish) },
 																			onCloseSnack = { lastAction = ListScreenSingleEvent.Nothing }
 			)
 			is ListScreenSingleEvent.DeleteWish  -> LaunchDeletedSnackbar(scaffoldState,
-																		  onAction = { presenter.undoDeleteWish(action.wish) },
+																		  onAction = { undoDeleteWish(action.wish) },
 																		  onCloseSnack = { lastAction = ListScreenSingleEvent.Nothing }
 			)
 			ListScreenSingleEvent.Nothing        -> Unit
@@ -90,16 +142,16 @@ class WishListScreen : MigrateComposeScreen<ListScreenState>() {
 				WishActionBottomSheet(
 					title = selectedWish.name,
 					onClickEdit = {
-						presenter.openEditWishScreen(selectedWish.id)
+						router.openEditWishScreen(selectedWish.id)
 						scope.launch { bottomSheetState.hide() }
 					},
 					onClickComplete = {
-						presenter.perform(selectedWish)
+						perform(selectedWish)
 						lastAction = ListScreenSingleEvent.PerformWish(selectedWish)
 						scope.launch { bottomSheetState.hide() }
 					},
 					onClickDelete = {
-						presenter.delete(selectedWish)
+						delete(selectedWish)
 						lastAction = ListScreenSingleEvent.DeleteWish(selectedWish)
 						scope.launch { bottomSheetState.hide() }
 					},
@@ -109,7 +161,7 @@ class WishListScreen : MigrateComposeScreen<ListScreenState>() {
 			content = {
 				WishList(
 					wishList = wishList,
-					onNewWishClick = { presenter.openNewWishScreen() },
+					onNewWishClick = router::openNewWishScreen,
 					onSelectWish = {
 						selectedWish = it
 						scope.launch { bottomSheetState.show() }
@@ -123,7 +175,7 @@ class WishListScreen : MigrateComposeScreen<ListScreenState>() {
 	private fun composeActions(hasWishes: Boolean): @Composable RowScope.() -> Unit = {
 		CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
 			if (hasWishes) {
-				IconButton(onClick = { presenter.openCompletedWishScreen() }) {
+				IconButton(onClick = router::openCompletedWishScreen) {
 					Icon(
 						imageVector = Icons.Outlined.Task,
 						contentDescription = stringResource(R.string.wish_list_menu_completed)

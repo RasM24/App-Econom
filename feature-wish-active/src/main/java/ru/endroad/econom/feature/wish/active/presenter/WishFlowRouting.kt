@@ -2,9 +2,9 @@ package ru.endroad.econom.feature.wish.active.presenter
 
 interface WishFlowRouting {
 
-	fun openWishEditScreen(wishId: Int)
+	fun openEditWishScreen(wishId: Int)
 
-	fun openWishNewScreen()
+	fun openNewWishScreen()
 
 	fun openCompletedWishScreen()
 }

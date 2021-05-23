@@ -6,9 +6,9 @@ import ru.endroad.econom.state.StateHolder
 
 class WishFlowRoutingImpl(private val stateHolder: StateHolder) : WishFlowRouting {
 
-	override fun openWishEditScreen(wishId: Int) = stateHolder.openScreen(ApplicationState.WishDetail(wishId))
+	override fun openEditWishScreen(wishId: Int) = stateHolder.openScreen(ApplicationState.WishDetail(wishId))
 
-	override fun openWishNewScreen() = stateHolder.openScreen(ApplicationState.WishDetail())
+	override fun openNewWishScreen() = stateHolder.openScreen(ApplicationState.WishDetail())
 
 	override fun openCompletedWishScreen() = stateHolder.openScreen(ApplicationState.WishCompleted)
 }
