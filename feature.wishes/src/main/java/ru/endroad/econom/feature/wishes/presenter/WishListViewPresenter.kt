@@ -8,8 +8,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.endroad.component.core.PresenterMviAbstract
 import ru.endroad.econom.feature.wishes.WishFlowRouting
-import ru.endroad.econom.feature.wishes.entity.ChangedItem
-import ru.endroad.econom.feature.wishes.entity.ItemAction
 import ru.endroad.econom.feature.wishes.entity.ListScreenEvent
 import ru.endroad.econom.feature.wishes.entity.ListScreenEvent.DeleteClick
 import ru.endroad.econom.feature.wishes.entity.ListScreenEvent.EditClick
@@ -46,7 +44,7 @@ class WishListViewPresenter(
 				val notCompletedList = wishList.filterNot(Wish::complete).reversed()
 
 				when {
-					notCompletedList.isNotEmpty() -> state.value.reduce(notCompletedList).applyState()
+					notCompletedList.isNotEmpty() -> ListScreenState.ShowData(notCompletedList).applyState()
 					wishList.none(Wish::complete) -> ListScreenState.NoDesire.applyState()
 					wishList.any(Wish::complete)  -> ListScreenState.AllCompleted.applyState()
 				}
@@ -70,35 +68,5 @@ class WishListViewPresenter(
 			is UndoDeleteClick  -> CoroutineScope(Dispatchers.Main).launch { addWish(event.wish) }
 			is UndoPerformClick -> CoroutineScope(Dispatchers.Main).launch { performWish(event.wish, complete = false) }
 		}
-	}
-
-	private fun ListScreenState?.reduce(notCompletedList: List<Wish>): ListScreenState =
-		if (this is ListScreenState.ShowData) {
-			val changedItem = diff(this.wishList, notCompletedList)
-			ListScreenState.ShowData(notCompletedList, changedItem)
-		} else
-			ListScreenState.ShowData(notCompletedList)
-
-	private fun diff(oldList: List<Wish>, newList: List<Wish>): ChangedItem? {
-		val itemAction: ItemAction = when (newList.size) {
-			oldList.size + 1 -> ItemAction.ADDED
-			oldList.size - 1 -> ItemAction.DELETED
-			else             -> return null
-		}
-
-		val position = oldList.zip(newList)
-			.indexOrLast { it.first.id != it.second.id }
-
-		return ChangedItem(position, itemAction)
-	}
-
-	private inline fun <T> List<T>.indexOrLast(predicate: (T) -> Boolean): Int {
-		val iterator = this.listIterator(size)
-		while (iterator.hasPrevious()) {
-			if (predicate(iterator.previous())) {
-				return iterator.nextIndex()
-			}
-		}
-		return size
 	}
 }
