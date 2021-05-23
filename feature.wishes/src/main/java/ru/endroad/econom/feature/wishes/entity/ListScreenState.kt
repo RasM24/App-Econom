@@ -4,7 +4,5 @@ import ru.endroad.shared.wish.core.entity.Wish
 
 sealed class ListScreenState {
 	object Idle : ListScreenState()
-	object NoDesire : ListScreenState()
-	object AllCompleted : ListScreenState()
-	class ShowData(val wishList: List<Wish>) : ListScreenState()
+	class Data(val wishList: List<Wish>, val hasCompletedWish: Boolean) : ListScreenState()
 }

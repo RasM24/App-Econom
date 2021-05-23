@@ -33,34 +33,36 @@ import ru.endroad.econom.feature.wishes.entity.ListScreenState
 import ru.endroad.econom.feature.wishes.presenter.WishListViewPresenter
 import ru.endroad.shared.wish.core.entity.Wish
 
-//TODO перевести всю навигацию на роутинг в app-модуле
+//TODO Много говнокода. Изучить детальнее compose и навести здесь порядок
 class WishListScreen : MigrateComposeScreen<ListScreenState>() {
 
 	override val presenter by inject(WishListViewPresenter::class.java)
 
 	@Composable
 	override fun Render(screenState: ListScreenState) {
-		//TODO забыл использовать этот флаг
-		val hasWishes = screenState is ListScreenState.ShowData
+		val hasWishes = (screenState as? ListScreenState.Data)?.wishList?.isNotEmpty() ?: false
 
-		Scaffold(
-			topBar = composeFlatTopBar(actions = composeActions(hasWishes))
-		) {
+		Scaffold(topBar = composeFlatTopBar(actions = composeActions(hasWishes))) {
 			when (screenState) {
-				ListScreenState.Idle         -> IdleScreen()
-				ListScreenState.NoDesire     -> RenderNoDesireStub(doTheMainAction = { presenter.openNewWishScreen() })
-				ListScreenState.AllCompleted -> RenderAllCompletedStub(
-					doTheMainAction = { presenter.openNewWishScreen() },
-					doTheSecondaryAction = { presenter.openCompletedWishScreen() })
-				is ListScreenState.ShowData  -> RenderDataScene(state = screenState)
+				ListScreenState.Idle -> IdleScreen()
+				is ListScreenState.Data -> RenderSelector(screenState)
 			}
 		}
 	}
 
-	//TODO Много говнокода. Изучить детальнее compose и навести здесь порядок
+	@Composable
+	private fun RenderSelector(state: ListScreenState.Data) = when {
+		state.wishList.isNotEmpty() -> RenderDataScene(state.wishList)
+		!state.hasCompletedWish     -> RenderNoDesireStub(doTheMainAction = presenter::openNewWishScreen)
+		else                        -> RenderAllCompletedStub(
+			doTheMainAction = presenter::openNewWishScreen,
+			doTheSecondaryAction = presenter::openCompletedWishScreen
+		)
+	}
+
 	@OptIn(ExperimentalMaterialApi::class)
 	@Composable
-	private fun RenderDataScene(state: ListScreenState.ShowData) {
+	private fun RenderDataScene(wishList: List<Wish>) {
 		val scaffoldState = rememberScaffoldState()
 
 		//TODO придумать, как работать с BottomSheet и selectable entity
@@ -106,7 +108,7 @@ class WishListScreen : MigrateComposeScreen<ListScreenState>() {
 			//TODO вынести Scaffold наверх
 			content = {
 				WishList(
-					wishList = state.wishList,
+					wishList = wishList,
 					onNewWishClick = { presenter.openNewWishScreen() },
 					onSelectWish = {
 						selectedWish = it

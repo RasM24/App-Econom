@@ -15,7 +15,6 @@ import ru.endroad.shared.wish.core.domain.GetWishListUseCase
 import ru.endroad.shared.wish.core.domain.PerformWishUseCase
 import ru.endroad.shared.wish.core.entity.Wish
 
-//TODO чет работает плохо - разобраться
 class WishListViewPresenter(
 	private val addWish: AddWishUseCase,
 	private val deleteWish: DeleteWishUseCase,
@@ -32,13 +31,11 @@ class WishListViewPresenter(
 	init {
 		CoroutineScope(Dispatchers.Main).launch {
 			getWishList().collect { wishList ->
-				val notCompletedList = wishList.filterNot(Wish::complete).reversed()
-
-				when {
-					notCompletedList.isNotEmpty() -> ListScreenState.ShowData(notCompletedList).applyState()
-					wishList.none(Wish::complete) -> ListScreenState.NoDesire.applyState()
-					wishList.any(Wish::complete)  -> ListScreenState.AllCompleted.applyState()
-				}
+				ListScreenState.Data(
+					wishList = wishList.filterNot(Wish::complete).reversed(),
+					hasCompletedWish = wishList.any(Wish::complete),
+				)
+					.applyState()
 			}
 		}
 	}
