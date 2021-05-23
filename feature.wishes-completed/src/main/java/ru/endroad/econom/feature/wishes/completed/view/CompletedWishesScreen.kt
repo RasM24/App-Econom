@@ -22,8 +22,6 @@ class CompletedWishesScreen : MigrateComposeScreen<CompletedScreenState>() {
 
 	override val presenter by inject(CompletedWishListPresenter::class.java)
 
-	override val titleRes = R.string.completed_list_title
-
 	@Composable
 	override fun Render(screenState: CompletedScreenState) {
 		Scaffold(topBar = { FlatTopBar() }) {
@@ -47,7 +45,7 @@ class CompletedWishesScreen : MigrateComposeScreen<CompletedScreenState>() {
 
 	@Composable
 	private fun FlatTopBar() = TopAppBar(
-		title = { Text(text = stringResource(id = titleRes)) },
+		title = { Text(text = stringResource(id = R.string.completed_list_title)) },
 		navigationIcon = { NavigationIcon(onClick = { presenter.back() }) },
 	)
 }

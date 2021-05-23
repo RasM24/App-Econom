@@ -18,9 +18,6 @@ class EditWishScreen(wishId: Int?) : MigrateComposeScreen<EditScreenState>() {
 
 	override val presenter by inject(EditWishViewPresenter::class.java) { parametersOf(wishId) }
 
-	@Deprecated("разобраться с логикой title")
-	override val titleRes = R.string.edit_wish_title
-
 	@Composable
 	override fun Render(screenState: EditScreenState) {
 		Scaffold(topBar = composeFlatTopBar()) {
@@ -47,9 +44,10 @@ class EditWishScreen(wishId: Int?) : MigrateComposeScreen<EditScreenState>() {
 		)
 	}
 
+	@Deprecated("разобраться с логикой title")
 	private fun composeFlatTopBar(): @Composable () -> Unit = {
 		TopAppBar(
-			title = { Text(text = stringResource(id = titleRes)) },
+			title = { Text(text = stringResource(id = R.string.edit_wish_title)) },
 			navigationIcon = { NavigationIcon(onClick = { presenter.back() }) },
 		)
 	}

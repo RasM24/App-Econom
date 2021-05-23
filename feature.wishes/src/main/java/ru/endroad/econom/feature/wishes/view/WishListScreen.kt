@@ -37,8 +37,6 @@ class WishListScreen : MigrateComposeScreen<ListScreenState>() {
 
 	override val presenter by inject(WishListViewPresenter::class.java)
 
-	override val titleRes = R.string.wish_list_title
-
 	@Composable
 	override fun Render(screenState: ListScreenState) {
 		//TODO забыл использовать этот флаг
@@ -134,7 +132,7 @@ class WishListScreen : MigrateComposeScreen<ListScreenState>() {
 
 	private fun composeFlatTopBar(actions: @Composable RowScope.() -> Unit = {}): @Composable () -> Unit = {
 		TopAppBar(
-			title = { Text(text = stringResource(id = titleRes)) },
+			title = { Text(text = stringResource(id = R.string.wish_list_title)) },
 			actions = actions,
 		)
 	}
