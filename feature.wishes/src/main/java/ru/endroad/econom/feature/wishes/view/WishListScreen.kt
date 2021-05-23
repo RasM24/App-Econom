@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
 import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.component.core.MigrateComposeScreen
+import ru.endroad.composable.IdleScreen
 import ru.endroad.econom.feature.wishes.entity.ListScreenSingleEvent
 import ru.endroad.econom.feature.wishes.entity.ListScreenState
 import ru.endroad.econom.feature.wishes.presenter.WishListViewPresenter
@@ -46,7 +47,7 @@ class WishListScreen : MigrateComposeScreen<ListScreenState>() {
 			topBar = composeFlatTopBar(actions = composeActions(hasWishes))
 		) {
 			when (screenState) {
-				ListScreenState.Init         -> Unit
+				ListScreenState.Idle         -> IdleScreen()
 				ListScreenState.NoDesire     -> RenderNoDesireStub(doTheMainAction = { presenter.openNewWishScreen() })
 				ListScreenState.AllCompleted -> RenderAllCompletedStub(
 					doTheMainAction = { presenter.openNewWishScreen() },

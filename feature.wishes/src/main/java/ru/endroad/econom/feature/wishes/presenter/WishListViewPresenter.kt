@@ -26,7 +26,7 @@ class WishListViewPresenter(
 
 	val message = MutableSharedFlow<ListScreenSingleEvent?>()
 
-	override val state = MutableStateFlow<ListScreenState>(ListScreenState.Init)
+	override val state = MutableStateFlow<ListScreenState>(ListScreenState.Idle)
 
 	//TODO переделать в отправку ивентов, как на скрине выполненных
 	init {
