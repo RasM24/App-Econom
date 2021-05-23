@@ -10,12 +10,11 @@ import org.koin.java.KoinJavaComponent.inject
 import ru.endroad.component.core.MigrateComposeScreen
 import ru.endroad.composable.NavigationIcon
 import ru.endroad.feature.wish.detail.R
-import ru.endroad.feature.wish.detail.presentation.EditScreenEvent
 import ru.endroad.feature.wish.detail.presentation.EditScreenState
 import ru.endroad.feature.wish.detail.presentation.EditWishViewPresenter
 import ru.endroad.shared.wish.core.entity.Wish
 
-class EditWishScreen(wishId: Int?) : MigrateComposeScreen<EditScreenState, EditScreenEvent>() {
+class EditWishScreen(wishId: Int?) : MigrateComposeScreen<EditScreenState>() {
 
 	override val presenter by inject(EditWishViewPresenter::class.java) { parametersOf(wishId) }
 
@@ -34,7 +33,7 @@ class EditWishScreen(wishId: Int?) : MigrateComposeScreen<EditScreenState, EditS
 	}
 
 	private val createWishFunction = { name: String, info: String, cost: String, importance: String ->
-		presenter.reduce(EditScreenEvent.ApplyClick(name = name, info = info, cost = cost, importance = importance))
+		presenter.saveWish(name = name, info = info, cost = cost, importance = importance)
 	}
 
 	@Composable
@@ -51,7 +50,7 @@ class EditWishScreen(wishId: Int?) : MigrateComposeScreen<EditScreenState, EditS
 	private fun composeFlatTopBar(): @Composable () -> Unit = {
 		TopAppBar(
 			title = { Text(text = stringResource(id = titleRes)) },
-			navigationIcon = { NavigationIcon(onClick = { presenter.reduce(EditScreenEvent.Back) }) },
+			navigationIcon = { NavigationIcon(onClick = { presenter.back() }) },
 		)
 	}
 }

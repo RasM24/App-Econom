@@ -27,14 +27,13 @@ import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
 import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.component.core.MigrateComposeScreen
-import ru.endroad.econom.feature.wishes.entity.ListScreenEvent
 import ru.endroad.econom.feature.wishes.entity.ListScreenSingleEvent
 import ru.endroad.econom.feature.wishes.entity.ListScreenState
 import ru.endroad.econom.feature.wishes.presenter.WishListViewPresenter
 import ru.endroad.shared.wish.core.entity.Wish
 
 //TODO перевести всю навигацию на роутинг в app-модуле
-class WishListScreen : MigrateComposeScreen<ListScreenState, ListScreenEvent>() {
+class WishListScreen : MigrateComposeScreen<ListScreenState>() {
 
 	override val presenter by inject(WishListViewPresenter::class.java)
 
@@ -50,10 +49,10 @@ class WishListScreen : MigrateComposeScreen<ListScreenState, ListScreenEvent>() 
 		) {
 			when (screenState) {
 				ListScreenState.Init         -> Unit
-				ListScreenState.NoDesire     -> RenderNoDesireStub(doTheMainAction = { presenter.reduce(ListScreenEvent.NewWishClick) })
+				ListScreenState.NoDesire     -> RenderNoDesireStub(doTheMainAction = { presenter.openNewWishScreen() })
 				ListScreenState.AllCompleted -> RenderAllCompletedStub(
-					doTheMainAction = { presenter.reduce(ListScreenEvent.NewWishClick) },
-					doTheSecondaryAction = { presenter.reduce(ListScreenEvent.MenuCompletedClick) })
+					doTheMainAction = { presenter.openNewWishScreen() },
+					doTheSecondaryAction = { presenter.openCompletedWishScreen() })
 				is ListScreenState.ShowData  -> RenderDataScene(state = screenState)
 			}
 		}
@@ -71,11 +70,11 @@ class WishListScreen : MigrateComposeScreen<ListScreenState, ListScreenEvent>() 
 
 		when (val action = lastAction) {
 			is ListScreenSingleEvent.PerformWish -> LaunchCompletedSnackbar(scaffoldState,
-																			onAction = { presenter.reduce(ListScreenEvent.UndoPerformClick(action.wish)) },
+																			onAction = { presenter.undoPerformWish(action.wish) },
 																			onCloseSnack = { lastAction = ListScreenSingleEvent.Nothing }
 			)
 			is ListScreenSingleEvent.DeleteWish  -> LaunchDeletedSnackbar(scaffoldState,
-																		  onAction = { presenter.reduce(ListScreenEvent.UndoDeleteClick(action.wish)) },
+																		  onAction = { presenter.undoDeleteWish(action.wish) },
 																		  onCloseSnack = { lastAction = ListScreenSingleEvent.Nothing }
 			)
 			ListScreenSingleEvent.Nothing        -> Unit
@@ -90,16 +89,16 @@ class WishListScreen : MigrateComposeScreen<ListScreenState, ListScreenEvent>() 
 				WishActionBottomSheet(
 					title = selectedWish.name,
 					onClickEdit = {
-						presenter.reduce(ListScreenEvent.EditClick(selectedWish))
+						presenter.openEditWishScreen(selectedWish.id)
 						scope.launch { bottomSheetState.hide() }
 					},
 					onClickComplete = {
-						presenter.reduce(ListScreenEvent.PerformClick(selectedWish))
+						presenter.perform(selectedWish)
 						lastAction = ListScreenSingleEvent.PerformWish(selectedWish)
 						scope.launch { bottomSheetState.hide() }
 					},
 					onClickDelete = {
-						presenter.reduce(ListScreenEvent.DeleteClick(selectedWish))
+						presenter.delete(selectedWish)
 						lastAction = ListScreenSingleEvent.DeleteWish(selectedWish)
 						scope.launch { bottomSheetState.hide() }
 					},
@@ -109,7 +108,7 @@ class WishListScreen : MigrateComposeScreen<ListScreenState, ListScreenEvent>() 
 			content = {
 				WishList(
 					wishList = state.wishList,
-					onNewWishClick = { presenter.reduce(ListScreenEvent.NewWishClick) },
+					onNewWishClick = { presenter.openNewWishScreen() },
 					onSelectWish = {
 						selectedWish = it
 						scope.launch { bottomSheetState.show() }
@@ -123,7 +122,7 @@ class WishListScreen : MigrateComposeScreen<ListScreenState, ListScreenEvent>() 
 	private fun composeActions(hasWishes: Boolean): @Composable RowScope.() -> Unit = {
 		CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
 			if (hasWishes) {
-				IconButton(onClick = { presenter.reduce(ListScreenEvent.MenuCompletedClick) }) {
+				IconButton(onClick = { presenter.openCompletedWishScreen() }) {
 					Icon(
 						imageVector = Icons.Outlined.Task,
 						contentDescription = stringResource(R.string.wish_list_menu_completed)

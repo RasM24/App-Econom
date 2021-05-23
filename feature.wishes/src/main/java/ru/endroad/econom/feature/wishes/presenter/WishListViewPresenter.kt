@@ -8,14 +8,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.endroad.component.core.PresenterMviAbstract
 import ru.endroad.econom.feature.wishes.WishFlowRouting
-import ru.endroad.econom.feature.wishes.entity.ListScreenEvent
-import ru.endroad.econom.feature.wishes.entity.ListScreenEvent.DeleteClick
-import ru.endroad.econom.feature.wishes.entity.ListScreenEvent.EditClick
-import ru.endroad.econom.feature.wishes.entity.ListScreenEvent.MenuCompletedClick
-import ru.endroad.econom.feature.wishes.entity.ListScreenEvent.NewWishClick
-import ru.endroad.econom.feature.wishes.entity.ListScreenEvent.PerformClick
-import ru.endroad.econom.feature.wishes.entity.ListScreenEvent.UndoDeleteClick
-import ru.endroad.econom.feature.wishes.entity.ListScreenEvent.UndoPerformClick
 import ru.endroad.econom.feature.wishes.entity.ListScreenSingleEvent
 import ru.endroad.econom.feature.wishes.entity.ListScreenState
 import ru.endroad.shared.wish.core.domain.AddWishUseCase
@@ -31,7 +23,7 @@ class WishListViewPresenter(
 	private val performWish: PerformWishUseCase,
 	private val router: WishFlowRouting,
 	getWishList: GetWishListUseCase,
-) : PresenterMviAbstract<ListScreenState, ListScreenEvent>() {
+) : PresenterMviAbstract<ListScreenState>() {
 
 	val message = MutableSharedFlow<ListScreenSingleEvent?>()
 
@@ -52,49 +44,37 @@ class WishListViewPresenter(
 		}
 	}
 
-	override fun reduce(event: ListScreenEvent) {
-		when (event) {
-			is NewWishClick     -> openNewWishScreen()
-			is PerformClick     -> performWish(event.wish)
-			is DeleteClick      -> deleteWish(event.wish)
-			is EditClick        -> openEditWishScreen(event.wish.id)
-			MenuCompletedClick  -> openCompletedWishScreen()
-			is UndoDeleteClick  -> undoDeleteWish(event.wish)
-			is UndoPerformClick -> undoPerformWish(event.wish)
-		}
-	}
-
-	private fun openNewWishScreen() {
+	fun openNewWishScreen() {
 		router.openWishNewScreen()
 	}
 
-	private fun openEditWishScreen(wishId: Int) {
+	fun openEditWishScreen(wishId: Int) {
 		router.openWishEditScreen(wishId)
 	}
 
-	private fun openCompletedWishScreen() {
+	fun openCompletedWishScreen() {
 		router.openCompletedWishScreen()
 	}
 
-	private fun performWish(wish: Wish) {
+	fun perform(wish: Wish) {
 		CoroutineScope(Dispatchers.Main).launch {
 			performWish(wish)
 			message.emit(ListScreenSingleEvent.PerformWish(wish))
 		}
 	}
 
-	private fun deleteWish(wish: Wish) {
+	fun delete(wish: Wish) {
 		CoroutineScope(Dispatchers.Main).launch {
 			deleteWish(wish)
 			message.emit(ListScreenSingleEvent.DeleteWish(wish))
 		}
 	}
 
-	private fun undoDeleteWish(wish: Wish) {
+	fun undoDeleteWish(wish: Wish) {
 		CoroutineScope(Dispatchers.Main).launch { addWish(wish) }
 	}
 
-	private fun undoPerformWish(wish: Wish) {
+	fun undoPerformWish(wish: Wish) {
 		CoroutineScope(Dispatchers.Main).launch { performWish(wish, complete = false) }
 	}
 }

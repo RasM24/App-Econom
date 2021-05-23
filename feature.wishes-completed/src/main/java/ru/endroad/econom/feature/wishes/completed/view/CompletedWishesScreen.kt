@@ -13,12 +13,11 @@ import org.koin.java.KoinJavaComponent.inject
 import ru.endroad.component.core.MigrateComposeScreen
 import ru.endroad.composable.NavigationIcon
 import ru.endroad.econom.feature.wishes.completed.R
-import ru.endroad.econom.feature.wishes.completed.mvi.CompletedScreenEvent
 import ru.endroad.econom.feature.wishes.completed.mvi.CompletedScreenState
 import ru.endroad.econom.feature.wishes.completed.presenter.CompletedWishListPresenter
 import ru.endroad.shared.wish.core.entity.Wish
 
-class CompletedWishesScreen : MigrateComposeScreen<CompletedScreenState, CompletedScreenEvent>() {
+class CompletedWishesScreen : MigrateComposeScreen<CompletedScreenState>() {
 
 	override val presenter by inject(CompletedWishListPresenter::class.java)
 
@@ -49,7 +48,7 @@ class CompletedWishesScreen : MigrateComposeScreen<CompletedScreenState, Complet
 	): @Composable () -> Unit = {
 		TopAppBar(
 			title = { Text(text = stringResource(id = titleRes)) },
-			navigationIcon = { NavigationIcon(onClick = { presenter.reduce(CompletedScreenEvent.Back) }) },
+			navigationIcon = { NavigationIcon(onClick = { presenter.back() }) },
 		)
 	}
 }

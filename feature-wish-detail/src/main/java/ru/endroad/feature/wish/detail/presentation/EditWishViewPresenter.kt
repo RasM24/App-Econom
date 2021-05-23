@@ -18,20 +18,12 @@ class EditWishViewPresenter(
 	private val addWish: AddWishUseCase,
 	private val editWish: EditWishUseCase,
 	private val router: WishDetailRouter
-) : PresenterMviAbstract<EditScreenState, EditScreenEvent>() {
+) : PresenterMviAbstract<EditScreenState>() {
 
 	override val state: MutableStateFlow<EditScreenState> = MutableStateFlow(EditScreenState.Initial)
 
 	init {
-		reduce(EditScreenEvent.LoadDraft)
-	}
-
-	override fun reduce(event: EditScreenEvent) {
-		when (event) {
-			is EditScreenEvent.LoadDraft  -> loadDraft()
-			is EditScreenEvent.ApplyClick -> saveWish(name = event.name, cost = event.cost, importance = event.importance, info = event.info)
-			EditScreenEvent.Back          -> back()
-		}
+		loadDraft()
 	}
 
 	private fun loadDraft() {
@@ -42,7 +34,7 @@ class EditWishViewPresenter(
 		}
 	}
 
-	private fun saveWish(name: String, cost: String, importance: String, info: String) {
+	fun saveWish(name: String, cost: String, importance: String, info: String) {
 		CoroutineScope(Dispatchers.Main).launch {
 			val wish = Wish(name = name, info = info, cost = cost.toInt(), importance = Importance.valueOf(importance))
 
@@ -51,7 +43,7 @@ class EditWishViewPresenter(
 		}
 	}
 
-	private fun back() {
+	fun back() {
 		router.close()
 	}
 }
