@@ -1,4 +1,4 @@
-package ru.endroad.econom.feature.wishes.completed.presenter
+package ru.endroad.econom.feature.wish.completed.presenter
 
 import ru.endroad.shared.wish.core.entity.Wish
 

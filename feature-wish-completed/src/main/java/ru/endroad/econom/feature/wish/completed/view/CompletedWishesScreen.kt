@@ -1,4 +1,4 @@
-package ru.endroad.econom.feature.wishes.completed.view
+package ru.endroad.econom.feature.wish.completed.view
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,9 +13,9 @@ import org.koin.java.KoinJavaComponent.inject
 import ru.endroad.component.core.MigrateComposeScreen
 import ru.endroad.composable.IdleScreen
 import ru.endroad.composable.NavigationIcon
-import ru.endroad.econom.feature.wishes.completed.R
-import ru.endroad.econom.feature.wishes.completed.presenter.CompletedScreenState
-import ru.endroad.econom.feature.wishes.completed.presenter.CompletedWishListPresenter
+import ru.endroad.econom.feature.wish.completed.R
+import ru.endroad.econom.feature.wish.completed.presenter.CompletedScreenState
+import ru.endroad.econom.feature.wish.completed.presenter.CompletedWishListPresenter
 import ru.endroad.shared.wish.core.entity.Wish
 
 class CompletedWishesScreen : MigrateComposeScreen<CompletedScreenState>() {

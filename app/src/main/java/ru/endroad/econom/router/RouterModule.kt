@@ -4,7 +4,7 @@ import org.koin.dsl.module
 import org.koin.experimental.builder.single
 import org.koin.experimental.builder.singleBy
 import ru.endroad.econom.feature.wish.active.presenter.WishFlowRouting
-import ru.endroad.econom.feature.wishes.completed.presenter.WishCompletedListRouter
+import ru.endroad.econom.feature.wish.completed.presenter.WishCompletedListRouter
 import ru.endroad.econom.state.StateHolder
 import ru.endroad.feature.wish.detail.presentation.WishDetailRouter
 

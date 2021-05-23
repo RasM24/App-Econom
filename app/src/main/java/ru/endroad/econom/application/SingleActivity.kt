@@ -8,7 +8,7 @@ import androidx.compose.runtime.collectAsState
 import org.koin.java.KoinJavaComponent.inject
 import ru.endroad.compose.theme.ApplicationTheme
 import ru.endroad.econom.feature.wish.active.view.WishListScreen
-import ru.endroad.econom.feature.wishes.completed.view.CompletedWishesScreen
+import ru.endroad.econom.feature.wish.completed.view.CompletedWishesScreen
 import ru.endroad.econom.state.ApplicationState
 import ru.endroad.econom.state.StateHolder
 import ru.endroad.feature.wish.detail.view.EditWishScreen

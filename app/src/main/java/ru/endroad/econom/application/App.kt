@@ -6,7 +6,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import ru.endroad.econom.component.wish.componentWishModule
 import ru.endroad.econom.feature.wish.active.di.featureWishesModule
-import ru.endroad.econom.feature.wishes.completed.di.featureCompletedWishesModule
+import ru.endroad.econom.feature.wish.completed.di.featureCompletedWishesModule
 import ru.endroad.econom.room.dataModule
 import ru.endroad.econom.router.routerModule
 import ru.endroad.feature.wish.detail.di.featureWishDetailModule

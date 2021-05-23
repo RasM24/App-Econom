@@ -1,4 +1,4 @@
-package ru.endroad.econom.feature.wishes.completed.view
+package ru.endroad.econom.feature.wish.completed.view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,7 +19,7 @@ import ru.endroad.composable.PrimaryText
 import ru.endroad.composable.SecondaryText
 import ru.endroad.composable.TitleText
 import ru.endroad.compose.theme.dark600
-import ru.endroad.econom.feature.wishes.completed.R
+import ru.endroad.econom.feature.wish.completed.R
 import ru.endroad.shared.wish.core.domain.costInNoodles
 import ru.endroad.shared.wish.core.domain.markerColor
 import ru.endroad.shared.wish.core.entity.Wish

@@ -1,7 +1,7 @@
 include ':app',
 	':mock-wish',
 	':feature-wish-active',
-	':feature.wishes-completed',
+	':feature-wish-completed',
 	':feature-wish-detail',
 	':shared-wish-core',
 	':shared-wish-datasource',
