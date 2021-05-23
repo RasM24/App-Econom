@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.endroad.component.core.PresenterMviAbstract
-import ru.endroad.econom.feature.wishes.WishFlowRouting
 import ru.endroad.econom.feature.wishes.entity.ListScreenSingleEvent
 import ru.endroad.econom.feature.wishes.entity.ListScreenState
 import ru.endroad.shared.wish.core.domain.AddWishUseCase
