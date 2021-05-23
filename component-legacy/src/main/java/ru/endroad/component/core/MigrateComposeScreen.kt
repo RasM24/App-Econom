@@ -2,9 +2,10 @@ package ru.endroad.component.core
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import ru.endroad.compose.core.ComposeScreen
 
 @Deprecated("Переформировать базовый класс")
-abstract class MigrateComposeScreen<STATE> {
+abstract class MigrateComposeScreen<STATE> : ComposeScreen {
 
 	abstract val presenter: PresenterMviAbstract<STATE>
 
@@ -12,7 +13,7 @@ abstract class MigrateComposeScreen<STATE> {
 	protected abstract fun Render(screenState: STATE)
 
 	@Composable
-	fun SceneCompose() {
+	override fun SceneCompose() {
 		val state = presenter.state.collectAsState()
 		Render(screenState = state.value)
 	}
