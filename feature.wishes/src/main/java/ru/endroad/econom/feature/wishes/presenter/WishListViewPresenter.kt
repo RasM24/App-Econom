@@ -54,19 +54,47 @@ class WishListViewPresenter(
 
 	override fun reduce(event: ListScreenEvent) {
 		when (event) {
-			is NewWishClick     -> router.openWishNewScreen()
-			is PerformClick     -> CoroutineScope(Dispatchers.Main).launch {
-				performWish(event.wish)
-				message.emit(ListScreenSingleEvent.PerformWish(event.wish))
-			}
-			is DeleteClick      -> CoroutineScope(Dispatchers.Main).launch {
-				deleteWish(event.wish)
-				message.emit(ListScreenSingleEvent.DeleteWish(event.wish))
-			}
-			is EditClick        -> router.openWishEditScreen(event.wish.id)
-			MenuCompletedClick  -> router.openCompletedWishScreen()
-			is UndoDeleteClick  -> CoroutineScope(Dispatchers.Main).launch { addWish(event.wish) }
-			is UndoPerformClick -> CoroutineScope(Dispatchers.Main).launch { performWish(event.wish, complete = false) }
+			is NewWishClick     -> openNewWishScreen()
+			is PerformClick     -> performWish(event.wish)
+			is DeleteClick      -> deleteWish(event.wish)
+			is EditClick        -> openEditWishScreen(event.wish.id)
+			MenuCompletedClick  -> openCompletedWishScreen()
+			is UndoDeleteClick  -> undoDeleteWish(event.wish)
+			is UndoPerformClick -> undoPerformWish(event.wish)
 		}
+	}
+
+	private fun openNewWishScreen() {
+		router.openWishNewScreen()
+	}
+
+	private fun openEditWishScreen(wishId: Int) {
+		router.openWishEditScreen(wishId)
+	}
+
+	private fun openCompletedWishScreen() {
+		router.openCompletedWishScreen()
+	}
+
+	private fun performWish(wish: Wish) {
+		CoroutineScope(Dispatchers.Main).launch {
+			performWish(wish)
+			message.emit(ListScreenSingleEvent.PerformWish(wish))
+		}
+	}
+
+	private fun deleteWish(wish: Wish) {
+		CoroutineScope(Dispatchers.Main).launch {
+			deleteWish(wish)
+			message.emit(ListScreenSingleEvent.DeleteWish(wish))
+		}
+	}
+
+	private fun undoDeleteWish(wish: Wish) {
+		CoroutineScope(Dispatchers.Main).launch { addWish(wish) }
+	}
+
+	private fun undoPerformWish(wish: Wish) {
+		CoroutineScope(Dispatchers.Main).launch { performWish(wish, complete = false) }
 	}
 }

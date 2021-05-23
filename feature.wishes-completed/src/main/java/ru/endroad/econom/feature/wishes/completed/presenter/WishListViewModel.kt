@@ -31,8 +31,12 @@ class CompletedWishListPresenter(
 	override fun reduce(event: CompletedScreenEvent) {
 		when (event) {
 			is ChangeData             -> CompletedScreenState.ShowData(event.completedWishList).applyState()
-			CompletedScreenEvent.Back -> router.close()
+			CompletedScreenEvent.Back -> back()
 		}
+	}
+
+	private fun back() {
+		router.close()
 	}
 }
 

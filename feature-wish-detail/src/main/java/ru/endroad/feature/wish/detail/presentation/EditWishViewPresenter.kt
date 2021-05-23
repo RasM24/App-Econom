@@ -29,8 +29,8 @@ class EditWishViewPresenter(
 	override fun reduce(event: EditScreenEvent) {
 		when (event) {
 			is EditScreenEvent.LoadDraft  -> loadDraft()
-			is EditScreenEvent.ApplyClick -> event.reduceAndApply()
-			EditScreenEvent.Back          -> router.close()
+			is EditScreenEvent.ApplyClick -> saveWish(name = event.name, cost = event.cost, importance = event.importance, info = event.info)
+			EditScreenEvent.Back          -> back()
 		}
 	}
 
@@ -42,16 +42,16 @@ class EditWishViewPresenter(
 		}
 	}
 
-	private fun EditScreenEvent.ApplyClick.reduceAndApply() {
+	private fun saveWish(name: String, cost: String, importance: String, info: String) {
 		CoroutineScope(Dispatchers.Main).launch {
-			saveWish(name, info, cost.toInt(), Importance.valueOf(importance))
+			val wish = Wish(name = name, info = info, cost = cost.toInt(), importance = Importance.valueOf(importance))
+
+			wishId?.let { editWish(wish.copy(id = it)) } ?: addWish(wish)
 			router.close()
 		}
 	}
 
-	//TODO можно вынести в domain
-	private suspend fun saveWish(name: String, info: String, cost: Int, importance: Importance) {
-		val wish = Wish(name = name, info = info, cost = cost, importance = importance)
-		wishId?.let { editWish(wish.copy(id = it)) } ?: addWish(wish)
+	private fun back() {
+		router.close()
 	}
 }
