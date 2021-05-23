@@ -11,33 +11,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import org.koin.java.KoinJavaComponent.inject
 import ru.endroad.component.core.MigrateComposeScreen
+import ru.endroad.composable.IdleScreen
 import ru.endroad.composable.NavigationIcon
 import ru.endroad.econom.feature.wishes.completed.R
-import ru.endroad.econom.feature.wishes.completed.mvi.CompletedScreenEvent
-import ru.endroad.econom.feature.wishes.completed.mvi.CompletedScreenState
+import ru.endroad.econom.feature.wishes.completed.presenter.CompletedScreenState
 import ru.endroad.econom.feature.wishes.completed.presenter.CompletedWishListPresenter
 import ru.endroad.shared.wish.core.entity.Wish
 
-class CompletedWishesScreen : MigrateComposeScreen<CompletedScreenState, CompletedScreenEvent>() {
+class CompletedWishesScreen : MigrateComposeScreen<CompletedScreenState>() {
 
 	override val presenter by inject(CompletedWishListPresenter::class.java)
 
-	override val titleRes = R.string.completed_list_title
-
 	@Composable
 	override fun Render(screenState: CompletedScreenState) {
-		Scaffold(topBar = composeFlatTopBar()) {
+		Scaffold(topBar = { FlatTopBar() }) {
 			when (screenState) {
-				is CompletedScreenState.ShowData -> RenderData(screenState)
-				else                             -> Unit
+				CompletedScreenState.Idle    -> IdleScreen()
+				is CompletedScreenState.Data -> RenderData(screenState)
 			}
 		}
 	}
 
 	@Composable
-	private fun RenderData(state: CompletedScreenState.ShowData) {
+	private fun RenderData(state: CompletedScreenState.Data) {
 		if (state.completedWishList.isEmpty()) {
-			RenderNoCompletedStub()
+			NoCompletedStub()
 		} else {
 			LazyColumn(modifier = Modifier.fillMaxSize()) {
 				items(state.completedWishList, Wish::id) { WishItem(wish = it) }
@@ -45,11 +43,9 @@ class CompletedWishesScreen : MigrateComposeScreen<CompletedScreenState, Complet
 		}
 	}
 
-	private fun composeFlatTopBar(
-	): @Composable () -> Unit = {
-		TopAppBar(
-			title = { Text(text = stringResource(id = titleRes)) },
-			navigationIcon = { NavigationIcon(onClick = { presenter.reduce(CompletedScreenEvent.Back) }) },
-		)
-	}
+	@Composable
+	private fun FlatTopBar() = TopAppBar(
+		title = { Text(text = stringResource(id = R.string.completed_list_title)) },
+		navigationIcon = { NavigationIcon(onClick = { presenter.back() }) },
+	)
 }

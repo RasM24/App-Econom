@@ -18,40 +18,37 @@ class EditWishViewPresenter(
 	private val addWish: AddWishUseCase,
 	private val editWish: EditWishUseCase,
 	private val router: WishDetailRouter
-) : PresenterMviAbstract<EditScreenState, EditScreenEvent>() {
+) : PresenterMviAbstract<EditScreenState>() {
 
-	override val state: MutableStateFlow<EditScreenState> = MutableStateFlow(EditScreenState.Initial)
+	override val state: MutableStateFlow<EditScreenState> = MutableStateFlow(EditScreenState.Idle)
 
 	init {
-		reduce(EditScreenEvent.LoadDraft)
-	}
-
-	override fun reduce(event: EditScreenEvent) {
-		when (event) {
-			is EditScreenEvent.LoadDraft  -> loadDraft()
-			is EditScreenEvent.ApplyClick -> event.reduceAndApply()
-			EditScreenEvent.Back          -> router.close()
-		}
+		loadDraft()
 	}
 
 	private fun loadDraft() {
 		CoroutineScope(Dispatchers.Main).launch {
 			val wish = wishId?.let { getWish(it) }
-			val newState = wish?.let(EditScreenState::InitialEditWish) ?: EditScreenState.InitialNewWish
-			newState.applyState()
+
+			EditScreenState.DraftWish(
+				name = wish?.name,
+				cost = wish?.cost,
+				importance = wish?.importance,
+				info = wish?.info,
+			).applyState()
 		}
 	}
 
-	private fun EditScreenEvent.ApplyClick.reduceAndApply() {
+	fun saveWish(name: String, cost: String, importance: String, info: String) {
 		CoroutineScope(Dispatchers.Main).launch {
-			saveWish(name, info, cost.toInt(), Importance.valueOf(importance))
+			val wish = Wish(name = name, info = info, cost = cost.toInt(), importance = Importance.valueOf(importance))
+
+			wishId?.let { editWish(wish.copy(id = it)) } ?: addWish(wish)
 			router.close()
 		}
 	}
 
-	//TODO можно вынести в domain
-	private suspend fun saveWish(name: String, info: String, cost: Int, importance: Importance) {
-		val wish = Wish(name = name, info = info, cost = cost, importance = importance)
-		wishId?.let { editWish(wish.copy(id = it)) } ?: addWish(wish)
+	fun back() {
+		router.close()
 	}
 }

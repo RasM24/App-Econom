@@ -10,10 +10,4 @@ class NameValidator(private val maxLengthName: Int) {
 		}
 
 	private fun String.isLong(): Boolean = length > maxLengthName
-
-	@Deprecated("Use invoke operator")
-	fun isNotEmpty(value: String): Boolean = value.isNotEmpty()
-
-	@Deprecated("Use invoke operator")
-	fun isNotLong(value: String): Boolean = value.length <= maxLengthName
 }

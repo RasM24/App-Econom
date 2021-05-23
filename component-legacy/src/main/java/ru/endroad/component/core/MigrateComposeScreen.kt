@@ -4,11 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 
 @Deprecated("Переформировать базовый класс")
-abstract class MigrateComposeScreen<STATE, EVENT> {
+abstract class MigrateComposeScreen<STATE> {
 
-	abstract val titleRes: Int
-
-	abstract val presenter: PresenterMviAbstract<STATE, EVENT>
+	abstract val presenter: PresenterMviAbstract<STATE>
 
 	@Composable
 	protected abstract fun Render(screenState: STATE)
