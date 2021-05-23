@@ -7,7 +7,6 @@ import org.koin.core.context.startKoin
 import ru.endroad.econom.component.wish.componentWishModule
 import ru.endroad.econom.room.dataModule
 import ru.endroad.econom.router.routerModule
-import ru.endroad.feature.wish.detail.di.featureWishDetailModule
 
 class App : Application() {
 
@@ -19,7 +18,6 @@ class App : Application() {
 		startKoin {
 			androidContext(this@App)
 			modules(
-				featureWishDetailModule,
 				componentWishModule,
 				routerModule,
 				dataModule
