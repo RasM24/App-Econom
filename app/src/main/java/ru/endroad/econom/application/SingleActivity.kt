@@ -24,7 +24,7 @@ class SingleActivity : AppCompatActivity() {
 
 			ApplicationTheme {
 				Crossfade(targetState = applicationState) { state ->
-					when(val screen = state.value){
+					when (val screen = state.value) {
 						ApplicationState.WishCompleted -> CompletedWishesScreen().SceneCompose()
 						is ApplicationState.WishDetail -> EditWishScreen(screen.wishId).SceneCompose()
 						ApplicationState.WishList      -> WishListScreen().SceneCompose()
@@ -35,6 +35,6 @@ class SingleActivity : AppCompatActivity() {
 	}
 
 	override fun onBackPressed() {
-		stateHolder.back()
+		if (!stateHolder.back()) super.onBackPressed()
 	}
 }
