@@ -1,6 +1,6 @@
 include ':app',
 	':mock-wish',
-	':feature.wishes',
+	':feature-wish-active',
 	':feature.wishes-completed',
 	':feature-wish-detail',
 	':shared-wish-core',

@@ -19,7 +19,7 @@ dependencies {
 	androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 	androidTestImplementation 'androidx.test.espresso:espresso-intents:3.3.0'
 
-	implementation project(':feature.wishes')
+	implementation project(':feature-wish-active')
 	implementation project(':feature.wishes-completed')
 	implementation project(':feature-wish-detail')
 	implementation project(":shared-wish-datasource")

@@ -1,4 +1,4 @@
-package ru.endroad.econom.feature.wishes.view
+package ru.endroad.econom.feature.wish.active.view
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.ContentAlpha
@@ -25,12 +25,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
-import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.component.core.MigrateComposeScreen
 import ru.endroad.composable.IdleScreen
-import ru.endroad.econom.feature.wishes.entity.ListScreenSingleEvent
-import ru.endroad.econom.feature.wishes.entity.ListScreenState
-import ru.endroad.econom.feature.wishes.presenter.WishListViewPresenter
+import ru.endroad.econom.feature.wish.active.R
+import ru.endroad.econom.feature.wish.active.entity.ListScreenSingleEvent
+import ru.endroad.econom.feature.wish.active.entity.ListScreenState
+import ru.endroad.econom.feature.wish.active.presenter.WishListViewPresenter
 import ru.endroad.shared.wish.core.entity.Wish
 
 //TODO Много говнокода. Изучить детальнее compose и навести здесь порядок
@@ -44,7 +44,7 @@ class WishListScreen : MigrateComposeScreen<ListScreenState>() {
 
 		Scaffold(topBar = composeFlatTopBar(actions = composeActions(hasWishes))) {
 			when (screenState) {
-				ListScreenState.Idle -> IdleScreen()
+				ListScreenState.Idle    -> IdleScreen()
 				is ListScreenState.Data -> RenderSelector(screenState)
 			}
 		}

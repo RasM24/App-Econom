@@ -1,4 +1,4 @@
-package ru.endroad.econom.feature.wishes.presenter
+package ru.endroad.econom.feature.wish.active.presenter
 
 interface WishFlowRouting {
 

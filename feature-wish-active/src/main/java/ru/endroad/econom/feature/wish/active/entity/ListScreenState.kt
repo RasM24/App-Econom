@@ -1,4 +1,4 @@
-package ru.endroad.econom.feature.wishes.entity
+package ru.endroad.econom.feature.wish.active.entity
 
 import ru.endroad.shared.wish.core.entity.Wish
 

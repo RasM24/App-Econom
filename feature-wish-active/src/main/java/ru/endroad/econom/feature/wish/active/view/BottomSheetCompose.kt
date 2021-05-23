@@ -1,4 +1,4 @@
-package ru.endroad.econom.feature.wishes.view
+package ru.endroad.econom.feature.wish.active.view
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box

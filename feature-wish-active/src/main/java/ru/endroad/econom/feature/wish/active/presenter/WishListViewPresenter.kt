@@ -1,4 +1,4 @@
-package ru.endroad.econom.feature.wishes.presenter
+package ru.endroad.econom.feature.wish.active.presenter
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.endroad.component.core.PresenterMviAbstract
-import ru.endroad.econom.feature.wishes.entity.ListScreenSingleEvent
-import ru.endroad.econom.feature.wishes.entity.ListScreenState
+import ru.endroad.econom.feature.wish.active.entity.ListScreenSingleEvent
+import ru.endroad.econom.feature.wish.active.entity.ListScreenState
 import ru.endroad.shared.wish.core.domain.AddWishUseCase
 import ru.endroad.shared.wish.core.domain.DeleteWishUseCase
 import ru.endroad.shared.wish.core.domain.GetWishListUseCase

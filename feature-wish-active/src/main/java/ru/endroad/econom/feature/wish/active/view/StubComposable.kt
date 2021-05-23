@@ -1,11 +1,11 @@
-package ru.endroad.econom.feature.wishes.view
+package ru.endroad.econom.feature.wish.active.view
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import ru.endroad.birusa.feature.wishes.R
 import ru.endroad.composable.OneActionStub
 import ru.endroad.composable.TwoActionStub
+import ru.endroad.econom.feature.wish.active.R
 
 @Composable
 fun RenderNoDesireStub(doTheMainAction: () -> Unit) = OneActionStub(

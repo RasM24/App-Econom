@@ -1,4 +1,4 @@
-package ru.endroad.econom.feature.wishes.view
+package ru.endroad.econom.feature.wish.active.view
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
