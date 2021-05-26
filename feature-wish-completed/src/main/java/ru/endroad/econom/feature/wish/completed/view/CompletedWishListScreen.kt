@@ -16,7 +16,7 @@ import ru.endroad.econom.feature.wish.completed.presenter.WishCompletedListRoute
 import ru.endroad.shared.wish.core.domain.GetWishListUseCase
 import ru.endroad.shared.wish.core.entity.Wish
 
-class CompletedWishesScreen : ComposeScreen {
+class CompletedWishListScreen : ComposeScreen {
 
 	private val router by inject(WishCompletedListRouter::class.java)
 	private val getWishListUseCase by inject(GetWishListUseCase::class.java)
@@ -39,17 +39,14 @@ class CompletedWishesScreen : ComposeScreen {
 
 			when (val screenState = rememberState.value) {
 				CompletedScreenState.Idle    -> IdleScene()
-				is CompletedScreenState.Data -> RenderData(screenState)
+				is CompletedScreenState.Data -> DataScene(screenState)
 			}
 		}
 	}
 
 	@Composable
-	private fun RenderData(state: CompletedScreenState.Data) {
-		if (state.completedWishList.isEmpty()) {
-			NoCompletedStubScene()
-		} else {
-			DataScene(wishList = state.completedWishList)
-		}
+	private fun DataScene(state: CompletedScreenState.Data) = when {
+		state.completedWishList.isNotEmpty() -> DataScene(wishList = state.completedWishList)
+		else                                 -> NoCompletedStubScene()
 	}
 }
