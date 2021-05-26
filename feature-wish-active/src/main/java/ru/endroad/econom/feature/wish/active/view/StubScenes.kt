@@ -8,7 +8,7 @@ import ru.endroad.composable.TwoActionStub
 import ru.endroad.econom.feature.wish.active.R
 
 @Composable
-fun RenderNoDesireStub(doTheMainAction: () -> Unit) = OneActionStub(
+internal fun NoDesireStubScene(doTheMainAction: () -> Unit) = OneActionStub(
 	painter = painterResource(id = R.drawable.empty),
 	contentDescription = null,
 	titleText = stringResource(id = R.string.noDesireTitle),
@@ -18,7 +18,7 @@ fun RenderNoDesireStub(doTheMainAction: () -> Unit) = OneActionStub(
 )
 
 @Composable
-fun RenderAllCompletedStub(doTheMainAction: () -> Unit, doTheSecondaryAction: () -> Unit) = TwoActionStub(
+internal fun AllCompletedStubScene(doTheMainAction: () -> Unit, doTheSecondaryAction: () -> Unit) = TwoActionStub(
 	painter = painterResource(id = R.drawable.all_completed),
 	contentDescription = null,
 	titleText = stringResource(id = R.string.wishesFulfilledTitle),
