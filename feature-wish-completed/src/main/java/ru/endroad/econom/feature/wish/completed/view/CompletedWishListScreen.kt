@@ -17,17 +17,17 @@ class CompletedWishListScreen : ComposeScreen {
 	override fun SceneCompose() {
 		Scaffold(topBar = { FlatTopBar(navigationClick = actor::back) }) {
 			val rememberState = actor.state.collectAsState()
+			val state = rememberState.value
 
-			when (val screenState = rememberState.value) {
-				CompletedScreenState.Idle    -> IdleScene()
-				is CompletedScreenState.Data -> DataScene(screenState)
+			when {
+				state is CompletedScreenState.Idle          -> IdleScene()
+
+				state is CompletedScreenState.Data
+					&& state.completedWishList.isNotEmpty() -> DataScene(state.completedWishList)
+
+				state is CompletedScreenState.Data
+					&& state.completedWishList.isEmpty()    -> NoCompletedStubScene()
 			}
 		}
-	}
-
-	@Composable
-	private fun DataScene(state: CompletedScreenState.Data) = when {
-		state.completedWishList.isNotEmpty() -> DataScene(wishList = state.completedWishList)
-		else                                 -> NoCompletedStubScene()
 	}
 }
