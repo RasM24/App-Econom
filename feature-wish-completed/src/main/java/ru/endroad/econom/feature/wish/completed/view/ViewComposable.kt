@@ -10,27 +10,15 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.endroad.composable.GradientCard
-import ru.endroad.composable.ImageStub
 import ru.endroad.composable.PrimaryText
 import ru.endroad.composable.SecondaryText
 import ru.endroad.composable.TitleText
 import ru.endroad.compose.theme.dark600
-import ru.endroad.econom.feature.wish.completed.R
 import ru.endroad.shared.wish.core.domain.costInNoodles
 import ru.endroad.shared.wish.core.domain.markerColor
 import ru.endroad.shared.wish.core.entity.Wish
-
-@Composable
-internal fun NoCompletedStub() = ImageStub(
-	painter = painterResource(id = R.drawable.empty),
-	contentDescription = null,
-	titleText = stringResource(id = R.string.noCompletedTitle),
-	descriptionText = stringResource(id = R.string.noCompletedDescriptor),
-)
 
 @Composable
 internal fun WishItem(wish: Wish) = GradientCard(

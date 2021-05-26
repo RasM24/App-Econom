@@ -56,7 +56,7 @@ class CompletedWishesScreen : ComposeScreen {
 	@Composable
 	private fun RenderData(state: CompletedScreenState.Data) {
 		if (state.completedWishList.isEmpty()) {
-			NoCompletedStub()
+			NoCompletedStubScene()
 		} else {
 			LazyColumn(modifier = Modifier.fillMaxSize()) {
 				items(state.completedWishList, Wish::id) { WishItem(wish = it) }
