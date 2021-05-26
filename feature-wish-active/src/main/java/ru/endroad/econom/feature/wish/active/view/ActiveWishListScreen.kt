@@ -44,7 +44,7 @@ import ru.endroad.shared.wish.core.domain.PerformWishUseCase
 import ru.endroad.shared.wish.core.entity.Wish
 
 //TODO Много говнокода. Изучить детальнее compose и навести здесь порядок
-class WishListScreen : ComposeScreen {
+class ActiveWishListScreen : ComposeScreen {
 
 	private val addWishUseCase by inject(AddWishUseCase::class.java)
 	private val deleteWishUseCase by inject(DeleteWishUseCase::class.java)

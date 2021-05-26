@@ -7,7 +7,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.collectAsState
 import org.koin.java.KoinJavaComponent.inject
 import ru.endroad.compose.theme.ApplicationTheme
-import ru.endroad.econom.feature.wish.active.view.WishListScreen
+import ru.endroad.econom.feature.wish.active.view.ActiveWishListScreen
 import ru.endroad.econom.feature.wish.completed.view.CompletedWishListScreen
 import ru.endroad.econom.state.ApplicationState
 import ru.endroad.econom.state.StateHolder
@@ -27,7 +27,7 @@ class SingleActivity : AppCompatActivity() {
 					when (val screen = state.value) {
 						ApplicationState.WishCompleted -> CompletedWishListScreen().SceneCompose()
 						is ApplicationState.WishDetail -> EditWishScreen(screen.wishId).SceneCompose()
-						ApplicationState.WishList      -> WishListScreen().SceneCompose()
+						ApplicationState.WishList      -> ActiveWishListScreen().SceneCompose()
 					}
 				}
 			}
