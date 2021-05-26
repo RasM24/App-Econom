@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
-import ru.endroad.composable.IdleScreen
+import ru.endroad.composable.IdleScene
 import ru.endroad.compose.core.ComposeScreen
 import ru.endroad.econom.feature.wish.active.R
 import ru.endroad.econom.feature.wish.active.entity.ListScreenSingleEvent
@@ -96,7 +96,7 @@ class WishListScreen : ComposeScreen {
 
 		Scaffold(topBar = composeFlatTopBar(actions = composeActions(hasWishes))) {
 			when (screenState) {
-				ListScreenState.Idle    -> IdleScreen()
+				ListScreenState.Idle    -> IdleScene()
 				is ListScreenState.Data -> RenderSelector(screenState)
 			}
 		}

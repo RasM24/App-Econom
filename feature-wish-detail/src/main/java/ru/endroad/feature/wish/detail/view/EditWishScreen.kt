@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
-import ru.endroad.composable.IdleScreen
+import ru.endroad.composable.IdleScene
 import ru.endroad.composable.NavigationIcon
 import ru.endroad.compose.core.ComposeScreen
 import ru.endroad.feature.wish.detail.R
@@ -62,7 +62,7 @@ class EditWishScreen(private val wishId: Int?) : ComposeScreen {
 
 		Scaffold(topBar = composeFlatTopBar()) {
 			when (screenState) {
-				EditScreenState.Idle -> IdleScreen()
+				EditScreenState.Idle -> IdleScene()
 				is EditScreenState.DraftWish -> RenderWishDetail(
 					nameDraft = screenState.name,
 					infoDraft = screenState.info,

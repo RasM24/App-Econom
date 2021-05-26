@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
-import ru.endroad.composable.IdleScreen
+import ru.endroad.composable.IdleScene
 import ru.endroad.compose.core.ComposeScreen
 import ru.endroad.econom.feature.wish.completed.presenter.CompletedScreenState
 import ru.endroad.econom.feature.wish.completed.presenter.WishCompletedListRouter
@@ -38,7 +38,7 @@ class CompletedWishesScreen : ComposeScreen {
 			val rememberState = state.collectAsState()
 
 			when (val screenState = rememberState.value) {
-				CompletedScreenState.Idle    -> IdleScreen()
+				CompletedScreenState.Idle    -> IdleScene()
 				is CompletedScreenState.Data -> RenderData(screenState)
 			}
 		}
