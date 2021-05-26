@@ -1,29 +1,18 @@
 package ru.endroad.econom.feature.wish.active.view
 
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.ContentAlpha
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Task
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -33,7 +22,6 @@ import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
 import ru.endroad.composable.IdleScene
 import ru.endroad.compose.core.ComposeScreen
-import ru.endroad.econom.feature.wish.active.R
 import ru.endroad.econom.feature.wish.active.entity.ListScreenSingleEvent
 import ru.endroad.econom.feature.wish.active.entity.ListScreenState
 import ru.endroad.econom.feature.wish.active.presenter.WishFlowRouting
@@ -94,12 +82,19 @@ class ActiveWishListScreen : ComposeScreen {
 
 		val hasWishes = (screenState as? ListScreenState.Data)?.wishList?.isNotEmpty() ?: false
 
-		Scaffold(topBar = composeFlatTopBar(actions = composeActions(hasWishes))) {
-			when (screenState) {
-				ListScreenState.Idle    -> IdleScene()
-				is ListScreenState.Data -> RenderSelector(screenState)
+		Scaffold(
+			topBar = {
+				FlatTopBar(actions = {
+					if (hasWishes) MenuCompletedTaskActions(onClick = router::openCompletedWishScreen)
+				})
+			},
+			content = {
+				when (screenState) {
+					ListScreenState.Idle -> IdleScene()
+					is ListScreenState.Data -> RenderSelector(screenState)
+				}
 			}
-		}
+		)
 	}
 
 	@Composable
@@ -169,26 +164,6 @@ class ActiveWishListScreen : ComposeScreen {
 					scaffoldState = scaffoldState
 				)
 			}
-		)
-	}
-
-	private fun composeActions(hasWishes: Boolean): @Composable RowScope.() -> Unit = {
-		CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-			if (hasWishes) {
-				IconButton(onClick = router::openCompletedWishScreen) {
-					Icon(
-						imageVector = Icons.Outlined.Task,
-						contentDescription = stringResource(R.string.wish_list_menu_completed)
-					)
-				}
-			}
-		}
-	}
-
-	private fun composeFlatTopBar(actions: @Composable RowScope.() -> Unit = {}): @Composable () -> Unit = {
-		TopAppBar(
-			title = { Text(text = stringResource(id = R.string.wish_list_title)) },
-			actions = actions,
 		)
 	}
 }
