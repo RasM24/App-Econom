@@ -100,8 +100,8 @@ class ActiveWishListScreen : ComposeScreen {
 	@Composable
 	private fun RenderSelector(state: ListScreenState.Data) = when {
 		state.wishList.isNotEmpty() -> RenderDataScene(state.wishList)
-		!state.hasCompletedWish     -> RenderNoDesireStub(doTheMainAction = router::openNewWishScreen)
-		else                        -> RenderAllCompletedStub(
+		!state.hasCompletedWish     -> NoDesireStubScene(doTheMainAction = router::openNewWishScreen)
+		else                        -> AllCompletedStubScene(
 			doTheMainAction = router::openNewWishScreen,
 			doTheSecondaryAction = router::openCompletedWishScreen
 		)
@@ -154,14 +154,18 @@ class ActiveWishListScreen : ComposeScreen {
 			},
 			//TODO вынести Scaffold наверх
 			content = {
-				WishList(
-					wishList = wishList,
-					onNewWishClick = router::openNewWishScreen,
-					onSelectWish = {
-						selectedWish = it
-						scope.launch { bottomSheetState.show() }
-					},
-					scaffoldState = scaffoldState
+				Scaffold(
+					floatingActionButton = { AddFloatingActionButton(onClick = router::openNewWishScreen) },
+					scaffoldState = scaffoldState,
+					content = {
+						WishList(
+							wishList = wishList,
+							onSelectWish = {
+								selectedWish = it
+								scope.launch { bottomSheetState.show() }
+							},
+						)
+					}
 				)
 			}
 		)

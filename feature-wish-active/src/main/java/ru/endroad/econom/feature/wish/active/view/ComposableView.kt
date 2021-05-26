@@ -3,7 +3,6 @@ package ru.endroad.econom.feature.wish.active.view
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarResult
 import androidx.compose.runtime.Composable
@@ -14,20 +13,9 @@ import ru.endroad.shared.wish.core.entity.Wish
 @Composable
 internal fun WishList(
 	wishList: List<Wish>,
-	onNewWishClick: () -> Unit,
 	onSelectWish: (Wish) -> Unit,
-	scaffoldState: ScaffoldState,
-) {
-	Scaffold(
-		floatingActionButton = { AddFloatingActionButton(onClick = onNewWishClick) },
-		scaffoldState = scaffoldState,
-	) {
-		LazyColumn(modifier = Modifier.fillMaxSize()) {
-			items(wishList, Wish::id) {
-				WishCard(wish = it, onClick = { onSelectWish(it) })
-			}
-		}
-	}
+) = LazyColumn(modifier = Modifier.fillMaxSize()) {
+	items(wishList, Wish::id) { WishCard(wish = it, onClick = { onSelectWish(it) }) }
 }
 
 @Composable
