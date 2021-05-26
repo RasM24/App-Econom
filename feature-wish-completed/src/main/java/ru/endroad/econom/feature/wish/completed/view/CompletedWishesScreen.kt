@@ -1,11 +1,8 @@
 package ru.endroad.econom.feature.wish.completed.view
 
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,9 +10,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
 import ru.endroad.composable.IdleScreen
-import ru.endroad.composable.NavigationIcon
 import ru.endroad.compose.core.ComposeScreen
-import ru.endroad.econom.feature.wish.completed.R
 import ru.endroad.econom.feature.wish.completed.presenter.CompletedScreenState
 import ru.endroad.econom.feature.wish.completed.presenter.WishCompletedListRouter
 import ru.endroad.shared.wish.core.domain.GetWishListUseCase
@@ -39,7 +34,7 @@ class CompletedWishesScreen : ComposeScreen {
 
 	@Composable
 	override fun SceneCompose() {
-		Scaffold(topBar = { FlatTopBar() }) {
+		Scaffold(topBar = { FlatTopBar(navigationClick = router::close) }) {
 			val rememberState = state.collectAsState()
 
 			when (val screenState = rememberState.value) {
@@ -57,10 +52,4 @@ class CompletedWishesScreen : ComposeScreen {
 			DataScene(wishList = state.completedWishList)
 		}
 	}
-
-	@Composable
-	private fun FlatTopBar() = TopAppBar(
-		title = { Text(text = stringResource(id = R.string.completed_list_title)) },
-		navigationIcon = { NavigationIcon(onClick = { router.close() }) },
-	)
 }
