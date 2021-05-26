@@ -9,7 +9,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +28,7 @@ import ru.endroad.shared.wish.core.domain.markerColor
 import ru.endroad.shared.wish.core.entity.Wish
 
 @Composable
-internal fun WishItem(wish: Wish, onClick: () -> Unit) =
+internal fun WishCard(wish: Wish, onClick: () -> Unit) =
 	GradientCard(
 		modifier = Modifier
 			.fillMaxWidth()
@@ -51,4 +55,10 @@ internal fun WishItem(wish: Wish, onClick: () -> Unit) =
 				SecondaryText(text = "~${wish.costInNoodles} пачек лапши", color = MaterialTheme.colors.dark600, modifier = Modifier.align(Alignment.End))
 			}
 		}
+	}
+
+@Composable
+internal fun AddFloatingActionButton(onClick: () -> Unit) =
+	FloatingActionButton(onClick = onClick) {
+		Icon(imageVector = Icons.Default.Add, contentDescription = "Add Wish")
 	}
