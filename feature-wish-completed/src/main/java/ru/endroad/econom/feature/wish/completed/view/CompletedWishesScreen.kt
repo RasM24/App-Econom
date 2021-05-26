@@ -59,7 +59,7 @@ class CompletedWishesScreen : ComposeScreen {
 			NoCompletedStubScene()
 		} else {
 			LazyColumn(modifier = Modifier.fillMaxSize()) {
-				items(state.completedWishList, Wish::id) { WishItem(wish = it) }
+				items(state.completedWishList, Wish::id) { WishCard(wish = it) }
 			}
 		}
 	}

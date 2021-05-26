@@ -21,7 +21,7 @@ import ru.endroad.shared.wish.core.domain.markerColor
 import ru.endroad.shared.wish.core.entity.Wish
 
 @Composable
-internal fun WishItem(wish: Wish) = GradientCard(
+internal fun WishCard(wish: Wish) = GradientCard(
 	modifier = Modifier
 		.fillMaxWidth()
 		.wrapContentHeight()
