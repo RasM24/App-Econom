@@ -111,6 +111,8 @@ class ActiveWishListScreen : ComposeScreen {
 	@Composable
 	private fun RenderDataScene(wishList: List<Wish>) {
 		val scaffoldState = rememberScaffoldState()
+		val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+		val scope = rememberCoroutineScope()
 
 		//TODO придумать, как работать с BottomSheet и selectable entity
 		var selectedWish: Wish by remember { mutableStateOf(Wish(name = "mock", cost = 0)) }
@@ -128,28 +130,22 @@ class ActiveWishListScreen : ComposeScreen {
 			ListScreenSingleEvent.Nothing        -> Unit
 		}
 
-		val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-		val scope = rememberCoroutineScope()
-
 		ModalBottomSheetLayout(
 			sheetState = bottomSheetState,
 			sheetContent = {
-				WishActionBottomSheet(
+				ExperimentalWishActionBottomSheet(
 					title = selectedWish.name,
-					onClickEdit = {
-						router.openEditWishScreen(selectedWish.id)
-						scope.launch { bottomSheetState.hide() }
-					},
+					onClickEdit = { router.openEditWishScreen(selectedWish.id) },
 					onClickComplete = {
 						perform(selectedWish)
 						lastAction = ListScreenSingleEvent.PerformWish(selectedWish)
-						scope.launch { bottomSheetState.hide() }
 					},
 					onClickDelete = {
 						delete(selectedWish)
 						lastAction = ListScreenSingleEvent.DeleteWish(selectedWish)
-						scope.launch { bottomSheetState.hide() }
 					},
+					bottomSheetState = bottomSheetState,
+					coroutineScope = scope,
 				)
 			},
 			//TODO вынести Scaffold наверх
