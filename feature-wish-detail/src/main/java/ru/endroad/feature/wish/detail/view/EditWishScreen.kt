@@ -1,84 +1,52 @@
 package ru.endroad.feature.wish.detail.view
 
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import org.koin.java.KoinJavaComponent.inject
 import ru.endroad.composable.IdleScene
-import ru.endroad.composable.NavigationIcon
 import ru.endroad.compose.core.ComposeScreen
 import ru.endroad.feature.wish.detail.R
 import ru.endroad.feature.wish.detail.presentation.EditScreenState
-import ru.endroad.feature.wish.detail.presentation.WishDetailRouter
-import ru.endroad.shared.wish.core.domain.AddWishUseCase
-import ru.endroad.shared.wish.core.domain.EditWishUseCase
-import ru.endroad.shared.wish.core.domain.GetWishUseCase
-import ru.endroad.shared.wish.core.entity.Importance
-import ru.endroad.shared.wish.core.entity.Wish
+import ru.endroad.feature.wish.detail.presentation.EditWishActor
 
 class EditWishScreen(private val wishId: Int?) : ComposeScreen {
 
-	private val getWishUseCase by inject(GetWishUseCase::class.java)
-	private val addWishUseCase by inject(AddWishUseCase::class.java)
-	private val editWishUseCase by inject(EditWishUseCase::class.java)
-	private val router by inject(WishDetailRouter::class.java)
-
-	private val state: MutableStateFlow<EditScreenState> = MutableStateFlow(EditScreenState.Idle)
+	private val actor = EditWishActor(wishId)
 
 	init {
-		CoroutineScope(Dispatchers.Main).launch {
-			val wish = wishId?.let { getWishUseCase(it) }
-
-			EditScreenState.DraftWish(
-				name = wish?.name,
-				cost = wish?.cost,
-				importance = wish?.importance,
-				info = wish?.info,
-			)
-				.let { state.emit(it) }
-		}
-	}
-
-	private fun saveWish(name: String, cost: String, importance: String, info: String) {
-		CoroutineScope(Dispatchers.Main).launch {
-			val wish = Wish(name = name, info = info, cost = cost.toInt(), importance = Importance.valueOf(importance))
-
-			wishId?.let { editWishUseCase(wish.copy(id = it)) } ?: addWishUseCase(wish)
-			router.close()
-		}
+		CoroutineScope(Dispatchers.Main).launch { actor.loadData() }
 	}
 
 	@Composable
 	override fun SceneCompose() {
-		val rememberState = state.collectAsState()
+		val rememberState = actor.state.collectAsState()
 		val screenState = rememberState.value
+		val coroutineScope = rememberCoroutineScope()
 
-		Scaffold(topBar = composeFlatTopBar()) {
-			when (screenState) {
-				EditScreenState.Idle -> IdleScene()
-				is EditScreenState.DraftWish -> RenderWishDetail(
-					nameDraft = screenState.name,
-					infoDraft = screenState.info,
-					costDraft = screenState.cost?.toString(),
-					importanceDraft = screenState.importance?.name,
-					createWish = { name, info, cost, importance -> saveWish(name = name, info = info, cost = cost, importance = importance) }
-				)
-			}
-		}
-	}
+		Scaffold(
+			topBar = {
+				FlatTopBar(title = stringResource(id = R.string.edit_wish_title), navigationClick = actor::close)
+			},
+			content = {
+				when (screenState) {
+					EditScreenState.Idle -> IdleScene()
 
-	@Deprecated("разобраться с логикой title")
-	private fun composeFlatTopBar(): @Composable () -> Unit = {
-		TopAppBar(
-			title = { Text(text = stringResource(id = R.string.edit_wish_title)) },
-			navigationIcon = { NavigationIcon(onClick = router::close) },
+					is EditScreenState.DraftWish -> RenderWishDetailScene(
+						nameDraft = screenState.name,
+						infoDraft = screenState.info,
+						costDraft = screenState.cost?.toString(),
+						importanceDraft = screenState.importance?.name,
+						createWish = { name, info, cost, importance ->
+							coroutineScope.launch { actor.saveWish(name = name, info = info, cost = cost, importance = importance) }
+						}
+					)
+				}
+			},
 		)
 	}
 }
