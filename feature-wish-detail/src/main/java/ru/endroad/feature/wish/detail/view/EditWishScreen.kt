@@ -3,6 +3,7 @@ package ru.endroad.feature.wish.detail.view
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,32 +31,33 @@ class EditWishScreen(private val wishId: Int?) : ComposeScreen {
 	private val state: MutableStateFlow<EditScreenState> = MutableStateFlow(EditScreenState.Idle)
 
 	init {
-		CoroutineScope(Dispatchers.Main).launch {
-			val wish = wishId?.let { getWishUseCase(it) }
-
-			EditScreenState.DraftWish(
-				name = wish?.name,
-				cost = wish?.cost,
-				importance = wish?.importance,
-				info = wish?.info,
-			)
-				.let { state.emit(it) }
-		}
+		CoroutineScope(Dispatchers.Main).launch { loadData() }
 	}
 
-	private fun saveWish(name: String, cost: String, importance: String, info: String) {
-		CoroutineScope(Dispatchers.Main).launch {
-			val wish = Wish(name = name, info = info, cost = cost.toInt(), importance = Importance.valueOf(importance))
+	private suspend fun loadData() {
+		val wish = wishId?.let { getWishUseCase(it) }
 
-			wishId?.let { editWishUseCase(wish.copy(id = it)) } ?: addWishUseCase(wish)
-			router.close()
-		}
+		EditScreenState.DraftWish(
+			name = wish?.name,
+			cost = wish?.cost,
+			importance = wish?.importance,
+			info = wish?.info,
+		)
+			.let { state.emit(it) }
+	}
+
+	private suspend fun saveWish(name: String, cost: String, importance: String, info: String) {
+		val wish = Wish(name = name, info = info, cost = cost.toInt(), importance = Importance.valueOf(importance))
+
+		wishId?.let { editWishUseCase(wish.copy(id = it)) } ?: addWishUseCase(wish)
+		router.close()
 	}
 
 	@Composable
 	override fun SceneCompose() {
 		val rememberState = state.collectAsState()
 		val screenState = rememberState.value
+		val coroutineScope = rememberCoroutineScope()
 
 		Scaffold(
 			topBar = {
@@ -64,12 +66,15 @@ class EditWishScreen(private val wishId: Int?) : ComposeScreen {
 			content = {
 				when (screenState) {
 					EditScreenState.Idle -> IdleScene()
+
 					is EditScreenState.DraftWish -> RenderWishDetailScene(
 						nameDraft = screenState.name,
 						infoDraft = screenState.info,
 						costDraft = screenState.cost?.toString(),
 						importanceDraft = screenState.importance?.name,
-						createWish = { name, info, cost, importance -> saveWish(name = name, info = info, cost = cost, importance = importance) }
+						createWish = { name, info, cost, importance ->
+							coroutineScope.launch { saveWish(name = name, info = info, cost = cost, importance = importance) }
+						}
 					)
 				}
 			},
