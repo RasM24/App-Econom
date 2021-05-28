@@ -15,7 +15,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -40,8 +39,6 @@ class ActiveWishListScreen : ComposeScreen {
 	private val getWishListUseCase by inject(GetWishListUseCase::class.java)
 	private val router by inject(WishFlowRouting::class.java)
 
-	private val message = MutableSharedFlow<ListScreenSingleEvent?>()
-
 	private val state = MutableStateFlow<ListScreenState>(ListScreenState.Idle)
 
 	init {
@@ -56,14 +53,12 @@ class ActiveWishListScreen : ComposeScreen {
 	private fun perform(wish: Wish) {
 		CoroutineScope(Dispatchers.Main).launch {
 			performWishUseCase(wish)
-			message.emit(ListScreenSingleEvent.PerformWish(wish))
 		}
 	}
 
 	private fun delete(wish: Wish) {
 		CoroutineScope(Dispatchers.Main).launch {
 			deleteWishUseCase(wish)
-			message.emit(ListScreenSingleEvent.DeleteWish(wish))
 		}
 	}
 
