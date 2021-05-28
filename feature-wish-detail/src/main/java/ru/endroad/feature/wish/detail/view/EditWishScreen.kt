@@ -1,8 +1,6 @@
 package ru.endroad.feature.wish.detail.view
 
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.res.stringResource
@@ -12,7 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
 import ru.endroad.composable.IdleScene
-import ru.endroad.composable.NavigationIcon
 import ru.endroad.compose.core.ComposeScreen
 import ru.endroad.feature.wish.detail.R
 import ru.endroad.feature.wish.detail.presentation.EditScreenState
@@ -60,25 +57,22 @@ class EditWishScreen(private val wishId: Int?) : ComposeScreen {
 		val rememberState = state.collectAsState()
 		val screenState = rememberState.value
 
-		Scaffold(topBar = composeFlatTopBar()) {
-			when (screenState) {
-				EditScreenState.Idle -> IdleScene()
-				is EditScreenState.DraftWish -> RenderWishDetail(
-					nameDraft = screenState.name,
-					infoDraft = screenState.info,
-					costDraft = screenState.cost?.toString(),
-					importanceDraft = screenState.importance?.name,
-					createWish = { name, info, cost, importance -> saveWish(name = name, info = info, cost = cost, importance = importance) }
-				)
-			}
-		}
-	}
-
-	@Deprecated("разобраться с логикой title")
-	private fun composeFlatTopBar(): @Composable () -> Unit = {
-		TopAppBar(
-			title = { Text(text = stringResource(id = R.string.edit_wish_title)) },
-			navigationIcon = { NavigationIcon(onClick = router::close) },
+		Scaffold(
+			topBar = {
+				FlatTopBar(title = stringResource(id = R.string.edit_wish_title), navigationClick = router::close)
+			},
+			content = {
+				when (screenState) {
+					EditScreenState.Idle -> IdleScene()
+					is EditScreenState.DraftWish -> RenderWishDetailScene(
+						nameDraft = screenState.name,
+						infoDraft = screenState.info,
+						costDraft = screenState.cost?.toString(),
+						importanceDraft = screenState.importance?.name,
+						createWish = { name, info, cost, importance -> saveWish(name = name, info = info, cost = cost, importance = importance) }
+					)
+				}
+			},
 		)
 	}
 }

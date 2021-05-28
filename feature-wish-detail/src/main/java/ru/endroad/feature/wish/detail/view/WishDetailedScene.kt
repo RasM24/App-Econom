@@ -31,7 +31,7 @@ import ru.endroad.feature.wish.detail.domain.ValidationResult
 import ru.endroad.shared.wish.core.entity.Importance
 
 @Composable
-fun RenderWishDetail(
+internal fun RenderWishDetailScene(
 	nameDraft : String? = null,
 	infoDraft : String? = null,
 	costDraft : String? = null,
