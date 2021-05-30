@@ -1,3 +1,8 @@
+//TODO Избавится от зависимости на Android
+plugins {
+	id("com.android.library")
+	kotlin("android")
+}
 dependencies {
 	implementation(project(":shared-wish-core"))
 

@@ -1,3 +1,7 @@
+plugins {
+	id("com.android.library")
+	kotlin("android")
+}
 android {
 	//region Experimental. Удалить после релиза Jetpack Compose и перехода на kotlin 1.5.0
 	compileOptions {

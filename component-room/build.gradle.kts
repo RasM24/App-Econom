@@ -1,3 +1,8 @@
+//TODO Избавится от зависимости на Android
+plugins {
+	id("com.android.library")
+	kotlin("android")
+}
 dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.32")
 

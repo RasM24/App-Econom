@@ -1,3 +1,10 @@
+plugins {
+	id("com.android.application")
+	kotlin("android")
+	kotlin("android.extensions")
+	kotlin("kapt")
+}
+
 android {
 	//region Experimental. Удалить после релиза Jetpack Compose и перехода на kotlin 1.5.0
 	compileOptions {
