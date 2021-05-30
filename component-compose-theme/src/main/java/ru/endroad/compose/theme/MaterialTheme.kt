@@ -9,7 +9,7 @@ fun ApplicationTheme(
 	darkTheme: Boolean = isSystemInDarkTheme(),
 	content: @Composable () -> Unit
 ) = MaterialTheme(
-	colors = if (darkTheme) DarkThemeColors else LightThemeColors,
+	colors = LightThemeColors,
 	shapes = Shapes,
 	content = content
 )
