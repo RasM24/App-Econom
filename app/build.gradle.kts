@@ -31,7 +31,13 @@ dependencies {
 	add("mockImplementation", project(":mock-wish"))
 	implementation("com.facebook.stetho:stetho:1.5.1")
 
+	implementation("androidx.appcompat:appcompat:1.3.0")
+
 	kapt("androidx.room:room-compiler:2.3.0")
 	implementation("androidx.room:room-runtime:2.3.0")
 	implementation("androidx.room:room-ktx:2.3.0")
+
+	implementation("org.koin:koin-core:2.1.5")
+	implementation("org.koin:koin-core-ext:2.1.5")
+	implementation("org.koin:koin-android:2.1.5")
 }
