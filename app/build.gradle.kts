@@ -31,7 +31,10 @@ dependencies {
 	add("mockImplementation", project(":mock-wish"))
 	implementation("com.facebook.stetho:stetho:1.5.1")
 
+	implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.32")
+
 	implementation("androidx.appcompat:appcompat:1.3.0")
+	implementation("androidx.activity:activity-compose:1.3.0-alpha07")
 
 	kapt("androidx.room:room-compiler:2.3.0")
 	implementation("androidx.room:room-runtime:2.3.0")
