@@ -11,3 +11,10 @@ include(
 	":component-compose-theme",
 	":component-room"
 )
+
+dependencyResolutionManagement {
+	repositories {
+		google()
+		jcenter()
+	}
+}

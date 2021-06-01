@@ -14,14 +14,6 @@ buildscript {
 	}
 }
 
-allprojects {
-	repositories {
-		google()
-		mavenLocal()
-		jcenter()
-	}
-}
-
 subprojects {
 	plugins.matching { it is AppPlugin || it is LibraryPlugin }.whenPluginAdded {
 		configure<BaseExtension> {
