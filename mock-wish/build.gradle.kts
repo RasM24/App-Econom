@@ -1,7 +1,6 @@
 //TODO Избавится от зависимости на Android
 plugins {
-	id("com.android.library")
-	kotlin("android")
+	id("android-library-convection")
 }
 dependencies {
 	implementation(project(":component-room"))

@@ -1,4 +1,3 @@
-//TODO Избавится от зависимости на Android
 plugins {
 	id("com.android.library")
 	kotlin("android")

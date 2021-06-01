@@ -1,6 +1,5 @@
 plugins {
-	id("com.android.library")
-	kotlin("android")
+	id("android-library-convection")
 }
 android {
 	//region Experimental. Удалить после релиза Jetpack Compose и перехода на kotlin 1.5.0
