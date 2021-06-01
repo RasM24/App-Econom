@@ -1,6 +1,5 @@
 plugins {
-	id("com.android.library")
-	kotlin("android")
+	id("android-library-convection")
 }
 dependencies {
 	implementation(project(":shared-wish-core"))

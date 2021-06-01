@@ -1,8 +1,8 @@
 plugins {
 	id("android-application-convection")
-	kotlin("kapt")
 }
 
+//TODO Вернуть централизованное управление версиями
 android {
 	//region Experimental. Удалить после релиза Jetpack Compose и перехода на kotlin 1.5.0
 	compileOptions {
