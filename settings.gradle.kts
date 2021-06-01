@@ -1,3 +1,5 @@
+includeBuild("build-gradle")
+
 include(
 	":app",
 	":mock-wish",
